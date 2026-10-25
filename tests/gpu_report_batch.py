@@ -4,11 +4,15 @@ Report batch on real models (C-4, C-5): N independent stacks run jobs in paralle
                       each with its own config copy; jobs run one after another per stack (service loads the video)
   job = (video, variant, repeat): run_report.py with the stack config + the variant's report.* overrides
 Variants (--variants): comma list of names from VARIANTS. Default: "default" (current config).
+Loading a video rewrites its HippoRAG OpenIE cache files (HippoRAG.index -> save_openie_results), so two services
+loading the same video at once can read a half-written file (seen in C-5 on 2026-10-25). Each worker therefore
+loads the video explicitly under a per-video lock before run_report (whose preflight load is then a no-op).
 Watchdog and start/stop helpers come from gpu_3videos.py. Outputs: <out>/summary.json, <out>/<job>/..., logs.
 Usage: python tests/gpu_report_batch.py --out <dir> [--stack-gpus 4,5,6] [--videos a,b] [--variants v1,v2] [--repeats 1]
 """
 import argparse, copy, json, os, queue, subprocess, threading, time
-import yaml
+from collections import defaultdict
+import requests, yaml
 from gpu_3videos import PY, QUERY, RF, VIDEOS, Watch, count_calls, gpu_mem, start, stop_all, wait_health
 
 LLM_PORT, SVC_PORT, EXPECT_MIB = 18850, 18860, 19000
@@ -69,6 +73,7 @@ def main():
         summary["ready_sec"] = {s["i"]: s["ready_sec"] for s in stacks}
         print(f"[ready] {summary['ready_sec']}", flush=True)
 
+        video_locks = defaultdict(threading.Lock)
         q = queue.Queue()
         for j in jobs:
             q.put(j)
@@ -84,6 +89,15 @@ def main():
                 cfg["report"].update(VARIANTS[var])
                 path = os.path.join(args.out, f"config_{name}.yaml")
                 yaml.safe_dump(cfg, open(path, "w"), sort_keys=False, allow_unicode=True)
+                with video_locks[vid]:
+                    lr = requests.post(f"http://127.0.0.1:{SVC_PORT + s['i']}/videos/{vid}/load", timeout=1800)
+                if lr.status_code != 200:
+                    rec = {"job": name, "video": vid, "variant": var, "repeat": rep, "stack": s["i"], "gpu": s["gpu"],
+                           "exit": None, "load_status": lr.status_code, "load_body": lr.text[:300]}
+                    with lock:
+                        summary["results"].append(rec)
+                    print(f"[load-failed] {rec}", flush=True)
+                    continue
                 n0, t = count_calls([s["llm_log"]]), time.time()
                 rr = subprocess.run([PY, "-B", os.path.join(RF, "run_report.py"), "--config", path, f"--video-id={vid}",
                                      "--query", args.query, "--out-dir", os.path.join(args.out, name)],
