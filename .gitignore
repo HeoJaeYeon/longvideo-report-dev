@@ -1,0 +1,8 @@
+# 생성물·대용량·실행 기록 (디스크에는 그대로 두고 버전 관리만 제외)
+__pycache__/
+*.pyc
+cache/
+logs/
+outputs/
+tests/_artifacts/
+backups/

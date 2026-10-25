@@ -1,0 +1,554 @@
+[
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 0,
+  "sample": 0,
+  "setting": "base",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 536,
+   "hit_max": false,
+   "sec": 61.6,
+   "parse_ok": true,
+   "error": null,
+   "entities": 82,
+   "unique": 81
+  },
+  "triples": {
+   "prompt_tokens": 3024,
+   "completion_tokens": 1623,
+   "hit_max": false,
+   "sec": 179.1,
+   "parse_ok": true,
+   "error": null,
+   "n": 56,
+   "max_run_same_subj_pred": 39,
+   "max_count_same_subj_pred": 39
+  },
+  "triples_sample": [
+   [
+    "Gypsy",
+    "is a non-slandrous term for",
+    "Roma/Romani"
+   ],
+   [
+    "Roma/Romani",
+    "present in",
+    "Balkans"
+   ],
+   [
+    "TITO",
+    "associated with",
+    "inventing Macedonians"
+   ],
+   [
+    "Obama",
+    "overlaid on",
+    "dilapidated buildings"
+   ],
+   [
+    "Obama",
+    "with text",
+    "POREKLOM SAM CIGANIN"
+   ],
+   [
+    "Roma presence",
+    "juxtaposed with",
+    "marginalization"
+   ],
+   [
+    "Roma presence",
+    "juxtaposed with",
+    "social tension"
+   ],
+   [
+    "Roma",
+    "categorized as",
+    "foreign"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 0,
+  "sample": 1,
+  "setting": "base",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 407,
+   "hit_max": false,
+   "sec": 46.2,
+   "parse_ok": true,
+   "error": null,
+   "entities": 65,
+   "unique": 65
+  },
+  "triples": {
+   "prompt_tokens": 2912,
+   "completion_tokens": 1385,
+   "hit_max": false,
+   "sec": 158.2,
+   "parse_ok": true,
+   "error": null,
+   "n": 23,
+   "max_run_same_subj_pred": 2,
+   "max_count_same_subj_pred": 4
+  },
+  "triples_sample": [
+   [
+    "Gypsy",
+    "is a non-slandrous term for",
+    "Roma/Romani"
+   ],
+   [
+    "Roma/Romani",
+    "present in",
+    "Balkans"
+   ],
+   [
+    "Roma presence",
+    "juxtaposed with",
+    "marginalization imagery"
+   ],
+   [
+    "Roma presence",
+    "juxtaposed with",
+    "social tension imagery"
+   ],
+   [
+    "Roma",
+    "historically invisible due to",
+    "stigma and lack of scholarly attention"
+   ],
+   [
+    "Roma",
+    "reduced to",
+    "archetypes of 'danger' or 'criminality'"
+   ],
+   [
+    "Roma origins",
+    "since",
+    "13th century"
+   ],
+   [
+    "Roma",
+    "embedded in",
+    "historical geopolitics"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 1,
+  "sample": 0,
+  "setting": "base",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 2048,
+   "hit_max": true,
+   "sec": 232.7,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Unterminated string starting at: line 336 column 3 (char 7611)",
+   "entities": 334,
+   "unique": 190
+  },
+  "triples": {
+   "prompt_tokens": 4285,
+   "completion_tokens": 2048,
+   "hit_max": true,
+   "sec": 242.4,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Unterminated string starting at: line 137 column 33 (char 7356)",
+   "n": 134,
+   "max_run_same_subj_pred": 113,
+   "max_count_same_subj_pred": 115
+  },
+  "triples_sample": [
+   [
+    "Tiganiada",
+    "authored by",
+    "Ion Budai-Deleanu"
+   ],
+   [
+    "Tiganiada",
+    "depicts",
+    "Gypsy-led armies"
+   ],
+   [
+    "Tiganiada",
+    "features",
+    "Vlad Cepish"
+   ],
+   [
+    "Tiganiada",
+    "serves as",
+    "historical record"
+   ],
+   [
+    "Tiganiada",
+    "serves as",
+    "cultural myth"
+   ],
+   [
+    "Gypsy warriors",
+    "used by",
+    "Moldavian rulers"
+   ],
+   [
+    "Gypsy warriors",
+    "used by",
+    "Wallachian rulers"
+   ],
+   [
+    "Gypsy warriors",
+    "used for",
+    "resistance against Ottoman expansion"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 1,
+  "sample": 1,
+  "setting": "base",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 892,
+   "hit_max": false,
+   "sec": 104.3,
+   "parse_ok": true,
+   "error": null,
+   "entities": 129,
+   "unique": 123
+  },
+  "triples": {
+   "prompt_tokens": 3336,
+   "completion_tokens": 2048,
+   "hit_max": true,
+   "sec": 239.8,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Unterminated string starting at: line 117 column 34 (char 7455)",
+   "n": 109,
+   "max_run_same_subj_pred": 2,
+   "max_count_same_subj_pred": 4
+  },
+  "triples_sample": [
+   [
+    "Tiganiada",
+    "authored by",
+    "Ion Budai-Deleanu"
+   ],
+   [
+    "Tiganiada",
+    "depicts",
+    "Gypsy-led armies"
+   ],
+   [
+    "Tiganiada",
+    "features",
+    "Vlad Cepish"
+   ],
+   [
+    "Gypsy slave labor",
+    "used by",
+    "Romanian rulers"
+   ],
+   [
+    "Gypsy warriors",
+    "used by",
+    "Moldavian rulers"
+   ],
+   [
+    "Gypsy warriors",
+    "used by",
+    "Wallachian rulers"
+   ],
+   [
+    "Gypsy warriors",
+    "involved in",
+    "resistance against Ottoman expansion"
+   ],
+   [
+    "Romanian rulers",
+    "post-date",
+    "1471"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 2,
+  "sample": 0,
+  "setting": "base",
+  "ner": {
+   "prompt_tokens": 1941,
+   "completion_tokens": 2048,
+   "hit_max": true,
+   "sec": 237.4,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Unterminated string starting at: line 177 column 3 (char 10245)",
+   "entities": 175,
+   "unique": 167
+  },
+  "triples": {
+   "prompt_tokens": 4167,
+   "completion_tokens": 2048,
+   "hit_max": true,
+   "sec": 240.6,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Unterminated string starting at: line 112 column 6 (char 8316)",
+   "n": 109,
+   "max_run_same_subj_pred": 3,
+   "max_count_same_subj_pred": 3
+  },
+  "triples_sample": [
+   [
+    "Romani people",
+    "marginalized in",
+    "German-speaking territories"
+   ],
+   [
+    "Romani people",
+    "persecuted under",
+    "Nazi rule"
+   ],
+   [
+    "Otto von Bismarck",
+    "established",
+    "militarized social order"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "created in",
+    "Bavaria"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "created by",
+    "Alfred Dillmann"
+   ],
+   [
+    "Zigeunergeschmeiss",
+    "used for",
+    "public stigma"
+   ],
+   [
+    "Nuremberg Laws",
+    "codified",
+    "racial hierarchy"
+   ],
+   [
+    "Nuremberg Laws",
+    "targeted",
+    "Sinti and Roma"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 2,
+  "sample": 1,
+  "setting": "base",
+  "ner": {
+   "prompt_tokens": 1941,
+   "completion_tokens": 904,
+   "hit_max": false,
+   "sec": 107.7,
+   "parse_ok": true,
+   "error": null,
+   "entities": 140,
+   "unique": 138
+  },
+  "triples": {
+   "prompt_tokens": 3068,
+   "completion_tokens": 2029,
+   "hit_max": false,
+   "sec": 239.9,
+   "parse_ok": true,
+   "error": null,
+   "n": 122,
+   "max_run_same_subj_pred": 3,
+   "max_count_same_subj_pred": 3
+  },
+  "triples_sample": [
+   [
+    "Romani people",
+    "marginalized in",
+    "German-speaking territories"
+   ],
+   [
+    "Romani people",
+    "targeted by",
+    "Nazi rule"
+   ],
+   [
+    "Otto von Bismarck",
+    "associated with",
+    "militarized social order"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "established in",
+    "Bavaria"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "established by",
+    "Alfred Dillmann"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "established in",
+    "1899"
+   ],
+   [
+    "Zigeunergeschmeiss",
+    "type of",
+    "dehumanizing signage"
+   ],
+   [
+    "Nuremberg Laws",
+    "enacted in",
+    "1935"
+   ]
+  ]
+ },
+ {
+  "video": "-QuCz7kxBr8",
+  "chunk": 0,
+  "sample": 0,
+  "setting": "base",
+  "ner": {
+   "prompt_tokens": 1898,
+   "completion_tokens": 517,
+   "hit_max": false,
+   "sec": 60.7,
+   "parse_ok": true,
+   "error": null,
+   "entities": 83,
+   "unique": 81
+  },
+  "triples": {
+   "prompt_tokens": 2678,
+   "completion_tokens": 2048,
+   "hit_max": true,
+   "sec": 247.9,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Unterminated string starting at: line 136 column 16 (char 7446)",
+   "n": 87,
+   "max_run_same_subj_pred": 3,
+   "max_count_same_subj_pred": 3
+  },
+  "triples_sample": [
+   [
+    "Chris",
+    "participates in",
+    "viral sports gadgets testing"
+   ],
+   [
+    "Zach",
+    "participates in",
+    "viral sports gadgets testing"
+   ],
+   [
+    "Cass",
+    "participates in",
+    "viral sports gadgets testing"
+   ],
+   [
+    "James",
+    "participates in",
+    "viral sports gadgets testing"
+   ],
+   [
+    "Mitchell",
+    "participates in",
+    "viral sports gadgets testing"
+   ],
+   [
+    "Six men",
+    "gather on",
+    "sunny outdoor basketball court"
+   ],
+   [
+    "Six men",
+    "split into",
+    "two teams of three"
+   ],
+   [
+    "Six men",
+    "test",
+    "12 viral sports gadgets"
+   ]
+  ]
+ },
+ {
+  "video": "-QuCz7kxBr8",
+  "chunk": 0,
+  "sample": 1,
+  "setting": "base",
+  "ner": {
+   "prompt_tokens": 1898,
+   "completion_tokens": 142,
+   "hit_max": false,
+   "sec": 13.9,
+   "parse_ok": true,
+   "error": null,
+   "entities": 22,
+   "unique": 21
+  },
+  "triples": {
+   "prompt_tokens": 2365,
+   "completion_tokens": 2048,
+   "hit_max": true,
+   "sec": 242.7,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Unterminated string starting at: line 126 column 6 (char 7213)",
+   "n": 94,
+   "max_run_same_subj_pred": 2,
+   "max_count_same_subj_pred": 2
+  },
+  "triples_sample": [
+   [
+    "Chris",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Zach",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Cass",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "James",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Mitchell",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Six men",
+    "gather on",
+    "outdoor basketball court"
+   ],
+   [
+    "Six men",
+    "split into",
+    "two teams of three"
+   ],
+   [
+    "Six men",
+    "test",
+    "12 viral sports gadgets"
+   ]
+  ]
+ }
+]

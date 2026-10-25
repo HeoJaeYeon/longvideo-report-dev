@@ -1,0 +1,494 @@
+[
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 0,
+  "sample": 0,
+  "setting": "rp110gen",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 560,
+   "hit_max": false,
+   "sec": 62.1,
+   "parse_ok": true,
+   "error": null,
+   "entities": 72,
+   "unique": 72
+  },
+  "triples": {
+   "prompt_tokens": 3090,
+   "completion_tokens": 1423,
+   "hit_max": false,
+   "sec": 157.5,
+   "parse_ok": true,
+   "error": null,
+   "n": 2,
+   "max_run_same_subj_pred": 1,
+   "max_count_same_subj_pred": 1
+  },
+  "triples_sample": [
+   [
+    "Gypsy",
+    "is a non-slandrous term for",
+    "Roma/Romani"
+   ],
+   [
+    "Video opens with",
+    "disclaimer clarifying use of",
+    "Gypsy"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 0,
+  "sample": 1,
+  "setting": "rp110gen",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 622,
+   "hit_max": false,
+   "sec": 69.6,
+   "parse_ok": true,
+   "error": null,
+   "entities": 75,
+   "unique": 75
+  },
+  "triples": {
+   "prompt_tokens": 3149,
+   "completion_tokens": 1300,
+   "hit_max": false,
+   "sec": 147.3,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Expecting ',' delimiter: line 50 column 38 (char 3848)",
+   "n": 2,
+   "max_run_same_subj_pred": 1,
+   "max_count_same_subj_pred": 1
+  },
+  "triples_sample": [
+   [
+    "Gypsy",
+    "is a non-slandrous term for",
+    "Roma/Romani"
+   ],
+   [
+    "Video opens with disclaimer clarifying use of",
+    "Gypsy",
+    "as non-slandrous term for Roma/Romani"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 1,
+  "sample": 0,
+  "setting": "rp110gen",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 194,
+   "hit_max": false,
+   "sec": 23.7,
+   "parse_ok": true,
+   "error": null,
+   "entities": 24,
+   "unique": 24
+  },
+  "triples": {
+   "prompt_tokens": 2734,
+   "completion_tokens": 868,
+   "hit_max": false,
+   "sec": 100.7,
+   "parse_ok": true,
+   "error": null,
+   "n": 46,
+   "max_run_same_subj_pred": 1,
+   "max_count_same_subj_pred": 1
+  },
+  "triples_sample": [
+   [
+    "Tiganiada",
+    "authored by",
+    "Ion Budai-Deleanu"
+   ],
+   [
+    "Tiganiada",
+    "depicts",
+    "Gypsy-led armies"
+   ],
+   [
+    "Tiganiada",
+    "features",
+    "Vlad Cepish"
+   ],
+   [
+    "Tiganiada",
+    "is referenced as",
+    "historical record and cultural myth"
+   ],
+   [
+    "Romanian rulers",
+    "used",
+    "Gypsy slave labor"
+   ],
+   [
+    "Romanian rulers",
+    "employed",
+    "Gypsy warriors"
+   ],
+   [
+    "Moldavian and Wallachian rulers",
+    "resisted",
+    "Ottoman expansion"
+   ],
+   [
+    "Imperial Watch guard",
+    "demands payment or forfeiture from",
+    "unseen individual"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 1,
+  "sample": 1,
+  "setting": "rp110gen",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 204,
+   "hit_max": false,
+   "sec": 22.6,
+   "parse_ok": true,
+   "error": null,
+   "entities": 26,
+   "unique": 26
+  },
+  "triples": {
+   "prompt_tokens": 2742,
+   "completion_tokens": 1448,
+   "hit_max": false,
+   "sec": 168.5,
+   "parse_ok": true,
+   "error": null,
+   "n": 74,
+   "max_run_same_subj_pred": 2,
+   "max_count_same_subj_pred": 2
+  },
+  "triples_sample": [
+   [
+    "Tiganiada",
+    "authored by",
+    "Ion Budai-Deleanu"
+   ],
+   [
+    "Tiganiada",
+    "depicts",
+    "Gypsy-led armies"
+   ],
+   [
+    "Tiganiada",
+    "features",
+    "Vlad Cepish"
+   ],
+   [
+    "Romanian rulers",
+    "used",
+    "Gypsy slave labor"
+   ],
+   [
+    "Romanian rulers",
+    "employed",
+    "Gypsy warriors"
+   ],
+   [
+    "Gypsy warriors",
+    "resisted",
+    "Ottoman expansion"
+   ],
+   [
+    "Gypsy slave labor",
+    "was used for",
+    "strategic military purposes"
+   ],
+   [
+    "Imperial Watch guard",
+    "demands payment or forfeiture from",
+    "unseen individual"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 2,
+  "sample": 0,
+  "setting": "rp110gen",
+  "ner": {
+   "prompt_tokens": 1941,
+   "completion_tokens": 214,
+   "hit_max": false,
+   "sec": 25.2,
+   "parse_ok": true,
+   "error": null,
+   "entities": 26,
+   "unique": 26
+  },
+  "triples": {
+   "prompt_tokens": 2488,
+   "completion_tokens": 412,
+   "hit_max": false,
+   "sec": 48.0,
+   "parse_ok": true,
+   "error": null,
+   "n": 20,
+   "max_run_same_subj_pred": 3,
+   "max_count_same_subj_pred": 3
+  },
+  "triples_sample": [
+   [
+    "Romani people",
+    "marginalized in",
+    "German-speaking territories"
+   ],
+   [
+    "Romani people",
+    "targeted by",
+    "Nazi rule"
+   ],
+   [
+    "Otto von Bismarck",
+    "associated with",
+    "state-building and militarization"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "established in",
+    "Bavaria"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "created by",
+    "Alfred Dillmann"
+   ],
+   [
+    "Zigeunergeschmeiss",
+    "used as",
+    "dehumanizing signage"
+   ],
+   [
+    "Nuremberg Laws (1935)",
+    "codified racial hierarchy targeting",
+    "Sinti and Roma"
+   ],
+   [
+    "Gestapo",
+    "documented",
+    "Ludwig Horvath"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 2,
+  "sample": 1,
+  "setting": "rp110gen",
+  "ner": {
+   "prompt_tokens": 1941,
+   "completion_tokens": 182,
+   "hit_max": false,
+   "sec": 21.2,
+   "parse_ok": true,
+   "error": null,
+   "entities": 23,
+   "unique": 23
+  },
+  "triples": {
+   "prompt_tokens": 2459,
+   "completion_tokens": 351,
+   "hit_max": false,
+   "sec": 42.5,
+   "parse_ok": true,
+   "error": null,
+   "n": 18,
+   "max_run_same_subj_pred": 3,
+   "max_count_same_subj_pred": 3
+  },
+  "triples_sample": [
+   [
+    "Romani people",
+    "marginalized in",
+    "German-speaking territories"
+   ],
+   [
+    "Romani people",
+    "targeted by",
+    "Nazi rule"
+   ],
+   [
+    "Otto von Bismarck",
+    "associated with",
+    "state-building and militarization"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "established in",
+    "Bavaria"
+   ],
+   [
+    "Alfred Dillmann",
+    "created",
+    "Central Office for Gypsy Affairs"
+   ],
+   [
+    "Zigeuner-Buch",
+    "used for",
+    "racial classification"
+   ],
+   [
+    "Nuremberg Laws",
+    "codified discrimination against",
+    "Sinti and Roma"
+   ],
+   [
+    "Gestapo",
+    "documented",
+    "Ludwig Horvath"
+   ]
+  ]
+ },
+ {
+  "video": "-QuCz7kxBr8",
+  "chunk": 0,
+  "sample": 0,
+  "setting": "rp110gen",
+  "ner": {
+   "prompt_tokens": 1898,
+   "completion_tokens": 86,
+   "hit_max": false,
+   "sec": 9.8,
+   "parse_ok": true,
+   "error": null,
+   "entities": 13,
+   "unique": 13
+  },
+  "triples": {
+   "prompt_tokens": 2318,
+   "completion_tokens": 643,
+   "hit_max": false,
+   "sec": 75.2,
+   "parse_ok": true,
+   "error": null,
+   "n": 26,
+   "max_run_same_subj_pred": 1,
+   "max_count_same_subj_pred": 1
+  },
+  "triples_sample": [
+   [
+    "Chris",
+    "participates in",
+    "basketball gadget testing"
+   ],
+   [
+    "Zach",
+    "participates in",
+    "basketball gadget testing"
+   ],
+   [
+    "Cass",
+    "participates in",
+    "basketball gadget testing"
+   ],
+   [
+    "James",
+    "participates in",
+    "basketball gadget testing"
+   ],
+   [
+    "Mitchell",
+    "participates in",
+    "basketball gadget testing"
+   ],
+   [
+    "Unnamed sixth player",
+    "participates in",
+    "basketball gadget testing"
+   ],
+   [
+    "Chris",
+    "uses",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Zach",
+    "uses",
+    "SPORTS DRIBBLE SPECS"
+   ]
+  ]
+ },
+ {
+  "video": "-QuCz7kxBr8",
+  "chunk": 0,
+  "sample": 1,
+  "setting": "rp110gen",
+  "ner": {
+   "prompt_tokens": 1898,
+   "completion_tokens": 244,
+   "hit_max": false,
+   "sec": 28.0,
+   "parse_ok": true,
+   "error": null,
+   "entities": 42,
+   "unique": 42
+  },
+  "triples": {
+   "prompt_tokens": 2447,
+   "completion_tokens": 2048,
+   "hit_max": true,
+   "sec": 237.8,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Unterminated string starting at: line 125 column 6 (char 7869)",
+   "n": 52,
+   "max_run_same_subj_pred": 2,
+   "max_count_same_subj_pred": 2
+  },
+  "triples_sample": [
+   [
+    "Chris",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Zach",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Cass",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "James",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Mitchell",
+    "participates in",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Six men",
+    "gather on",
+    "basketball court"
+   ],
+   [
+    "Six men",
+    "split into",
+    "two teams of three"
+   ],
+   [
+    "One man in white hoodie",
+    "sets tone with",
+    "playful banter"
+   ]
+  ]
+ }
+]

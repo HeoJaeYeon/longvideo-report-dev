@@ -1,0 +1,38 @@
+# 공통 제외
+- __pycache__/
+- *.pyc
+# 프로젝트
++ /report_framework/
++ /report_framework/**
+- /WorldMM/.venv/
+- /WorldMM/data/Video-MME/data
+- /WorldMM/data/Video-MME/subtitle
+- /WorldMM/data/Video-MME/videomme/test-00000-of-00001.parquet
++ /WorldMM/
++ /WorldMM/**
++ /MERIT/
++ /MERIT/**
++ /Deep-Report/
++ /Deep-Report/**
++ /claude_output/
++ /claude_output/**
++ /CLAUDE.md
+# Claude 기록: 대화·메모리·설정만
++ /.claude/
++ /.claude/projects/
++ /.claude/projects/**
++ /.claude/history.jsonl
++ /.claude/settings.json
++ /.claude/settings.local.json
+- /.claude/**
+# 모델 4개만
++ /.cache/
++ /.cache/huggingface/
++ /.cache/huggingface/hub/
++ /.cache/huggingface/hub/models--Qwen--Qwen3-VL-8B-Instruct/***
++ /.cache/huggingface/hub/models--Qwen--Qwen3-Embedding-4B/***
++ /.cache/huggingface/hub/models--Qwen--Qwen2-VL-2B-Instruct/***
++ /.cache/huggingface/hub/models--VLM2Vec--VLM2Vec-V2.0/***
+- /.cache/**
+# 나머지(AdaVideoRAG, HolmesVAU, Vgent 등) 제외
+- /*

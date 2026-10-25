@@ -1,0 +1,989 @@
+# Video-RAG × Deep-Reporter 장편 비디오 보고서 프레임워크 — 분석·설계·구현 현황
+
+- 작성: 2026-10-21~22 (Claude Code, 사용자 지시와 승인에 따라 작성). 최종 갱신: 2026-10-25 (대기 실행 기록 §9.9, HF 모델 캐시 사실 정정 §3·§10, 검증 영상의 10min 캡션 잘림 §11, GPU 지시 갱신 §13.1, 서버 이전 준비 `MIGRATION_HANDOFF.md`)
+- 위치: `/data1/jyheo/workspace/VideoRAG/report_framework/DESIGN_AND_STATUS.md`
+- **처음 이어받는 사람은 §2(현재 상태)와 §13(인수인계)부터 읽는다.**
+
+## 0. 문서 안내
+
+### 0.1 목적
+코드, 논문, 디스크 상태를 직접 확인해 얻은 사실과 그에 따른 설계 결정, 구현 내용, 검증 결과, 남은 위험을 한 곳에 정리한다. 다음 작업자가 이 문서만으로 현재 상태를 파악하고 작업을 이어갈 수 있게 하는 것이 목표다.
+
+### 0.2 관련 문서
+
+| 문서 | 내용 |
+|---|---|
+| `DESIGN_AND_STATUS.md` (이 문서) | 목표, 분석 결과, 설계 결정, 구현 상세, 검증 기록, 위험, 인수인계 |
+| `REPORT_PIPELINE.md` | 보고서 1건이 만들어지는 과정(①–⑨ 단계), 시간, 설정, 실패 처리 |
+| `REPORT_ISSUES_AND_FIXES.md` | 실제 보고서와 개발 과정에서 나온 문제, 검토한 방법, 수정 내용과 효과 |
+| `ANALYSIS_D4_D7.md` | 결정 4(반복)·결정 7(근거 구성) 분석 자료 |
+| `FRAMEWORK_OVERVIEW.md` | 팀·지도교수 보고용 전체 설명(구조, 동작, 이슈, 한계) |
+| `REPORT_AND_SLIDES_DRAFT.md` | 보고서 초안과 슬라이드 구성안 |
+| `MIGRATION_HANDOFF.md` | 다른 서버(`/home/jyheo/workspace/VideoRAG`)로의 이전 준비 기록: 복사 범위·검증, 새 서버에서 할 일(경로 수정 13개 파일, 모델 위치, Docker 마운트) |
+
+### 0.3 표기
+
+| 표기 | 의미 |
+|---|---|
+| ✔ | 코드를 직접 읽었거나 명령으로 실측해 확인함 |
+| ◇ | 기존 기록 문서(예: `WorldMM/claude_output/REPORT.md`)에서 인용, 이번에 재측정하지 않음 |
+| ✖ | 아직 검증되지 않음 |
+| (추정) | 계산이나 가정에 기반한 값 |
+
+코드 위치는 `파일:줄`로 적는다. 줄 번호는 2026-10-21~22 시점 기준이다. 보고서 A·B는 §9.3·§9.4의 실제 실행 결과를 가리킨다.
+
+**시각 표기**: 이 문서와 로그의 시각은 모두 컨테이너 시계 기준이다. 컨테이너는 `TZ=Asia/Seoul`이지만 `/usr/share/zoneinfo/Asia/Seoul`이 없어 실제로는 **UTC**로 동작한다(✔ 2026-10-25: `date`와 `date -u`가 같은 시각, 파일 시각 `+0000`). 한국 시간은 9시간을 더한다. 처음 작성할 때 일부 실행 날짜를 2026-10-22로 적었으나 실제로는 UTC 2026-10-21 실행이었던 것(`.venv` 수리, 검색 스모크, 보고서 A)을 2026-10-25에 파일 시각·대화 기록 시각으로 확인해 고쳤다(§2.3, §3, §10). 결정 시점(§6.2)처럼 시각 기록이 없는 날짜는 고치지 않았다.
+
+---
+
+## 1. 목표, 범위, 원칙
+
+- **최종 목표**: 장편 영상에 대한 질의(query)를 받아 보고서 outline을 구상하고, 섹션마다 Video-RAG(WorldMM 중심, MERIT 교체 가능)로 근거를 검색해 Deep-Reporter 방식으로 **근거 인용이 붙은 보고서**를 생성하는 통합 프레임워크.
+- **1차 대상**: Video-MME long subset (메모리 구축이 끝난 50개 영상). 이후 관제(surveillance) 영상으로 도메인을 전환한다.
+- **원칙 (사용자 지시)**
+  - 기존 repo(WorldMM, MERIT, Deep-Report) 코드는 삭제·수정하지 않는다. 신규 코드는 `VideoRAG/report_framework/`에만 둔다. Deep-Reporter 동작을 바꿀 때는 실행 중에만 적용하고 끝나면 되돌리는 검증된 교체(§7.4)만 쓴다.
+  - LLM 기본값은 로컬 Qwen 계열(Qwen3-VL-8B)이다. 외부 API(OpenAI) 경로는 보존하고 설정으로 선택한다.
+  - LLM 호출 수가 많은 무거운 설계는 피한다.
+  - 분석과 보고에는 추측이나 거짓을 넣지 않는다. 확인하지 않은 것은 미확인이라고 쓴다.
+  - GPU는 사용자가 허용할 때만, 허용된 GPU에서, 다른 사용자의 프로세스를 절대 침범하지 않는 범위에서 쓴다. 허용 범위는 사용자 지시로 바뀌어 왔다(최신 2026-10-25: 이 서버의 **GPU 4–7 사용 가능**, §13.1).
+
+---
+
+## 2. 현재 상태 요약 (2026-10-25)
+
+### 2.1 구성요소별 상태
+
+| 구성요소 | 파일 | 상태 | 검증 수준 |
+|---|---|---|---|
+| 설정 | `config.yaml` | 완료 | — |
+| 오프라인 사전 인덱싱 | `prebuild_episodic_index.py`, `run_prebuild.sh`, `run_prebuild_http.sh` | 완료. 결정 1 = A안(OpenIE를 LLM 서버 HTTP로) + **긴 청크 분할 OpenIE·응답 구제·폭주 절단**(2026-10-22, §8.3) | dry-run ✔ / CPU ✔ / 실제 실행: 영상 1개 완주(분할 적용 전, §9.6) / **분할·구제 적용 후 GPU 실행 ✖**(§9.8에서 중단) |
+| 로컬 LLM 서버 | `local_llm_server.py` | 완료 | GPU 실검증 ✔ |
+| [A] 검색 서비스 | `videorag_retriever_service.py` | 완료 | CPU 통합 ✔ / GPU ✔ (10sec만, L0·L1·full) / 4개 granularity ✖ |
+| 템플릿·맥락 교체 | `domain_templates.py` | 완료 (videomme 템플릿, 결론·상한, 규칙 4·6, C0) | CPU ✔ / 실제 보고서 2건 ✔ (**규칙 6·C0 추가 전** 버전) |
+| [C] 후처리기·규칙 근거 검사 | `grounding_postprocessor.py` | 완료 (absence 처리, 이미지 시간 기록 포함) | CPU ✔ (실제 보고서 2건 입력) / 실제 실행 1회 ✔ (absence·시간 기록 추가 전) |
+| [D] 보고서 생성 진입점 | `run_report.py` | 완료 | CPU end-to-end ✔ / **실제 모델 1회 exit 0** ✔ (§9.4) |
+| 한국어 번역 | `report_translator.py` | 완료 (한자·가나 감지, 고유명사 보호 포함) | CPU ✔ / 실제 1회 ✔ (감지·보호 추가 전) |
+| 분석 도구 | `analysis/analyze_report.py`, `analysis/openie_degeneration_exp.py` | 완료 | 보고서 A·B에 적용 ✔ / OpenIE 디코딩 실험 ✔(§9.7) |
+| GPU 실행 스크립트 | `tests/gpu_3videos.py`, `tests/delayed_gpu_3videos.py` | 완료 (GPU 2개 배치, 메모리 감시·자동 중단 / 대기 후 여유 확인 시작) | 감시 장치 실동작 ✔(§9.8) / 완주 ✖ / 대기 시작은 조건 미충족으로 미시작(§9.9) |
+| 평가, MERIT backend, 관제 도메인 | — | 이후 | — |
+
+### 2.2 지금 할 수 있는 것과 아직 안 되는 것
+
+- **할 수 있는 것**: LLM 서버와 검색 서비스를 띄우고 `run_report.py`를 실행하면 다음이 나온다.
+  - 근거가 연결된 영어 보고서(`report.md`, References·그림 포함)
+  - 한국어 번역본(`report_ko.md`)
+  - 원본(`report_raw.md`), 전체 기록(`report.json`), 검증 결과(`validation.json`)
+- **아직 안 되는 것**
+  - **완성된 4개 단위(10sec/30sec/3min/10min) episodic 캐시가 하나도 없다.** `-QuCz7kxBr8`은 4개 단위를 한 번 완성했지만(§9.6), 분할 OpenIE 적용을 위해 사용자 승인으로 10min을 지워 지금은 10sec·30sec·3min만 있다. `0RxMZBLeqRI`의 캐시는 지웠다. 실제 실행은 테스트용 10sec 캐시(영상 1개)로만 가능하다(§13.2).
+  - 분할 OpenIE·응답 구제·폭주 절단은 CPU로만 검증했다.
+  - 결정 4(규칙 6 + C0)와 번역 보완(한자 감지, 이름 보호)은 실제 모델로 돌려 보지 않았다.
+  - 품질 평가(Video-MME 문항 풀이, 사람 검수)는 시작하지 않았다.
+- **GPU**
+  - 2026-10-22: **GPU 6·7만**, 다른 사용자 프로세스 절대 침범 금지. 다른 사용자가 그 GPU들을 크게 오르내리며 써서(§9.8 시점 GPU 6 약 18–30GB, GPU 7 약 18–34GB, §9.9 18시 이후 10분 최대값 30–39GB) 실행하지 못했다. §9.8은 감시 장치가 우리 프로세스만 종료했고, §9.9는 6시간 동안 시작 조건을 한 번도 만족하지 못해 시작하지 않았다.
+  - 2026-10-23: 다른 서버로 옮기는 준비를 했다(`MIGRATION_HANDOFF.md`). 프로젝트 파일 758MB를 새 서버에 복사·검증했고, 새 서버에서의 Docker 빌드·모델 다운로드·경로 수정은 아직 하지 않았다. 새 서버에서는 호스트 GPU 3·4를 다른 사용자와 같이 쓰는 계획이다(사용자).
+  - **2026-10-25 (최신): 이 서버에서 GPU 4–7 네 개를 모두 사용할 수 있다**(사용자 지시). 같은 날 11:44 확인 시 GPU 0–7 모두 사용량 0–3 MiB였다. 다른 사용자 프로세스를 침범하지 않는다는 원칙과 메모리 상한·감시는 그대로 지킨다(§13.1).
+
+### 2.3 실제 모델 실행 기록
+
+| 실행 | 일시 | 내용 | 결과 | 상세 |
+|---|---|---|---|---|
+| 검색 스모크 | 2026-10-21 16:24–16:31 | 10sec 실제 캐시, L0·L1, Deep-Reporter `search_node` 연결 | 정상 | §9.2 |
+| 보고서 A (스모크) | 2026-10-21 | `tests/gpu_report_smoke.py`, 5섹션 | 성공, 382초 | §9.3 |
+| 보고서 B (`run_report.py` 첫 실행) + full 모드 | 2026-10-22 (06:17 보고서 저장) | `tests/gpu_e2e.py`, 6섹션, 번역 포함 | exit 0, 494.4초 | §9.4 |
+| 사전 인덱싱 시험 (A안) | 2026-10-22 06:31 | 영상 1개, LLM 서버 3 + 인덱서 1 | 10sec 완료, 30sec 도중 **중지** | §9.5 |
+| 영상 3개 사전 인덱싱 + 보고서 | 2026-10-22 12:04 | LLM 서버 7(GPU 4–7) + 인덱서. 분할 적용 전 코드 | 영상 1 완료(668초). 영상 2의 10min에서 OpenIE 잘림·재시도로 정체 → **사용자 지시로 중지**. 보고서 단계 미실행 | §9.6 |
+| OpenIE 디코딩 비교 실험 | 2026-10-22 12:41–13:26 | 문제 10min 청크 4개 × 2회 × 설정 3개(GPU 5·6·7) | 디코딩 변경 기각, 분할 + 구제·절단 채택 근거 | §9.7 |
+| 영상 3개 재실행 (분할·구제 적용) | 2026-10-22 14:10 | GPU 6·7만, LLM 서버 1 + 인덱서 1 | **41초 만에 감시 장치가 우리 프로세스 종료**(다른 사용자 메모리 증가). OpenIE 호출 0회, 캐시 변경 없음 | §9.8 |
+| 영상 3개 대기 후 자동 시작 | 2026-10-22 16:05 – 10-23 00:06 | GPU 6·7만. 2시간 대기 후 10분 최대 사용량으로 여유 판단 | **시작 조건을 698번 판단 중 한 번도 만족하지 못해 시작하지 않음**(가장 큰 여유 −961 MiB). 우리 GPU 프로세스 0개, 캐시 변경 없음 | §9.9 |
+
+### 2.4 알려진 품질 문제 (요약, 상세는 `REPORT_ISSUES_AND_FIXES.md`)
+
+| 문제 | 대응 상태 |
+|---|---|
+| 인용이 붙은 문장의 근거 없는 수치·문구, 다른 근거 인용 | 규칙 검사로 경고(의미 수준 오류는 미검출) |
+| 다른 장면을 같은 사건으로 엮음 | 감지 안 됨 |
+| planner 섹션 설명의 내용이 근거 없이 본문에 들어감 | 경고만. C0로 결론 섹션 완화 기대(미측정) |
+| 결론 섹션이 앞 섹션의 사실을 자기 근거에 붙임 | C0로 완화 기대(미측정) |
+| 반복 단락 | 규칙 6 + C0 구현(효과 미측정) |
+| 근거 없는 추측 표현 | 대응 없음 |
+| 번역의 한자 혼입·이름 표기 불일치 | 감지·재시도, 이름 보호 구현(효과 미측정). 제목 형식 불일치는 미대응 |
+| 이미지와 텍스트 근거의 시간 차이 | `validation.json`에 기록. 출력 변경은 결정 7 보류 |
+| (인덱스 품질) 10min 캡션 32/232개가 전처리에서 2,048토큰에 잘림. **검증 영상 3개 중 `0RxMZBLeqRI`의 10min 0–10분·10–20분 캡션이 여기에 해당**(§11) | 원인 확인, 재생성은 보류(I22) |
+| (인덱스 품질) 10min OpenIE 출력 잘림·재시도 폭증, 열거 폭주 triple | 분할 OpenIE + 구제 + 연속 15개 초과 절단 구현, GPU 미검증(I23·I24) |
+
+---
+
+## 3. 실행 환경 사실 (✔)
+
+| 항목 | 사실 |
+|---|---|
+| 컨테이너 기본 venv | **`/opt/venv`** (Docker 이미지에 구워져 있음). `PATH`, `VIRTUAL_ENV`, `UV_PROJECT_ENVIRONMENT`가 모두 `/opt/venv`를 가리킨다. Python 3.13.9 |
+| `/opt/venv` 내용 | torch 2.8.0+cu128, transformers 4.57.6, flash_attn 2.8.3, sentence-transformers 5.3.0, decord 0.6.0, igraph 1.0.0, flask 3.1.3, langgraph 1.2.16, langchain-core 1.6.12, langchain-openai 1.4.3, openai 2.54.0, qwen-vl-utils 0.0.14 |
+| `/opt/venv`의 editable 설치 | worldmm → `VideoRAG/WorldMM/src`, hipporag → `VideoRAG/WorldMM/src/HippoRAG/src`, merit → `VideoRAG/MERIT/src` (모두 올바른 경로) |
+| `PYTHONPATH` | `/data1/jyheo/workspace/VideoRAG/Deep-Report` (`deep_reporter` 패키지를 import할 수 있음) |
+| `WorldMM/.venv` | 9월에 만든 예전 venv. 이름 변경 전 경로(`VAU_RAG`)를 가리키던 문제를 2026-10-21 15:47에 수리했다(§10). Deep-Reporter 의존성(langgraph 등)과 merit는 없다 |
+| HF 모델 캐시 (**2026-10-25 정정**) | 컨테이너 환경변수는 `HF_HOME=/data1/jyheo/workspace/VideoRAG/.cache/huggingface`와 **`HUGGINGFACE_HUB_CACHE=/data1/jyheo/workspace/VideoRAG/.cache/huggingface/hub`** 두 개다(Makefile `docker-run`의 `-e`). `huggingface_hub`는 모델 저장 위치를 `HF_HUB_CACHE` → `HUGGINGFACE_HUB_CACHE` → `$HF_HOME/hub` 순서로 정하므로(`huggingface_hub/constants.py:129-155`, 0.36.2), 우리 스크립트가 `HF_HOME`을 `paths.hf_home`으로 바꿔도 **모델 저장 위치는 바뀌지 않는다**(✔ 실험: `HF_HOME` 변경 후 `HF_HUB_CACHE`가 그대로 `VideoRAG/.cache/huggingface/hub`). 경위: 2026-10-21 15:36 확인 때 `VideoRAG/.cache/huggingface/hub`에는 모델이 없었고(I4), 16:24–16:31 GPU 스모크(§9.2)와 LLM 서버가 모델을 그 위치에 내려받았다(근거: `.locks/` 생성 시각 16:26–16:31, Qwen3-VL-8B blob 16:28:41–16:31:14, 첫 Qwen3-Embedding 로드 90초 → 두 번째 15초). 그 뒤 모든 실제 모델 실행은 이 위치의 모델을 썼다. 모델 4개(`Qwen3-VL-8B-Instruct`, `Qwen3-Embedding-4B`, `VLM2Vec-V2.0`, `Qwen2-VL-2B-Instruct`)는 `/data1/jyheo/workspace/.cache/huggingface/hub`에도 있고 snapshot 해시·바이트 수가 같다(✔ 2026-10-23). 로그의 `HF_HOME=...` 표시(`local_llm_server.py`)는 실제 저장 위치가 아니다 |
+| vLLM | `/opt/venv`, `WorldMM/.venv` 어디에도 설치돼 있지 않다 |
+| GPU | A6000 48GB(49,140 MiB) × 8. 2026-10-22 사용 이력: GPU 4–7(20,000 MiB 규칙) → 중지 지시 → GPU 4–7 전부 사용 허용(20,000 MiB 규칙 해제, 12:04 실행) → "다른 사용자 프로세스를 침범하지 않는 여유 메모리 안에서"(12:41 실험) → **GPU 6·7만**(14:10 실행, 16:05 대기 실행). 다른 사용자 사용량 관측: §9.8 시점 GPU 6 약 18–30GB, GPU 7 약 18–34GB, §9.9(18:15–00:05) 10분 최대값 GPU 6 30.4–38.2GB, GPU 7 28.5–39.2GB. **2026-10-25: GPU 4–7 사용 가능**(사용자 지시, 11:44 확인 시 GPU 0–7 모두 0–3 MiB) |
+| CPU | 8코어 (`nproc`). OpenIE의 `ThreadPoolExecutor` 기본 동시성은 min(32, 8+4) = 12 |
+| 검색 도구 주의 | 셸의 `grep`은 ignore 파일을 따르는 래퍼라 `.venv` 내부(`.gitignore=*`) 등을 건너뛴다. 전수 검사에는 `/usr/bin/grep`을 쓴다 |
+
+---
+
+## 4. 구성요소 분석 요약
+
+### 4.1 WorldMM (CVPR 2026, arXiv 2512.02425)
+
+**메모리 3종과 검색 방식** (✔ 코드)
+
+| 메모리 | 구축 | 검색 | 검색 시 LLM |
+|---|---|---|---|
+| Episodic | 10sec 캡션(프레임+Whisper 자막) → LLM 요약으로 30sec/3min/10min 생성 | granularity마다 HippoRAG 그래프 → fact 점수 → DSPy fact 필터(LLM) → PPR → `multiscale_filter`(LLM) | 쿼리당 최대 5회 (§5.1) |
+| Semantic | 10sec OpenIE triple을 10개씩 묶어 semantic triple 추출 → 임베딩 유사도 ≥0.6인 것끼리 LLM consolidation | 마지막 snapshot으로 igraph 구성, PPR, triple 점수 = 주어 PPR + 목적어 PPR | 0 |
+| Visual | VLM2Vec-V2로 10초 구간 비디오 임베딩 (Video-MME, 키=`start_time`) | 텍스트 질의 cosine top-k → 구간 프레임. 또는 `DAY X HH:MM:SS - …` 시간 범위 질의 | 0 |
+
+**추론 루프** (`memory.py:408`): 매 라운드 respond LLM이 `search`(메모리 종류 + 질의) 또는 `answer`를 결정한다. 최대 5라운드 후 MCQ 답을 생성한다.
+
+**코드에서 확인한 주의점** (✔)
+- 아이템 단위 검색은 하위 메모리 객체를 직접 써야 한다.
+  - `episodic_memory.retrieve(as_context=False)` → `List[CaptionEntry]` (id, text, start/end_time, date, granularity, video_path). **점수 없음**.
+  - `semantic_memory.retrieve(as_context=False)` → `List[SemanticTripleEntry]`. **점수 없음**.
+  - `visual_memory.retrieve(as_context=False)` (텍스트 질의) → `List[VideoClipEntry]` (id, video_path, clip_start_sec, clip_end_sec, start_time). **점수는 버려짐** (`visual/memory.py:389-391`).
+  - `as_context=True`는 `{표시용 시간 문자열: [PIL]}`만 반환해 클립 정보가 사라진다.
+- `WorldMemory.retrieve_from_*`는 에이전트 QA용으로 결과를 합친 문자열이나 dict를 반환한다.
+- QA 단계에서 visual 결과는 **타임스탬프 라벨 없이 이미지만** 들어간다(`memory.py:248-272`). 추론 LLM은 visual 결과를 `"[N images from M clips]"` 문자열로만 본다(`memory.py:522`).
+- Semantic triple에는 **시간 근거가 없다**. `consolidate_semantic_memory.py`가 evidence를 `[[] for _ in current_triples]`로 버리고, `SemanticTripleEntry.timestamp`는 snapshot 키일 뿐이다.
+- Visual의 시간 범위 질의는 `until_time` 인덱스가 아니라 `self.clips` 전체를 대상으로 한다.
+- 캡션 JSON의 `video_path`는 상대경로(`data/Video-MME/data/X.mp4`, WorldMM 루트 기준)다.
+- preprocess가 만든 `episodic_triple_results_*.json`은 eval에서 읽지 않는다. `openie_results_*.json`만 semantic 추출의 입력이 된다.
+- WorldMM에는 로컬 수정이 있다(`git diff`): `qwen3vl.py`(생성 lock 추가, JSON 파싱 보강), `multiscale.py`(LLM 1회 로드, worker 1개), `script/4_eval.sh`·`script/videomme/4_eval.sh`(모델명 `qwen3vl`). 이 중 **`qwen3vl`은 `MODEL_DICT` 키(`qwen3vl-2b/4b/8b`)가 아니어서 기본값으로 실행하면 `ValueError`가 난다**. `eval.py`는 semantic 파일을 `semantic_consolidation_results_{retriever_model}.json`으로 찾으므로 `--retriever-model qwen3vl-8b`로 실행해야 한다.
+- `Qwen3VLModel`은 `max_retries=3`, 기본 `max_new_tokens=2048`이고, 구조화 응답을 `_parse_structured_response`로 파싱한다(코드블록 제거, 첫 JSON 값만 디코드, 필드가 1개인 스키마의 bare 배열은 그 필드로 감쌈). OpenIE는 그 위에 별도 재시도(기본 5회)를 건다.
+
+**구축된 데이터** (✔): `WorldMM/claude_output/full/`
+- 50개 영상 모두 캡션 4종, `episodic_memory/openie_results_qwen3vl-8b.json`, `semantic_consolidation_results_qwen3vl-8b.json`, `visual_embeddings.pkl`을 갖췄다. `done/` 표식 50개, `failed/` 비어 있음.
+- Video-MME `test.json`은 2,700행이고, 그중 이 50개 영상의 QA는 150문항(영상당 3문항)이다.
+
+| 캡션 통계 (50개 영상) | 10sec | 30sec | 3min | 10min |
+|---|---|---|---|---|
+| 영상당 항목 수 (평균) | 251.0 | 84.0 | 14.5 | 4.6 |
+| 단어 수 평균 / 최댓값 | 75 / 1,855 | 153 / 1,522 | 292 / 849 | 940 / 1,630 |
+
+- **10min 캡션 잘림** (✔ 실측·코드, `REPORT_ISSUES_AND_FIXES.md` I22): 10min 캡션 232개 중 32개(영상 20개)가 정확히 2,048토큰이고 30개는 문장 중간에서 끝난다. 30sec 1개, 10sec 2개도 2,048토큰이다. 전처리 multiscale(`process_one_video.sh:26`, `--model qwen3vl-8b`)이 `gen_multiscale._summarize_batch`에서 `max_new_tokens` 없이 `llm.generate`를 불러 `Qwen3VLModel` 기본값 2,048이 적용됐기 때문이다. 10min 캡션은 episodic 10min 인덱스, planner 개요, 검색 근거에만 쓰이고, `build_memory.py`의 episodic·semantic·visual 단계는 10sec만 읽는다.
+
+**논문 수치** (✔ 논문 원문): Video-MME(Long) 정확도는 WorldMM-8B 66.0, WorldMM-GPT 76.6이다. Video-MME 설정은 granularity 10s/30s/3m/10m, semantic consolidation 임계값 0.6, semantic top-10, 최대 5라운드다.
+
+**기존 pilot 기록** (◇ `WorldMM/claude_output/REPORT.md`)
+- 8개 영상, 24문항의 보정 결과가 12/24 = 50.0%로 기록돼 있다.
+- eval 시 episodic 재인덱싱이 영상당 약 30–50분, eval 프로세스가 GPU 약 44GB를 쓴다고 기록돼 있다.
+
+### 4.2 MERIT (ECCV 2026, arXiv 2608.07663) — 아직 통합하지 않음
+
+- **메모리**: 30초 클립의 dense caption마다 키 4개(event, dialogue, object, summary)를 붙인 flat key–value 구조. 검색은 Qwen3-Embedding-4B로 임베딩한 키들과의 cosine 중 최댓값(MaxSim)으로 top-N(기본 10)을 고른다. 검색 자체에 LLM은 쓰지 않는다(✔).
+- **추론**: 라운드마다 LLM 2회(결정 1, neighbor filter 1)와 최종 QA 1회. Neighbor filtering은 검색된 클립 앞뒤 ±2 클립 캡션을 LLM이 한 번에 요약한다(✔ 코드·논문).
+- **최종 QA 프레임 수**: 1라운드는 클립당 6장, 2라운드는 상위 5개 클립만 6장, 3라운드부터는 1장(`merit_memory.py:182`, 논문 부록 A).
+- **논문 수치**: Video-MME(L) GPT-5 77.7. 같은 30초 캡션 기준으로 WorldMM 대비 메모리 구축 입력 토큰 8.4배, 출력 토큰 8.6배 절감. Neighbor filtering ablation(Table 3)에서 성능 차이가 크다.
+- **통합 시 주의점** (✔)
+  - core `MeritMemory._extract_frames_from_video`는 **파일 전체**에서 균등 샘플링한다(`merit_memory.py:154`). Video-MME처럼 영상이 mp4 하나면 클립 구간이 아니라 영상 전체에서 프레임을 뽑는다.
+  - core `MultiKeyMemory`의 임베딩 캐시 파일명(`{cache_dir}/30sec_{key}_key_embeddings.pt`)에 영상 구분이 없다. 영상별 `cache_dir`을 지정하지 않으면 행 수만 같은 다른 영상의 캐시를 불러올 수 있다.
+  - `MultiKeyMemory.index(until_time)`는 전체를 임베딩하고, 시간 필터는 `retrieve(until_time=…)`에서 한다.
+  - Video-MME용 `*_4_key.json`은 로컬에 없다. WorldMM의 `30sec.json`은 10sec 캡션 3개를 LLM으로 요약한 것이라 논문의 "30초 클립 dense caption" 설정과 다르다.
+  - `benchmarks/videomme` 변형은 시간 형식이 `HHMMSS`이고, 미리 뽑은 프레임 디렉터리를 사용한다.
+
+### 4.3 Deep-Reporter (arXiv 2604.10741, `Deep-Report/`)
+
+- **LangGraph 흐름**: `planner → query_generation → search → (filter) → section_writing →` 남은 섹션이 있으면 `query_generation`으로, 없으면 `combine` (`core/graph.py`). 그래프 실행 `recursion_limit=50`(`api.py:105`).
+- **생성 뒤 보고서 전체를 다듬는 refine/polishing 단계는 없다** (✔ 코드·논문). `combine_node`는 섹션을 `"\n\n"`으로 이어 붙이기만 한다. 논문의 "refine"은 근거 필터링, outline을 사람이 다듬는 선택 사항, 벤치마크용 전문가 참조 보고서를 뜻한다. 반복은 평가 지표(`S_Rep`)로만 다룬다.
+- **Search 계약** (✔)
+  - 요청: `POST retriever_url {query_list, type: text|image, topk}`. 응답 `status=="success"`일 때 `results`를 그대로 저장하고 `img_base64`만 지운다(`search_node.py:97`).
+  - HTTP 타임아웃은 600초이고, 예외가 나면 빈 결과로 계속 진행한다. text 요청과 image 요청 사이에 2초 대기한다(`search_node.py:74`).
+  - 원래 retriever는 모든 query의 hit을 합친 뒤 전체에서 topk만 남긴다(`retriever_app.py:717`).
+- **Writer 입력** (✔)
+  - text: `content`, 없으면 `text`.
+  - image: `caption`, 없으면 `description`, 둘 다 없으면 `'Image'`. **키가 없을 때만** 대체되고 빈 문자열은 그대로 들어간다.
+  - 근거 형식 `[Source txtN begin]…`, `[Source imgN: …]`은 **노드 코드**가 만든다(`section_writing_node.py:59`).
+  - Writer는 **텍스트만** 받는다. `LLMCaller`가 user 메시지 텍스트만 전달한다(`llm_utils.py:36`).
+- **인용**: 섹션 단위 `[citation:txtN]`, `![](citation:imgN)`. 최종 반환값의 `outline[i]`에 `retrieved_texts/images`와 `content`가 들어 있다.
+- **Recurrent context** (✔ 코드·실측): 논문은 `m_global`을 "recursive summary"라고 하지만, 코드의 `_update_context`(`section_writing_node.py:214`)는 LLM을 쓰지 않는 휴리스틱이다.
+  - 요약: `Section: <planner 섹션 설명>` + `Content: <본문 앞 100자>`. 2,000자를 넘으면 앞쪽 섹션은 첫 줄(섹션 설명)만 남긴다.
+  - tail: 본문을 `.`으로 나눈 마지막 3조각.
+  - 본문 앞 100자는 대부분 제목 줄이라, 다음 섹션은 앞 섹션에서 실제로 쓴 사실을 거의 받지 못한다(보고서 B로 복원해 확인, `ANALYSIS_D4_D7.md` §1.2).
+  - 이 요약은 query 생성과 writer 프롬프트에 함께 들어간다.
+- **LLM 라우팅** (✔ 실측)
+  - 모델명에 `deepseek`가 있으면 DEEPSEEK 설정, `gpt`가 있으면 OPENAI 설정, 그 외는 QWEN 설정(`qwen_api_key`/`qwen_base_url`)을 쓴다.
+  - 이름에 `qwen`이 있고 base_url이 localhost/127.0.0.1/0.0.0.0/:8000이면 `extra_body={"chat_template_kwargs":{"enable_thinking":False}}`를 붙인다.
+  - Deep-Reporter는 temperature를 보내지 않는다. 그래서 로컬 서버에서는 모델 기본 생성 설정(Qwen3-VL-8B: `do_sample=true`, temperature 0.7, top_p 0.8, top_k 20, repetition_penalty 1.0)으로 샘플링된다. 결과는 실행마다 달라진다.
+- **설정 dict의 함정** (✔ 실측)
+  - `BaseConfig.from_dict`는 `hasattr(cls, k)`로 키를 거른다. `default_factory`로 선언된 필드는 클래스 속성이 아니라서 걸러진다.
+  - 거부되는 키: `openai_api_key`, `openai_base_url`, `qwen_api_key`, `qwen_base_url`, `auxiliary_*`.
+  - **키와 URL은 환경변수로만 넣을 수 있고, `create_openai_api()` 호출 전에 설정해야 한다.**
+  - `retriever_url`은 config가 아니라 `generate_article(retriever_url=…)` 인자로 전달된다.
+- **조용한 실패** (✔)
+  - LLM 호출 실패 시 예외 없이 `"Call failed: …"` 문자열을 반환한다(`llm_utils.py:82`).
+  - planner JSON 파싱이 실패하면 섹션 1개(설명 = query)로 대체하고, query 파싱이 실패하면 섹션 설명을 검색어로 쓴다.
+  - Writer 예외가 나면 본문에 `"[Section generation failed: …]"`가 들어간다.
+  - 위 경우들은 `success=True`로 끝날 수 있다.
+  - 섹션이 16개 이상이면 `GraphRecursionError`로 `success=False`, outline 0개가 되어 보고서 전체가 사라진다(가짜 LLM으로 실측, 15개는 성공).
+- **import 순서** (✔ 실측)
+  - `deep_reporter.nodes`를 먼저 import하면 순환 import로 `ImportError`가 난다. `deep_reporter.api`를 먼저 import해야 한다.
+  - `import deep_reporter.nodes.section_writing_node as sw`는 `nodes/__init__.py`가 이름을 함수로 다시 묶어 두어서 함수 객체가 잡힌다. 모듈이 필요하면 `sys.modules["deep_reporter.nodes.section_writing_node"]`를 쓴다.
+- **템플릿 계약** (✔ AST 실측). 노드는 모듈 전역 변수를 호출 시점마다 읽는다.
+
+  | 노드 | 템플릿 | `.format()` 키 |
+  |---|---|---|
+  | `planner_node` | `OUTLINE_GENERATION_TEMPLATE` | `overall_query`, `overall_checklist` |
+  | `query_generation_node` | `QUERY_GENERATION_TEMPLATE` | 위 2개 + `previous_sections_summary`, `section_description`, `sectional_checklist` |
+  | `section_writing_node` | `SECTION_WRITING_TEMPLATE` | 위 5개 + `previous_section_tail`, `retrieved_materials`, `position_info`, `is_first_section`, `is_last_section` |
+
+- **웹 도메인 전제**: 원래 image query 지시는 "diagrams, charts, figures, or visualizations"이고, writer 프롬프트에는 타임스탬프나 관찰 사실 위주 서술 지시가 없다.
+- **논문 사실** (✔)
+  - 실험에서는 planner를 끄고 고정 checklist를 썼다(B.2).
+  - Filter를 제거하면 Section Content가 41.7에서 27.6으로, recurrent context를 제거하면 Full Report가 32.3에서 19.8로 떨어졌다(Qwen3-32B SFT).
+  - Filter가 전체 지연의 약 70%를 차지한다.
+
+---
+
+## 5. 핵심 분석 결과
+
+### 5.1 WorldMM episodic 검색의 LLM 호출 수 (✔)
+
+```
+episodic_memory.retrieve(query)                          episodic/memory.py:247
+ ├ for g in [10sec, 30sec, 3min, 10min]:                 그래프 4개
+ │    hipporag[g].retrieve([query])                      HippoRAG.py:327
+ │      ├ get_fact_scores (임베딩 내적)                   LLM 없음
+ │      ├ rerank_facts → DSPyFilter.llm_call             ★ LLM 1회 (rerank.py:95)
+ │      └ graph_search_with_fact_entities (PPR)          LLM 없음
+ └ _filter_with_llm (후보 > final_top_k이면 항상)         ★ LLM 1회 (episodic/memory.py:398)
+```
+
+- 쿼리당 최대 5회다. HippoRAG에서 LLM을 부르는 곳은 OpenIE(인덱싱)와 `rerank_filter`(검색) 두 곳뿐이다.
+- 필터 후보: granularity별 기본 top-k는 10sec 5(dict에 없어 기본값) / 30sec 10 / 3min 5 / 10min 5. 10min 항목이 영상당 4–6개라 실제 후보는 약 24개다.
+- 필터 입력: 캡션 평균 길이로 계산하면 약 7,700단어다.
+- Deep-Reporter의 섹션당 text query 3–5개에 그대로 연결하면 섹션당 15–25회가 든다.
+- 실측: granularity가 10sec 1개뿐인 full 모드에서 질의 2개에 LLM 4회(질의당 DSPy 1 + multiscale 1)였다(§9.4).
+
+### 5.2 Episodic 인덱싱 비용과 캐시 (✔)
+
+- `HippoRAG.index`는 새 청크마다 NER 1회와 triple 1회, LLM 2회를 부른다.
+- HippoRAG는 OpenIE JSON, embedding parquet(이미 있는 hash는 건너뜀), `graph.pickle`을 디스크에 저장하고 재사용한다. `force_*_from_scratch`의 기본값은 False다. 따라서 **오프라인에서 한 번 사전 인덱싱하면 서비스 시작 시 LLM 호출은 0회**다.
+- **10sec OpenIE 재사용**
+  - 전처리 결과 `metadata/episodic_memory/{vid}/openie_results_qwen3vl-8b.json`이 10sec 캡션 **12,551개 전부**를 덮는다.
+  - 해시 방식(`"chunk-"+md5(text)`), OpenIE 클래스(HippoRAG가 `worldmm.memory.episodic.openie.OpenIE`를 import), 모델(qwen3vl-8b)이 모두 같다.
+  - triple이 빈 항목이 1,252개(영상당 약 25개) 있다. 오류였는지 구분할 수 없어 시드에 넣지 않고 다시 계산하게 한다.
+- **계획된 호출 수** (✔ dry-run, 빈 캐시 기준): 50개 영상 총 12,818회(영상당 평균 256회). **긴 청크 분할(§8.3)을 적용하면 13,424회**(10sec 2,504 / 30sec 8,410 / 3min 1,446 / 10min 1,064. 분할 청크 150개(10min 149, 30sec 1), 조각 453개, +606회). 현재 캐시 상태 기준으로는 13,044회다. 10sec를 시드로 넣지 않으면 약 35,400회다.
+- **캐시 라벨 문제**: `EpisodicMemory._get_or_create_hipporag`가 `global_config`를 넘기지 않아 HippoRAG `llm_name`이 기본값 `gpt-5-mini`로 남는다. 디렉터리는 `gpt-5-mini_Qwen_Qwen3-Embedding-4B/`, 파일은 `openie_results_ner_gpt-5-mini.json`이 된다(pilot 캐시에서 실물 확인). 신규 코드의 `LabeledEpisodicMemory`로 해결했다(§8.3).
+- **OpenIE 오류 처리**: HippoRAG/WorldMM OpenIE는 재시도가 소진되면 예외를 삼키고 빈 결과를 반환하며, 그 결과도 캐시에 저장된다. 그래서 캐시 키가 있다고 해서 내용이 정상이라는 보장은 없다(시험 인덱싱에서 2건 확인, §9.5). 완료 표식에 단위별 빈 triple·빈 entity 수를 기록한다(§8.3).
+- **그래프 재저장 조건** (✔ 코드 `HippoRAG.index`): 새 passage 노드가 생길 때만 그래프를 다시 저장한다. 그래서 OpenIE 캐시 파일만 지우고 다시 인덱싱하면 옛 triple이 그래프에 남는다. **캐시를 다시 만들 때는 그 granularity 폴더 전체(OpenIE 파일, 임베딩, `graph.pickle`)를 지운다.**
+
+### 5.2.1 긴 passage의 OpenIE 출력 상한 문제 (✔ 실측, 상세 `REPORT_ISSUES_AND_FIXES.md` I23·I24)
+
+- 2026-10-22 3영상 실행(§9.6)에서 10sec·30sec·3min 호출 333회는 잘림 0건(입력 최대 1,025토큰)이었다. 10min에서는 영상 1이 9회 중 1회, 영상 2가 18회 중 12회 출력 상한(2,048토큰)에 걸렸다. 실패 응답 14건은 모두 JSON이 중간에 끊긴 형태다.
+- 유형: (M1) 같은 (주어, 술어)에 목적어만 바꿔 39–115회 나열하는 **열거 폭주**, (M2) 반복은 없지만 triple이 87–122개라 길어지는 **정상인데 긴 출력**.
+- 잘린 JSON은 파서가 통째로 버리고, WorldMM `OpenIE`(데코레이터 기본 5회) × 클라이언트(3회)로 **청크당 최대 15회** 재시도한다. 모두 실패하면 빈 triple이 저장된다. in-process 경로도 같은 설정이라 HTTP 방식 고유의 문제가 아니다.
+- 디코딩 설정 변경(반복 억제)은 실험(§9.7)에서 효과가 없거나 원인 불명의 이상이 있어 기각했다. 입력을 줄이는 **분할 OpenIE**와, 안전장치로 **응답 구제·폭주 절단**을 채택했다(§8.3).
+
+### 5.2.2 50개 영상 사전 인덱싱 소요 시간 추정 (2026-10-22, (추정))
+
+**입력 (✔ 실측)**
+- 호출 수(빈 캐시, 분할 포함 dry-run): 10sec 2,504 / 30sec 8,410 / 3min 1,446 / 10min 1,064, 합계 **13,424회**. 10min은 조각 449개(평균 543토큰, 최대 700)와 분할하지 않는 청크 83개(평균 691토큰)다.
+- 호출당 출력 토큰 평균(서버 로그): 10sec 재계산 20–86(§9.6 영상 2 / §9.5 시험 실행), 30sec 228–278, 3min 373–398, 10min 873(분할 전, 영상 1). 10min 조각은 입력 크기가 3min과 비슷해 3min 수준(373–500)으로 가정했다(가정).
+- → 총 출력 **약 290만–370만 토큰**.
+- 처리 속도
+  - LLM 서버 7개(GPU 4,4,5,5,6,6,7, 다른 사용자 없음, 동시성 12): 단계 전체 합산 68–91토큰/초, 호출 기준 3.55–3.66초/호출(영상 1 188회 668초, 영상 2 10sec–3min 154회 563초). 단위 끝부분에 긴 응답 몇 개만 남아 GPU가 노는 구간이 포함된 값이다.
+  - 서버 1개가 GPU를 혼자 쓸 때: 출력 300토큰 이상 호출 기준 17–24토큰/초(보고서 A·B 실행 로그). 요청은 한 번에 하나씩 처리된다.
+  - 서버 1개가 다른 사용자와 GPU를 같이 쓸 때(상대 사용률 100%): 약 8.6토큰/초(§9.7 실험).
+
+**추정 (LLM 생성 시간 기준. 임베딩·그래프 저장은 영상당 수십 초 수준으로 보이나 따로 재지 않았다)**
+
+| 배치 | 근거 | 50개 영상 | 영상 3개(430회) |
+|---|---|---|---|
+| LLM 서버 7개, GPU 4개 단독 사용 (§9.6 배치) | 호출 기준 3.55–3.66초 / 토큰 기준 68–91토큰/초 | **약 13시간** (토큰 기준 9–15시간) | 약 25–30분 |
+| 서버 2개, GPU 2개 단독(GPU 6·7이 비어 있을 때) | 서버 1개 속도 × 2 | 약 17–30시간 | 약 1시간 |
+| 서버 1개, GPU 단독 | 17–24토큰/초 | 약 34–60시간 | 약 1.5–2시간 |
+| 서버 1개, 다른 사용자와 공유 | 약 8.6토큰/초 | 약 94–120시간 (4–5일) | 약 4시간 |
+
+- 영상 3개 행은 430회 × 평균 출력 약 300토큰(가정)으로 계산했다.
+- **GPU 메모리**: LLM 서버 1개 17.4–18.8GB(실측). 인덱서는 §9.6에서 GPU 7 최대 35,782 MiB − 서버 약 18GB ≈ 18GB까지 잡았다(상한 26,000 MiB, 할당자 캐시 포함). §9.8에서는 15,000 MiB 상한으로 시작 41초 동안 약 8GB였다. 15,000 MiB 상한으로 끝까지 돌 수 있는지는 확인하지 않았다.
+- **줄이는 방법**
+  - 서버를 GPU당 2개 두는 것은 §9.6에서 동작했다(GPU당 최대 36.7–37.2GB).
+  - vLLM은 한 서버가 여러 요청을 묶어 처리하므로 이 작업에 유리할 것으로 보지만, 설치돼 있지 않고 측정하지 않았다(§11).
+  - 다른 사용자와 GPU를 같이 쓰면 생성 속도가 절반 이하로 떨어진다(24 → 8.6토큰/초).
+- **기존 캐시**: pilot 8개 영상에만 있다(`WorldMM/claude_output/pilot/eval_cache`, 합계 145MB, 영상 1개 약 25MB). 50개 중 겹치는 것은 `0w4OTD4L0GQ` 1개다.
+
+### 5.3 기존 설계 문서 검토 결과 (C1–C9)
+
+| ID | 내용 | 반영 |
+|---|---|---|
+| C1 | "`openai_base_url`만 바꾸면 로컬 전환"은 틀림 (라우팅은 모델명 기준, 키·URL은 env로만 가능). 실측으로 `Missing credentials` 오류 확인 | D4, `run_report.py`의 env 설정과 라우팅 확인 |
+| C2 | "score로 병합·정렬"은 WorldMM에서 불가능 (점수를 반환하지 않고, 출처별 점수 척도도 다름) | 순위 기반 병합(RRF) |
+| C3 | MERIT 프레임 함수 재사용은 Video-MME에서 오류. visual은 `as_context=False`를 써야 함. 상대경로 문제 | 구간 중앙 프레임 직접 추출, 절대경로 변환 |
+| C4 | Semantic에는 시간 근거가 없음 | "video-level knowledge"로 표기, 시간·프레임 미부여 |
+| C5 | 검색 LLM 비용 과소평가, 사전 인덱싱 누락 | L1 + 오프라인 사전 인덱싱 |
+| C6 | 조용한 실패 (`Call failed`, 섹션 실패 문자열, 검색 0건) | `run_report.py` 사전 확인·사후 검증 |
+| C7 | 프롬프트가 웹 도메인 기준, 관제 템플릿과 Video-MME 불일치 | 범위 한정 템플릿 교체 + videomme 템플릿 |
+| C8 | MERIT backend 세부 오류 (캐시 충돌 등, §4.2) | MERIT 추가 시 반영 |
+| C9 | 후처리기 명세 부족 | `grounding_postprocessor.py` |
+
+기존 문서의 사실 오류(정정 완료)
+- `format_with_time()`, `TripleEntry.format()`, `ClipEntry`는 존재하지 않는다. 실제 이름은 `to_display_str()`, `SemanticTripleEntry`, `VideoClipEntry`다.
+- Visual은 "프레임 임베딩"이 아니라 10초 구간 비디오 임베딩이다.
+- Writer는 `ChatOpenAI`가 아니라 `ReasoningOpenAI`다.
+- "쿼리당 LLM 1회"가 아니라 최대 5회다.
+- 경로는 `VAU_RAG`가 아니라 `VideoRAG`다.
+
+### 5.4 작업 중 Claude가 정정한 자신의 진술
+
+| 처음 진술 | 정정 |
+|---|---|
+| "`failed/`에 3개가 있다" | 실제로는 비어 있다. 그 3개 ID는 같은 명령에서 출력된 `claims/` 목록이었다 |
+| `WorldMM/.venv`가 실행 환경이라 보고 flask를 설치 | 실제 기본 환경은 `/opt/venv`다. 설치는 해롭지 않아 사용자 지시로 유지한다 |
+| 검색 기본값 L0(LLM 0회) 제안 | Deep-Reporter 논문의 filter ablation 근거로 L1로 수정, 사용자가 확정 |
+| "텍스트 인용 109개가 모두 범위 안"을 근거 정확성처럼 보고 | 인용 **번호**가 유효하다는 뜻이었다. 근거 원문과 대조하자 내용 오류가 있었다(`REPORT_ISSUES_AND_FIXES.md` P3) |
+| 섹션 수 한계 "16개"(계산값) | 실측 결과 15개까지 성공, 16개부터 보고서 전체 소실 |
+| writer 시간 "36–60초"(섹션 1–3 로그만 봄) | 로그 16건 전체 기준 35.7–66.5초(출력 614–1,121토큰) |
+| 반복 단락 유사도 "0.71" | 인용 표기를 포함한 원문으로 잰 값(0.711). 정규화해서 재면 같은 쌍이 0.901이다. 두 값 모두 문서에 측정 방식과 함께 적었다 |
+| 부정문 처리 첫 구현(문장 전체 제외) | 실제 오류 `3/16`, `WOO`를 놓쳐서 절 단위 제외로 고쳤다(§8.7) |
+| `test_report_pipeline.py` 통과 항목 "68개" | "RESULT" 줄까지 센 값이었다. 실제 통과 항목은 67개다 |
+| 3영상 실행 중 "서버 호출 374건" | `grep "chat.completions"`의 `.`이 `/`와도 맞아 접근 로그까지 셌다. 실제 187건이다 |
+| OpenIE 실패 응답 "13건" | 분석 스크립트가 로그 끝의 마지막 응답에서 멈춰 1건이 빠졌다. 14건이다(테스트 작성 중 발견) |
+| 디코딩 실험 base의 "정상인데 긴 출력 5건" | 4건이다(잘린 5건 중 1건은 폭주) |
+| "base 호출의 44%가 상한 도달" | 실패 청크만 고른 실험의 값이다. 실제 실행의 비율은 영상 1의 10min 1/9, 영상 2의 10min 12/18이다 |
+| "입력 1,056토큰 이하에서 잘림 0건" | 1,056은 50개 영상 3min 캡션 최대값이고, 실측 333회의 입력 최대값은 1,025토큰이다 |
+| rp110gen 설정이 "형식을 깨뜨림" | 원문 응답을 저장하지 않아 확인하지 못했다. 확인된 사실은 "1,300–1,400토큰 생성에 유효 triple 2개"인 이상 2건이다 |
+| 처음 수정안(잘린 응답 구제 + 폭주 절단만) | 증상만 처리하는 안이었다. 재검토 후 긴 청크 분할을 핵심으로 바꿨다. 또 구제 조건으로 쓰려던 `finish_reason`은 서버가 잘린 응답을 `stop`으로 표시할 수 있어 쓰지 않았다(I25) |
+| (2026-10-25 정정) "환경변수 `HF_HOME` 경로에는 모델이 없다", "`paths.hf_home`을 torch import 전에 설정해 해결" | 앞 문장은 2026-10-21 15:36 시점에만 맞았다. 16:26–16:31에 GPU 스모크가 그 경로(`HUGGINGFACE_HUB_CACHE`)에 모델을 내려받았다. 뒷 문장은 효과가 없다: 컨테이너가 설정한 `HUGGINGFACE_HUB_CACHE`가 `HF_HOME`보다 우선한다(§3) |
+| (2026-10-25 정정) 대기 실행이 "00:08에 종료" | 00:08은 종료를 확인한 시각이다. 실제 종료는 00:06:06(`gate.json`·`gate_run.log` 파일 시각) |
+| (2026-10-25 정정) "영상 2의 30sec·3min OpenIE 결과는 백업되지 않았다" | `backups/cache_before_split_20261022/0RxMZBLeqRI/`에 10sec·30sec·3min 세 파일이 모두 있다(184·62·11청크) |
+| (2026-10-25 정정) 검색 스모크·보고서 A·`.venv` 수리 날짜 "2026-10-22" | 컨테이너 시계(UTC) 기준 2026-10-21이다(파일 시각, 대화 기록 시각) |
+
+---
+
+## 6. 설계 결정
+
+### 6.1 아키텍처 결정 (D1–D10)
+
+| ID | 결정 | 근거 / 비고 |
+|---|---|---|
+| D1 | 1차 도메인 = Video-MME(일반 영상 보고서 템플릿). 관제는 이후 템플릿 세트 교체로 적용 | 관제 템플릿을 일반 영상에 쓰면 없는 내용을 지어낼 위험 |
+| D2 | 통합 접합점 = Deep-Reporter `retriever_url`(HTTP). 검색 서비스가 Deep-Reporter 계약을 구현 | Deep-Reporter 코드 무수정, 환경 분리 |
+| D3 | Outline = `with_planner`(질의 → outline 구상). planner 프롬프트에 그 영상의 10min 캡션 개요를 넣음 | planner가 영상 내용을 모르면 근거 없는 섹션이 생김. 추가 LLM 호출 없음 |
+| D4 | LLM: 기본 로컬 `qwen3vl-8b`(Qwen3-VL-8B-Instruct), 외부는 `gpt-5-mini`. 설정 `llm.backend: local\|openai`. Deep-Reporter에는 **환경변수**로 주입 | §4.3 라우팅·설정 함정 |
+| D5 | 로컬 LLM 제공 = 소형 HF 서버(`local_llm_server.py`, OpenAI 호환). 나중에 vLLM을 같은 주소로 교체 가능 | vLLM 미설치, 새 패키지 없이 검증된 래퍼 재사용 |
+| D6 | Episodic 검색 기본 = **L1** (검색 요청당 multiscale 필터 1회). L0와 full은 옵션 | §7.3 |
+| D7 | Semantic 근거 포함. "video-level knowledge"로 표기하고 시간·프레임 미부여 | §4.1 시간 근거 없음 |
+| D8 | Episodic 그래프는 오프라인 사전 인덱싱해 영구 캐시. 사전 인덱싱 방식은 사용자 결정 1(A안: OpenIE를 LLM 서버 HTTP로) | §5.2. 영상 1개 완주(§9.6), 분할·구제 적용 후 재실행은 중단(§9.8) |
+| D9 | Deep-Reporter filter 노드 = off (`enable_filter=False`) | 검색 단계의 L1 필터가 대신하고, Deep-Reporter filter는 웹 이미지 기준 |
+| D10 | MERIT은 이후 **별도 검색 서비스**(다른 `retriever_url`)로 교체 가능하게 | 프로세스 분리가 단순하고 충돌 위험이 적음 |
+
+### 6.2 사용자 결정 (2026-10-22)
+
+| # | 주제 | 결정 | 상태 |
+|---|---|---|---|
+| 1 | 사전 인덱싱 방식 (A: OpenIE를 LLM 서버 HTTP로 / B: GPU가 빌 때 현재 스크립트 / C: 10sec만 유지) | 처음 보류(GPU 불가) → **A안**, GPU 4–7 사용 | ✅ 구현(§8.3). 시험 실행 중지(§9.5) → 영상 1개 완주(§9.6) → 분할·구제 적용 후 재실행 중단(§9.8) |
+| 2 | 근거 일치 검사 방식 | **규칙 기반** (LLM 0회) | ✅ 구현(§8.7). 부정 절 처리 보완 |
+| 3 | 이미지 정책 | 잘못된 형식 `[citation:imgN]`은 **후처리에서 실제 그림으로 변환**. 섹션별 이미지는 **의무화하지 않음** | ✅ 구현(§8.7) |
+| 4 | 반복 억제 | 분석 후 **B안**(writer 규칙 6) 채택. 중복 관련 refine 전략은 **C0**(앞 섹션에서 실제로 쓴 문장을 writer에 전달, LLM 호출 증가 없음, Deep-Reporter 내부 함수를 실행 중에만 교체) | ✅ 구현(§8.6). 실제 모델 효과 ✖ |
+| 5 | 보고서 구조 | **가벼운 결론 섹션을 planner에 강제**. **섹션 수 상한 6**(사용자 확정) | ✅ 구현(§8.6). 허용 3–15. 실제 1회 준수 ✔ |
+| 6 | 보고서 언어 | **영어로 작성한 뒤 한국어로 번역해 추가** | ✅ 구현(§8.9). 실제 1회 ✔, 품질 보완 구현 |
+| 7 | 근거 구성 (episodic/semantic/image 개수) | **보류**. "구체적인 세팅 및 한계점을 분석해서 나중에 다시 물어봐 달라" | 설정·한계 정리 완료(`ANALYSIS_D4_D7.md` §2). 결정 1 완료 후 실험해서 다시 질문 |
+| 8 | 작업 순서 | 후처리기 → `run_report.py` → 규칙 기반 검사 먼저 | ✅ 완료 |
+| — | 보완 지시 | 번역 한자 혼입 감지, 사람 이름 보호, 부정문 오탐 처리, 이미지-텍스트 시간 기록 | ✅ 구현(§8.7, §8.9) |
+| 9 | OpenIE 출력 상한 문제 대응 | 디코딩 변경 기각. **긴 청크 분할 OpenIE + 응답 구제 + 폭주 절단** 적용(사용자 승인, 전략 수립 후 진행 지시) | ✅ 구현(§8.3), CPU ✔, GPU ✖ |
+| 10 | 기존 캐시 처리 | `-QuCz7kxBr8`의 10min과 완료 표식, `0RxMZBLeqRI` 전체를 **삭제 후 재계산**(사용자 승인) | 삭제 ✅(비교용 일부 백업), 재계산 ✖(§9.8) |
+| 11 | 10min 캡션 재생성(I22) | **이번 범위에서 제외(보류)**. 소요 시간·GPU 정리만 | 보류. 추정은 `REPORT_ISSUES_AND_FIXES.md` I22 |
+| 12 | GPU 사용 범위 | 20,000 MiB 규칙 해제·GPU 4–7 → 다른 사용자 침범 금지·여유 메모리 안 → **GPU 6·7만** | 현재 GPU 6·7. 실행 방식은 결정 대기(§9.8) |
+
+---
+
+## 7. 아키텍처
+
+### 7.1 구성
+
+```
+[0] 오프라인 사전 인덱싱 (영상별 1회, GPU)
+    prebuild_episodic_index.py (+ run_prebuild_http.sh)
+      캡션 4종 → HippoRAG 그래프 (granularity별) → cache/episodic/{vid}/episodic_memory/{g}/
+      OpenIE LLM: [LLM] 서버들을 HTTP로 호출 (결정 1 = A안), 10sec는 전처리 OpenIE를 시드로 사용
+      1,100토큰 초과 청크는 문단 조각(≤700토큰)으로 OpenIE 후 청크 단위로 병합해 캐시에 기록, 응답 구제·폭주 절단
+
+[LLM] local_llm_server.py  :8010  OpenAI 호환 /v1/chat/completions, Qwen3-VL-8B 1회 로드 (또는 vLLM, 같은 주소)
+         ▲ Deep-Reporter(env 라우팅) · L1 필터 · 번역 · (사전 인덱싱 OpenIE)
+
+[A] videorag_retriever_service.py  :8020  POST /videos/<vid>/search, /load, GET /health
+      text : episodic(L0/L1/full) + semantic(시간 없음) → RRF 병합, id 중복 제거
+      image: VLM2Vec 유사도 → RRF → 구간 중앙 프레임 jpg + 같은 시각의 10sec 캡션
+
+[D] run_report.py (CPU, 모델 로드 없음)
+      ① 사전 확인 → ② env 라우팅 → ③ 템플릿 교체 + C0 맥락 교체 (domain_templates.py)
+      → ④ Deep-Reporter 그래프 [B] (파일 무수정): planner → (query → search[A] → write) × N → combine
+      → ⑤⑥ [C] grounding_postprocessor.py: 인용 → 참조·그림, 규칙 근거 검사, 이미지 시간 기록
+      → ⑦ 사후 검증 → ⑧ report_translator.py (한국어) → ⑨ 산출물
+```
+
+단계별 상세는 `REPORT_PIPELINE.md` §3에 있다.
+
+### 7.2 LLM 호출 예산 (섹션 수 N)
+
+| 단계 | 원본 그대로 연결했을 때 (N=5) | 현재 설계 (L1) |
+|---|---|---|
+| planner | 1 | 1 |
+| query 생성 | 5 | N |
+| 검색 | 75–125 (쿼리 3–5개 × 5회 × 섹션) | N (요청당 L1 필터 1회) |
+| 작성 | 5 | N |
+| 영어 보고서 합계 | 약 86–136 | **1 + 3N** (A: 16, B: 19) |
+| 한국어 번역 | — | N (재시도 시 최대 2N) |
+
+후처리, 규칙 근거 검사, C0 요약, 이미지 시간 기록은 LLM을 쓰지 않는다.
+
+### 7.3 검색 단계 L0 / L1 / full
+
+| 모드 | 사용하지 않는 부분 | 검색 LLM 호출 | 특징 |
+|---|---|---|---|
+| full | 없음 (WorldMM 원본 `episodic_memory.retrieve`) | 쿼리당 최대 5회 | 논문과 같지만 무거움 |
+| **L1 (기본)** | DSPy fact 필터 | 검색 요청당 1회 | 섹션의 모든 쿼리 후보를 모아 `multiscale_filter`를 1회 실행 → 시간 규모 선택과 잡음 제거 유지 |
+| L0 | DSPy fact 필터와 multiscale 필터 | 0 | 규칙(granularity별 상한 + RRF)으로만 병합 |
+
+- **L0와 L1에서도 유지되는 것**: 다중 스케일 지식그래프, fact 임베딩 점수, PPR 확산, semantic PPR, visual VLM2Vec.
+- **DSPy 필터를 빼는 방법**: `prepare_retrieval_objects` → `get_query_embeddings` → `get_fact_scores` → 점수 상위 `linking_top_k`(5)개 fact → `graph_search_with_fact_entities`를 직접 조합한다(HippoRAG 코드 무수정, ✔ 메서드·시그니처 확인). 그래프 검색이 예외(assert 등)로 실패하면 dense passage retrieval로 대체한다.
+- **영향**: WorldMM 논문에 이 필터들만 뺀 ablation은 없어 품질 영향은 알 수 없다(✖). 4개 단위 캐시가 생기면 같은 영상·질의로 비교한다.
+- **L1 프롬프트 크기 관리**: 쿼리당 granularity별 후보를 10sec 3 / 30sec 3 / 3min 2 / 10min 1로 줄였다. 쿼리 3개를 합치고 중복을 빼면 후보는 최대 27개, 평균 길이 기준 약 6,600단어(추정)다. 실측(10sec만): L1 필터 입력 2,275–3,474토큰.
+- 후보가 요청 개수 이하이면 L1 필터를 건너뛴다(`meta.episodic_filter="skipped(<=n)"`).
+
+### 7.4 Deep-Reporter 동작 변경 방식 (범위 한정 + 사전 검증)
+
+repo 파일은 수정하지 않는다. 바꾸는 대상은 두 가지다.
+
+| 대상 | 무엇으로 | 함수 |
+|---|---|---|
+| 노드 3개의 프롬프트 템플릿(`OUTLINE_GENERATION_TEMPLATE`, `QUERY_GENERATION_TEMPLATE`, `SECTION_WRITING_TEMPLATE`) | videomme 템플릿 | `apply_templates()` |
+| `section_writing_node`가 호출하는 `_update_context` | 앞 섹션에서 실제로 쓴 문장 요약(C0) | `apply_written_context()` |
+
+1. `import deep_reporter.api`를 가장 먼저 한다(순환 import 회피).
+2. 대상 namespace는 그래프가 실제로 등록한 함수 객체의 `__globals__`에서 찾는다(`deep_reporter.core.graph.<node>.__globals__`). 함수가 실제로 읽는 dict라서 패키지 속성 가림 문제를 피한다.
+3. 실행 전에 계약을 검사하고, 실패하면 즉시 중단한다(웹용 템플릿으로 몰래 돌아가지 않는다).
+   - 템플릿: 함수가 그 이름을 전역으로 읽는지(`co_names`), placeholder ⊆ 노드가 넘기는 키(AST로 동적 추출), 필수 placeholder와 출력·규칙 마커 존재, `.format()` 시험 실행.
+   - `_update_context`: 노드가 호출하는지, 시그니처 `(previous_summary, new_content, section_desc)`, 반환이 `(summary, tail)` 문자열인지(실제 호출로 확인).
+4. `with` 블록 동안만 교체하고 `finally`에서 원래 객체로 복원한 뒤 복원 여부를 확인한다. 프로세스 lock으로 중첩·동시 적용을 거부한다.
+
+---
+
+## 8. 구현 상세 (현재 동작 기준)
+
+### 8.1 `report_framework/` 파일
+
+| 파일 | 역할 | 검증 |
+|---|---|---|
+| `config.yaml` | 경로, WorldMM, LLM, 검색, 서비스, 보고서 설정 | — |
+| `prebuild_episodic_index.py` | 오프라인 episodic 사전 인덱싱 (in-process 또는 HTTP OpenIE, 긴 청크 분할, 응답 구제·폭주 절단) | dry-run ✔, CPU ✔, 영상 1개 완주(분할 적용 전) |
+| `run_prebuild.sh` | in-process 방식 실행: `./run_prebuild.sh <GPU> [--videos a,b] [--shard K/N]` | 문법 ✔ |
+| `run_prebuild_http.sh` | A안 실행: `./run_prebuild_http.sh <LLM_GPUS> <INDEXER_GPU> [--videos=a,b]` (감시 장치 없음) | 시험 실행(§9.5, 중지) |
+| `local_llm_server.py` | OpenAI 호환 LLM 서버 (Qwen3-VL-8B) | GPU ✔ |
+| `videorag_retriever_service.py` | [A] 검색 서비스 | CPU ✔, GPU ✔ (10sec만) |
+| `domain_templates.py` | [B 교체] videomme 템플릿, 계약 검사, `apply_templates`, C0 `apply_written_context` | CPU ✔, 실제 2건(규칙 6·C0 전) |
+| `grounding_postprocessor.py` | [C] 인용 치환·그림·References, 규칙 근거 검사, 이미지 시간 기록 | CPU ✔ |
+| `run_report.py` | [D] 보고서 생성 진입점 | CPU ✔, 실제 1회 |
+| `report_translator.py` | 한국어 번역 (결정 6) | CPU ✔, 실제 1회 |
+| `analysis/analyze_report.py` | 반복·근거 구성 지표 (읽기 전용) | 보고서 A·B 적용 |
+| `analysis/openie_degeneration_exp.py`, `analysis/openie_exp/` | OpenIE 디코딩 설정 비교 실험과 결과(건별 `.json`, `.log`, 요약 `summarize.py`) | 실행 ✔(§9.7) |
+| `tests/` | CPU 테스트 5종, GPU 실행 스크립트 5종, 메모리 상한 래퍼 2종 (§8.11) | — |
+| `outputs/3videos_<시각>/` | `tests/gpu_3videos.py` 실행 결과(로그, `summary.json`) | §9.6, §9.8 |
+| `outputs/3videos_20261022_160548_gated/` | `tests/delayed_gpu_3videos.py` 실행 기록(`gate_run.log`, `gate.json`). 시작하지 않아 `summary.json`·보고서 없음 | §9.9 |
+| `migration/` | 서버 이전용: rsync 규칙 2개(`videorag_transfer_nomodels.filter` 사용, `videorag_transfer.filter`는 모델 포함본·미사용), 영상 50개 md5(`videos50.md5`), `/opt/venv` 패키지 목록(`opt_venv_freeze.txt`) | 이전 복사에 사용 ✔ |
+| `MIGRATION_HANDOFF.md` | 서버 이전 인수인계 메모 | — |
+| `.git/`, `.gitignore` | 2026-10-25 사용자 승인으로 만든 git 저장소(브랜치 `main`). 코드·문서·설정·테스트 코드·`analysis/`·`migration/`을 추적하고, 생성물·대용량인 `cache/`, `logs/`, `outputs/`, `tests/_artifacts/`, `backups/`, `__pycache__/`는 추적하지 않는다(디스크에는 그대로 있음). `tests/test_openie_split_guard.py`의 입력 로그(`outputs/3videos_20261022_120438/prebuild_indexer.log`)도 추적 대상이 아니다 | — |
+| `backups/` | `.venv` 수리 전 원본 76개 파일, 2026-10-22 수정 전 파일(`*.bak_20261022*`), 2026-10-25 수정 전 문서(`*.bak_20261025_b`), 삭제 전 캐시 일부(`cache_before_split_20261022/`) | — |
+
+### 8.2 `config.yaml`
+
+| 절 | 주요 값 |
+|---|---|
+| `paths` | `hf_home`(실제 모델 캐시), `caption_dir`·`metadata_dir`(WorldMM 산출물), `episodic_cache_root`(`report_framework/cache/episodic`), `log_dir` |
+| `worldmm` | `granularities: [10sec, 30sec, 3min, 10min]`, `query_time: 123595999`(DAY1 23:59:59, 전체), `metadata_model: qwen3vl-8b`, `text_embedding_model: Qwen/Qwen3-Embedding-4B`, `episodic_cache_label: qwen3vl-8b` |
+| `llm` | `backend: local`. local: `worldmm_model: qwen3vl-8b`, 엔드포인트 `server: hf`, `127.0.0.1:8010`, `model: qwen3vl-8b`, `api_key: EMPTY`, `default_max_tokens: 8192`. openai: `gpt-5-mini` |
+| `retrieval` | `episodic_filter: L1`, `rrf_k: 60`, 후보 `{10sec:3, 30sec:3, 3min:2, 10min:1}`, `full_top_k_per_query: 3`, `episodic_k: 8`, `semantic_k_per_query: 5`, `semantic_k: 4`, `visual_k_per_query: 3`, `image_k: 4`, `filter_max_tokens: 512` |
+| `service` | `127.0.0.1:8020`, `frames_dir`(`report_framework/cache/frames`) |
+| `report` | `domain: videomme`, `text_topk: 20`, `image_topk: 10`, `enable_filter: false`, `overview_granularity: 10min`, `outputs_dir`, `deep_reporter_log_dir`, `previous_sections_context: written`, `max_sections: 6`, `translate_ko: true`, `translation_max_tokens: 4096` |
+
+### 8.3 사전 인덱싱 `prebuild_episodic_index.py`
+
+- **`LabeledEpisodicMemory`**: WorldMM `EpisodicMemory`를 상속해 `_get_or_create_hipporag`만 재정의하고, `BaseConfig(llm_name=<실제 모델>)`을 넘겨 캐시 라벨을 바로잡는다. 검색 서비스도 같은 클래스를 써서 같은 캐시를 찾는다.
+- **10sec 시드**: 현재 캡션에 있는 passage만, 해시 기준 중복 제거, 빈 triple 제외. HippoRAG `index`의 `len(chunk_to_rows)==len(ner_results_dict)` assert와 맞추기 위해서다. 인덱싱 LLM이 전처리 모델과 같을 때만, 캐시 파일이 없을 때만 넣는다.
+- **진행 관리**: 영상 단위 완료 표식(`cache/episodic/_done/{vid}.{label}.json`, `llm_mode` 포함). 실패해도 다음 영상으로 계속하고, 인덱싱 후 캐시가 빠짐없이 채워졌는지 검증한다. 로그는 `logs/prebuild_<시각>.log`.
+- **`--dry-run`**: 모델 로드도 파일 쓰기도 하지 않는다(토크나이저 파일만 읽음). 빈 캐시 기준 50개 영상 13,424회(분할 포함, ✔). 분할 전 코드로는 12,818회였다.
+- **`--llm-endpoints URL1,URL2,…` (결정 1 = A안)**
+  - `HttpLLMModel`을 쓴다. HippoRAG/OpenIE가 쓰는 `.generate(messages, text_format=…)`와 `.model_name`만 제공하고, 여러 서버에 순서대로 돌아가며 요청한다.
+  - in-process 경로와 같게 맞춘 점(✔ 코드): 같은 chat 메시지, `max_tokens=2048`(Qwen3VLModel 기본 `max_new_tokens`), temperature/top_p 미전송(모델 기본 샘플링), 같은 파서(`Qwen3VLModel._parse_structured_response`), 같은 재시도 깊이(클라이언트 3회 × OpenIE 5회).
+  - 실행 전 각 서버 `/health`의 모델명이 `qwen3vl-8b`인지 확인한다. 다르면 중단한다. `llm.backend=local`이고 엔드포인트 모델명이 `worldmm_model`과 같아야 한다.
+  - 종료 시 HTTP 요청 수와 실패 수를 로그에 남긴다. 인자를 주지 않으면 기존처럼 in-process로 LLM을 올린다.
+- **`--gpu-mem-cap-mib`**: torch import 직후 `set_per_process_memory_fraction`을 적용한다.
+- **`run_prebuild_http.sh`**: LLM 서버를 GPU마다 1개(`tests/run_llm_server_capped.py`, 19,000 MiB 상한, 포트 18710부터) 띄우고 `/health`를 기다린 뒤, 인덱서를 `--gpu-mem-cap-mib 19000`으로 실행한다. 끝나면(오류 포함) trap으로 자기가 띄운 서버만 종료한다. 같은 GPU 번호를 두 번 넣으면 로그 파일 이름이 겹쳐(`prebuild_llm_<시각>_gpu<g>.log`) 로그가 섞인다. GPU당 서버 여러 개는 `tests/gpu_3videos.py` 방식으로 띄운다.
+- **긴 청크 분할 OpenIE** (2026-10-22, 결정 9)
+  - `plan_video`가 캐시·시드에 없는 청크 중 토큰 수가 `SPLIT_MIN_TOKENS`(1,100)를 넘는 것을 `split`으로 분류하고, `split_passage`로 빈 줄 문단을 `SPLIT_PIECE_TOKENS`(700) 이하 조각으로 묶는다(문단이 길면 문장 단위, 한 문장이 길면 그대로 1조각). 토큰 수는 Qwen3-VL 토크나이저(`tokenizers` + HF 캐시의 `tokenizer.json`, torch 미사용)로 센다. 그래서 `HF_HOME`을 dry-run 전에 설정한다.
+  - 영상마다 인덱싱 전에 `openie_split_docs`가 조각별로 WorldMM `OpenIE.ner` → `triple_extraction`을 병렬(기본 `ThreadPoolExecutor`, OpenIE와 같은 동시성)로 호출하고, 청크 단위로 합친다(entity는 순서 보존 합집합, triple은 `filter_invalid_triples`로 중복 제거). `write_cache_docs`가 기존 캐시 항목을 보존하면서 새 항목만 추가한다. 이후 HippoRAG는 이 청크를 캐시된 것으로 보고 다시 계산하지 않는다. 그래프 구조(청크 1개 = passage 노드 1개)는 그대로다.
+  - 경계: 조각 경계를 넘는 대명사·문맥을 잃을 수 있다(미측정). 1,026–1,100토큰 구간은 실측 범위 밖이다.
+- **응답 구제·폭주 절단** (HTTP 경로만)
+  - 파싱이 실패하면 `salvage_structured`가 `json_list_items`로 완성된 목록 항목만 꺼내고, 형식이 맞는 것만 남긴다(NER: 문자열, 중복 제거 후 최대 `MAX_SALVAGED_ENTITIES`=100 / triple: 문자열 리스트). 하나도 없으면 예외 → 기존 재시도.
+  - triple 응답(파싱 성공 포함)에서 같은 (주어, 술어)가 연속 `MAX_SAME_SUBJ_PRED_RUN`(15)개를 넘는 부분을 `cut_long_runs`로 버린다. 경험적 기준이다(정당한 연속 최대 14, 폭주 39–115).
+  - 구제·절단 횟수를 `HttpLLMModel.guard`에 센다. in-process 경로에는 적용되지 않는다.
+- **완료 표식 필드 추가**: `split`(단위별 분할 청크·조각·실패 조각 수), `cache_empty`(단위별 빈 triple·빈 entity 수), `guard_cumulative`(프로세스 누계 구제·절단 수). 완료 판정은 `to_compute`와 `split`이 모두 0이어야 한다.
+- **dry-run 표시**: `chunk/cache/seed/new/split(조각 수)`.
+
+### 8.4 로컬 LLM 서버 `local_llm_server.py`
+
+- 경로: `POST /v1/chat/completions`, `GET /v1/models`, `GET /health`.
+- WorldMM `LLMModel("qwen3vl-8b")`를 한 번 로드한다. 입력은 텍스트와 `image_url`(data URL 또는 절대경로만)을 받는다.
+- `max_tokens`(또는 `max_completion_tokens`) → `max_new_tokens`. `temperature`와 `top_p`는 값이 올 때만 반영하고(`temperature=0`이면 greedy), `chat_template_kwargs`는 무시하며, `stream=true`는 400을 반환한다.
+- 생성은 lock으로 하나씩 처리한다. `usage`는 생성된 **텍스트를 다시 토큰화해** 센 값이고, `finish_reason`은 그 값이 `max_tokens` 이상이면 `length`다. 그래서 실제로 잘린 응답이 `completion=2047 finish=stop`으로 기록될 수 있다(실측, `REPORT_ISSUES_AND_FIXES.md` I25). 로그의 `finish=length` 수는 잘림 수의 하한으로만 본다. 로그의 시간은 요청 수신부터 측정하므로 서버 안 대기 시간이 포함된다.
+- vLLM 교체: `vllm serve Qwen/Qwen3-VL-8B-Instruct --served-model-name qwen3vl-8b --port 8010` 후 `config.yaml`의 `server: vllm`. 모델 이름에 `qwen`이 있어야 Deep-Reporter 라우팅이 유지된다.
+
+### 8.5 검색 서비스 `videorag_retriever_service.py`
+
+- **엔드포인트**: `POST /videos/<video_id>/search`(Deep-Reporter 계약), `POST /videos/<video_id>/load`, `GET /health`. 요청 본문에 영상 id가 없어서 URL에 넣는다.
+- **구성**: WorldMM `WorldMemory`를 쓰지 않고 `LabeledEpisodicMemory`(캐시 라벨 = `episodic_cache_label`), `SemanticMemory`, `VisualMemory`를 직접 조합한다. 한 번에 영상 1개를 로드하고, 다른 영상 요청이 오면 교체한다. 요청은 lock으로 직렬 처리한다.
+- **로드 전 검사**: granularity마다 episodic 캐시가 완전한지(`plan_video`로 cached == chunks), semantic·visual 파일이 있는지. 불완전하면 **409**로 거부한다(캐시 오염 방지, §5.2). 분할 OpenIE(§8.3) 이후에도 판정 기준(캐시된 청크 수)은 같다. 캐시가 불완전한 영상을 검사할 때는 `plan_video`가 토크나이저를 읽는다.
+- **text**
+  - episodic L0/L1: (쿼리, granularity)마다 DSPy를 뺀 그래프 검색으로 후보를 모으고 RRF로 병합한다. L1은 병합 후보 전체에 WorldMM `_filter_with_llm`을 1회 호출한다(질문은 섹션 쿼리들을 `"; "`로 이은 문자열).
+  - episodic full: 쿼리마다 `episodic_memory.retrieve`. 쿼리별 결과가 겹쳐 근거가 모자라지 않도록 쿼리당 개수를 `max(full_top_k_per_query, ceil(n/쿼리 수))`로 둔다.
+  - semantic: 쿼리마다 PPR 검색 → RRF.
+  - 개수: episodic `min(episodic_k, topk)`, semantic `min(semantic_k, 남은 topk)`.
+- **image**: `VisualMemory._retrieve_by_similarity(as_context=False)` → RRF → 구간 **중앙** 프레임 JPEG(`{frames_dir}/{vid}/{start_time}.jpg`, decord, 캐시) → 같은 `start_time`의 10sec 캡션을 `caption`으로 붙인다. `visual.retrieve()`는 질의가 `DAY X HH:MM:SS - …` 형태면 시간 범위 검색으로 바뀌므로 쓰지 않는다.
+- **응답 항목**
+  - episodic: `content="[HH:MM:SS-HH:MM:SS | episodic <g>] 캡션"`.
+  - semantic: `content="[video-level knowledge | semantic] (s, p, o)"`, 시간 필드 None, `time_grounded: False`.
+  - image: `caption="[HH:MM:SS-HH:MM:SS | video frame at Xs] 캡션"`, `img_path`, `frame_sec`.
+  - 공통 메타: `uid`, `score`(RRF), `score_type`, `rank`, `start/end_time`, `start/end_sec`, 절대 `video_path`. 응답 최상위 `meta`에 모드, 후보 수, 필터 실행 결과(`llm` / `fallback_rrf(llm_failed)` / `skipped(<=n)` / `none`), 소요 시간을 둔다. Deep-Reporter는 `status`와 `results`만 읽는다.
+- **LLM 객체**: L0는 `NoLLM`(호출되면 예외). L1/full은 `EndpointLLM`(openai SDK. local은 `max_tokens`, openai는 `max_completion_tokens`, 호출·실패 횟수 집계). 구조화 생성(OpenIE) 요청은 거부한다.
+- **알려진 한계**: L1에서 LLM 응답 형식이 깨져 WorldMM이 RRF 순위로 빈자리를 채워도 `meta.episodic_filter`는 `llm`으로 표시된다(호출 자체는 성공했기 때문, ✔ 코드).
+
+### 8.6 템플릿·맥락 교체 `domain_templates.py`
+
+- **API**
+  - `load_video_overview(10min.json)`: `[HH:MM:SS-HH:MM:SS] 캡션` 블록을 이어 붙인 영상 개요.
+  - `build_templates("videomme", overview, max_sections=6)`: `<<VIDEO_OVERVIEW>>`(중괄호 escape)와 `<<MAX_SECTIONS>>` 자리를 채운다. `max_sections`는 정수 3–15만 허용한다(문자열·bool 거부).
+  - `apply_templates(templates)`, `apply_written_context()`: context manager(§7.4).
+  - `python domain_templates.py --check [--overview-file …] [--max-sections N]`: 계약 검사만 한다.
+- **planner 템플릿**
+  - 영상 개요를 근거로 **총 3–N개 섹션**(N = `max_sections`, 결론 포함)을 만들고, 영상에 없는 내용(외부 지식, 통계, 예측)의 섹션은 만들지 않는다. 질의 내용이 영상에 없으면 "보여주는 것과 보여주지 않는 것" 섹션을 최대 1개만 둔다.
+  - 섹션 설명에는 대략적인 시간 범위를, checklist에는 관찰 가능한 항목을 쓴다.
+  - 규칙 6(결정 5): 마지막 섹션은 앞에서 다룬 결과를 요약하는 짧은 결론이다. 설명은 정확히 `Conclusion:`으로 시작하고, 새 주제를 넣지 않으며, checklist는 2–3개다. 다른 섹션은 `Conclusion:`으로 시작하지 않는다. 출력 예시 JSON에도 결론 섹션이 있다.
+- **query 템플릿**: text 질의는 사건·인물·대사·물체 키워드 2–3개, image 질의는 장면의 생김새를 묘사하는 문장 1–2개. 차트·다이어그램 요청 금지. 앞 섹션에서 다룬 내용은 필요할 때만 다시 검색한다.
+- **writer 템플릿**
+  - 근거 라벨의 의미 설명(episodic 10sec/30sec는 세부, 3min/10min은 요약, video-level knowledge는 시간 없음, video frame은 그 순간의 프레임).
+  - Grounding 규칙: (1) 근거가 말하는 것만 쓰고 추측 금지 (2) 근거의 시간만 HH:MM:SS로, semantic에는 시간 금지 (3) 충돌 시 세밀한 단위 우선 (4) 근거가 없으면 없다고 씀 (5) 시간순 서술 (6) **반복 금지(결정 4-B)**: 이 섹션에서 쓴 사실·문장·단락을 반복하지 않고, 앞 섹션에서 다룬 사실은 한 문장 이하로만 언급한다. 결론 섹션은 예외.
+  - Citation 규칙: (1) 사실 문장마다 `[citation:txtN]` (2) 이미지는 별도 줄 `![](citation:imgN)`, 있으면 1–3장 (3) 괄호 하나에 출처 하나 (4) **`[citation:imgN]` 금지**(보고서 A의 문제를 보고 추가).
+  - 위치별 지시(첫/중간/마지막 섹션)와 결론 섹션 규칙: 설명이 `Conclusion:`으로 시작하면 100–250단어로 앞 결과만 종합하고 새 사건을 넣지 않으며, 사실 문장은 근거를 인용한다.
+- **계약 검사 마커**: planner `"outline"`, `"section_description"`, `"sectional_checklist"`, `"Conclusion:`. query `"text_queries"`, `"image_queries"`. writer `[citation:txt1]`, `![](citation:img1)`, `# Title`, `"Conclusion:"`, `mention it in at most one short sentence`(규칙 6).
+- **C0 `apply_written_context()`** (결정 4)
+  - 원래 `_update_context`가 만드는 요약(섹션 설명 + 본문 앞 100자)을, 앞 섹션에서 **실제로 쓴 문장 요약**으로 바꾼다. LLM은 쓰지 않는다.
+  - 형식: 안내 문구(인용 번호를 지웠고 현재 섹션 근거를 가리키지 않는다는 설명) + 섹션마다 `Section k: <제목>`(제목 앞의 "Section k:"는 제거) + 단락마다 첫 문장. 인용·이미지 표기는 지우고 시간은 남긴다. 4단어 미만 단락은 건너뛴다.
+  - 상한: 문장 240자, 섹션 700자, 전체 3,600자. 넘치면 오래된 섹션부터 제목만 남긴다.
+  - tail은 원래 함수가 계산한다(새 본문에만 의존하므로 결과가 같다). 같은 요약이 query 생성에도 들어간다.
+  - 보고서 B의 섹션 1–5로 재현하면 3,229자다.
+  - `config.yaml`의 `report.previous_sections_context`: `written`(기본, C0) / `deep_reporter`(원래 동작, 비교 실험용).
+
+### 8.7 후처리기·규칙 근거 검사 `grounding_postprocessor.py`
+
+- **입력**: `generate_article()` 결과. 섹션마다 writer와 같은 근거 목록을 고른다(`enable_filter`이고 `filtered_*`가 있으면 그것, 아니면 `retrieved_*`, 1부터 번호).
+- **인용 치환**
+  - 인식 형식: `[citation:txtN]`, 변형(`[citation: txt3]`, `[citation:txt1, txt3]`, 대소문자 무관), `![](citation:imgN)`(alt 허용), 잘못된 형식 `[citation:imgN]`.
+  - 텍스트 인용 → 전역 번호 `[n]`(같은 uid는 같은 번호) + `# References`(episodic: `HH:MM:SS–HH:MM:SS · episodic <g>: 캡션`, semantic: `Video-level knowledge (semantic memory, no timestamp): (s, p, o)`).
+  - 이미지 → `![Figure k (프레임 시각)](frames/<vid>_<start_time>.jpg)` + 캡션(클립 구간 포함). 프레임 파일을 `<out_dir>/frames/`로 복사하고, 같은 프레임은 한 번만 넣는다.
+  - 잘못된 형식 `[citation:imgN]`(결정 3): 문장 안의 자리는 `(Figure k)`로 바꾸고 실제 그림은 그 단락 뒤에 넣는다.
+  - 범위 밖·해석 불가 인용 → `[?]`(집계). 실패하거나 빈 섹션 → `[Section k content missing]`.
+  - 통계: 텍스트 인용, 잘못된 인용, 형식 오류 토큰, 이미지 삽입, 잘못된 형식 변환, 중복 삽입, 참조 수, 그림 수, 프레임 누락, 섹션별 미사용 근거 수.
+- **규칙 근거 검사 `check_section_grounding()`** (결정 2, LLM 0회)
+  - 문장 단위(제목·이미지 줄 제외, 문장 앞에 붙은 인용은 앞 문장에 붙임)로 **따옴표 문구, 숫자, HH:MM:SS**를 그 문장이 인용한 근거와 대조한다.
+    - 따옴표: 그대로 일치하거나, 같은 근거 안에서 단어가 같은 순서로 가까이(문구 길이 + 3단어 이내) 나오면 지지.
+    - 숫자: 정확히 일치, `a/b` ↔ `a out of b`, 20 이하 등 작은 정수는 영어 단어도 인정.
+    - 시간: 근거 텍스트에 있거나 인용한 근거 구간 안이면 지지.
+  - 분류: `unsupported`(어떤 근거에도 없음), `miscited`(인용하지 않은 다른 근거에만 있음), `uncited`(인용 없이 토큰이 있는 문장), `absence`(아래). 결과는 경고이며 오류가 아니다.
+  - **부정 절 처리(absence)**: 부정어(not/no/never/n't 등) 뒤 12단어 안에 show/visible/mention/state/specify 같은 동사가 오고, 문장에 footage/evidence/retrieved/video/clip/frame/source가 있으면, 부정어부터 다음 절 경계(`;`, `, but/though/while/which/and…`, 문장 끝)까지를 "근거에 없다는 진술"로 본다. 그 절 **안에만** 나오는 토큰은 검사하지 않고 `absence`로 기록하며, 절 밖의 토큰은 계속 검사한다.
+  - 한계: 의미 수준의 오류(장면 오인)는 잡지 못한다. 부정 절 안에 틀린 값이 전제로 들어간 경우(예: "the evidence does not confirm the progression from 0/1 to 3/16")는 검사에서 빠진다. 재현율은 정답 데이터가 없어 측정하지 못했다.
+- **이미지-텍스트 시간 기록 `image_time_alignment()`** (경고 없음)
+  - 섹션에서 인용된 이미지(올바른 형식과 잘못된 형식 모두)마다 프레임 시각과 인용된 텍스트 근거 구간 사이 거리(초, 구간 안이면 0)를 기록한다. semantic은 시간이 없어 제외한다.
+  - `gap_to_local_text_sec`: 같은 단락에서 인용된 텍스트(이미지만 있는 단락이면 직전 텍스트 단락). `gap_to_section_text_sec`: 섹션 전체에서 인용된 텍스트.
+  - 결과: 섹션별 `image_time_alignment` 목록과 보고서 요약(인용 이미지 수, 텍스트 시간이 없는 이미지 수, 0초 수, 최대·중앙값).
+
+### 8.8 보고서 생성 진입점 `run_report.py`
+
+- 사용법: `python run_report.py --config config.yaml --video-id=<vid> --query "<요청>" [--checklist "..."]... [--out-dir DIR]`. 모델을 올리지 않으며 LLM 서버와 검색 서비스가 실행 중이어야 한다.
+- **순서**
+  1. 설정 확인: LLM 백엔드(local이면 모델명에 `qwen`, openai면 `gpt`와 `OPENAI_API_KEY`), `max_sections`(3–15), `previous_sections_context`(`written`/`deep_reporter`). 잘못되면 exit 2.
+  2. 사전 확인: 개요 캡션 파일, LLM `/health`(local), 검색 서비스 `/health`와 `POST /videos/<vid>/load`(캐시 불완전 시 409), 템플릿 계약 검사. 하나라도 실패하면 exit 2.
+  3. 환경변수 설정 → `create_openai_api({primary_model, log_dir})` → 실제 라우팅된 base URL이 기대값인지 확인(다르면 exit 2).
+  4. `apply_templates(build_templates(domain, 개요, max_sections))`와 (`written`이면) `apply_written_context()` 안에서 `generate_article(with_planner, enable_filter=False, retriever_url=…/videos/<vid>/search)`.
+  5. 후처리(⑤⑥) → 사후 검증(⑦) → 번역(⑧, 검증 오류가 없을 때만) → 산출물(⑨).
+- **사후 검증**
+  - 오류 → exit 1(산출물은 저장): `success=False`, 빈 outline, planner fallback(섹션 1개이고 설명 == query), 본문의 `Call failed:`·`[Section generation failed`, 빈 본문, 텍스트 근거 0건인 섹션, 잘못된 인용(`[?]`), 프레임 누락.
+  - 경고: query fallback, 인용 없는 섹션, 잘못된 이미지 형식 변환 수, 규칙 검사 unsupported·miscited·uncited 수, 섹션 수 상한 초과, 마지막 섹션이 결론이 아님, 결론이 아닌 섹션에 `Conclusion:`, 결론 300단어 초과, 섹션 번역 실패(영어 유지), 번역에 한자·가나가 재시도 후에도 남음.
+- **산출물** (`report.outputs_dir/<vid>_<YYYYmmdd_HHMMSS>/`): `report.md`, `report_ko.md`, `report_raw.md`, `report.json`(요청·outline·근거·참조·그림·`previous_sections_context`), `validation.json`(상태, 오류, 경고, 단계별 시간, `max_sections`, `previous_sections_context`, 인용 통계, 근거 검사 통계와 항목, `image_time_alignment`, 섹션별 결과, 번역 결과), `frames/`.
+- **exit 코드**: 0 통과, 1 검증 오류(산출물 저장), 2 사전 확인·설정 실패(생성 안 함).
+
+### 8.9 한국어 번역 `report_translator.py` (결정 6)
+
+- 영어 `report.md`가 정본이고 `report_ko.md`는 추가 결과물이다. 번역 결과는 영어 결과와 exit 코드에 영향을 주지 않는다. 영어 보고서가 사후 검증에서 오류면 번역을 건너뛴다.
+- 단위는 섹션이다(섹션당 LLM 1회, 최대 출력 4,096토큰). LLM은 Deep-Reporter와 같은 엔드포인트·모델이다(`EndpointLLM` 재사용).
+- **보호(자리표시 `[[Pn]]`)**
+  - 그림 블록(이미지 줄, 캡션 줄): 통째로 보호해 원문 그대로 둔다.
+  - 인용 `[n]`·`[?]`, `(Figure k)`, `HH:MM:SS`, 따옴표 문구.
+  - **고유명사**: 보고서 본문에서 문장 중간에 한 번이라도 대문자로 나온 단어 묶음을 모아(문장 첫 단어, 제목 줄, 그림, 이미 보호된 부분, 흔한 단어 제외) 보고서 전체(제목 포함)에서 보호한다. NER이 없어 사람과 제품·브랜드 이름을 구분하지 않으며, 문장 첫머리에만 나오는 이름은 수집되지 않는다. 보고서 B에서는 Chris, Zach, Cass, James, Mitchell, SKLZ, SKLZ Dribble Stick, Shot Coach가 수집된다.
+- **검사**: 모든 자리표시가 정확히 한 번씩 있고 제목 줄 수가 같아야 한다(코드 블록 출력은 벗겨서 인정). 실패하면 1회 재시도하고, 그래도 실패하면 그 섹션은 영어 원문 유지 + 안내 문구.
+- **한자·가나 감지**: 자리표시를 뺀 번역 출력에 한자나 가나가 있으면 같은 1회 재시도를 쓴다. 재시도에도 남거나 재시도가 자리표시 검사에 실패하면 처음의 유효한 번역을 유지하고 `foreign_script`로 기록한다(경고).
+- **구성**: 한국어 헤더(영어 정본의 번역본 안내) + 번역 섹션 + References 영어 원문.
+- **기록**: `validation.json`의 `translation`에 전체 상태(complete/partial/failed/skipped/disabled), `proper_nouns`, 섹션별 상태·시도 횟수·자리표시 수·`protected_names`·`foreign_script`·시간·실패 이유.
+
+### 8.10 분석 도구 `analysis/analyze_report.py`
+
+- 보고서 1건(`outline.json` 또는 `report.json`)을 읽어 지표를 계산한다. 파일을 바꾸지 않는다.
+- 반복: 섹션 안 단락 쌍 유사도(인용·이미지 표기와 제목 제외, 정규화), 근접 중복 문장, 반복 8-gram 비율, 섹션 간 유사 문장, 섹션 사이에 다시 검색된 근거.
+- 근거 구성: 유형별·순위별 인용률, 근거 검사 지적의 인용 유형, semantic triple 목록, 이미지와 인용된 episodic 구간의 시간 차이, 근거 크기.
+- 선택: LLM 서버 로그에서 호출별 토큰·시간.
+- 결과: `tests/_artifacts/analysis/smoke_metrics.json`(A), `e2e_run1_metrics.json`(B).
+
+### 8.11 테스트
+
+| 파일 | 종류 | 내용 | 결과 (2026-10-22) |
+|---|---|---|---|
+| `tests/test_retriever.py` | CPU | 실제 데이터 + 실제 WorldMM·HippoRAG 코드, 가짜 모델. L0/L1/full, 이미지, 오류 응답(404·400·409), 실제 `search_node` 연결 | ALL PASS (30개) |
+| `tests/test_templates.py` | CPU | 템플릿 계약(거부 사례), 결정 5 상한·결론, 규칙 6, C0 요약·교체·복원, Deep-Reporter 그래프 통합 | ALL PASS (50개) |
+| `tests/test_report_pipeline.py` | CPU | [1] 후처리기(보고서 A 입력, 경계 사례) [2] `run_report` 전체 흐름(가짜 LLM: 정상, 서버 꺼짐, 캐시 없음, planner 실패, 결론 없음, 상한 초과, 번역 재시도·실패·한자) [3] 번역기(보고서 A 입력) [4] absence, 이미지 시간, 한자, 이름 보호(보고서 A·B 입력) | ALL PASS (67개) |
+| `tests/test_prebuild_http.py` | CPU | HTTP OpenIE 클라이언트: 메시지 동일성, 인자, 파싱, 서버 순환, 재시도, 모델명 확인 | ALL PASS (9개) |
+| `tests/test_openie_split_guard.py` | CPU | 실제 10min 캡션 분할(조각 ≤700토큰, 텍스트 손실·순서 변경 없음), **실제 실패 응답 14건 구제**, 비문자열 항목 제거, 폭주 절단, 캐시 병합, 가짜 서버로 1회 구제·구제 불가 시 15회 재시도, 분할 병합, dry-run 호출 수. 입력으로 `outputs/3videos_20261022_120438/prebuild_indexer.log`가 필요하다 | ALL PASS (18개) |
+| `tests/gpu_smoke.py` | GPU | 검색 스모크(§9.2) | 실행함 |
+| `tests/gpu_report_smoke.py` | GPU | 보고서 A(§9.3) | 실행함 |
+| `tests/gpu_e2e.py` | GPU | 보고서 B + full 모드(§9.4) | 실행함 |
+| `tests/gpu_3videos.py` | GPU | 영상 3개 사전 인덱싱 → 보고서. 현재 판: LLM 서버 1개(`--llm-gpu`, 19,000 MiB) + 인덱서·검색 서비스(`--aux-gpu`, `--aux-cap-mib` 기본 15,000), 시작 전 여유 확인(상한+2,000 MiB), 감시(합계 > `--abort-used-mib` 47,500이면 우리 프로세스만 종료) | §9.6(이전 판), §9.8 |
+| `tests/delayed_gpu_3videos.py` | GPU | `--delay-sec`(기본 7,200) 대기 → GPU를 30초마다 재서 최근 `--hold-sec`(600초)의 최대 사용량을 구함 → `최대[llm] + 19,000 + margin ≤ --abort-used-mib`과 `최대[aux] + --aux-cap-mib + margin ≤ --abort-used-mib`(margin `--margin-mib` 1,500)을 만족하면 `gpu_3videos.py`를 1회 실행. 두 배치(LLM·aux를 `--gpus`의 두 GPU에 이 순서 또는 반대 순서로) 중 두 GPU의 남는 여유 가운데 작은 값이 더 큰 배치를 고른다. `--max-wait-sec`(6시간) 안에 못 맞추면 exit 2. 자동 재시도 없음. 대상 GPU 2개는 `--gpus`(기본 `6,7`)로 지정한다(2026-10-25 사용자 승인으로 고정값 `GPUS = (6, 7)`을 인자로 바꿈, 수정 전 사본 `backups/delayed_gpu_3videos.py.bak_20261025`. `--gpus 4,5`·잘못된 입력 거부를 GPU 미사용 조건으로 확인) | §9.9 (시작 안 함) |
+| `tests/run_llm_server_capped.py`, `tests/run_service_capped.py` | 래퍼 | 상한을 건 LLM 서버(19,000 MiB)·검색 서비스(환경변수 `GPU_MEM_CAP_MIB`, 기본 19,000) 실행 | — |
+
+CPU 테스트는 `CUDA_VISIBLE_DEVICES=""`로 실행하고, 산출물은 `tests/_artifacts/`에 쓴다.
+
+---
+
+## 9. 검증 기록 (실제 모델)
+
+§9.2–9.5와 §9.7은 프로세스마다 19,000 MiB 상한을 걸었다. §9.6은 20,000 MiB 규칙 해제 후라 LLM 서버 19,000 MiB, 인덱서 26,000 MiB, §9.8은 LLM 서버 19,000 MiB, 인덱서 15,000 MiB 상한이다. 모든 실행에서 자기가 띄운 PID만 종료했고, 종료 후 GPU 사용량이 실행 전 수준(다른 사용자 사용량)으로 돌아온 것을 확인했다.
+
+### 9.1 공통 조건
+
+- 영상 `-QuCz7kxBr8`(Video-MME, 약 32분, 농구 가젯 리뷰).
+- query: `"Write a report describing what happens in this video: who takes part, what is tested, and how the tests turn out."`
+- episodic 캐시: **10sec 단위만** 있는 실제 캐시(`tests/_artifacts/gpu_test`). 전처리 OpenIE를 빈 triple 18개까지 포함해 시드로 넣고, 실제 Qwen3-Embedding-4B로 만들었다(226청크, 15초, LLM 0회). 테스트 전용이며 정식 사전 인덱싱 결과가 아니다.
+
+### 9.2 검색 스모크 (`tests/gpu_smoke.py`)
+
+- L0(GPU 6): text 12건 0.47초, image 3건 0.04초(프레임 캐시 이후). 결과가 질의 주제(농구 가젯 테스트, 드리블 고글)와 일치했다.
+- 로컬 LLM 서버(GPU 4): 로드 115초. Deep-Reporter 실제 클라이언트로 생성 2.4초.
+- L1: 실제 LLM 필터 1회(프롬프트 2,396토큰, 4.4초), 검색 요청 전체 5.5초, `episodic_filter=llm`.
+- Deep-Reporter `search_node` → 서비스(HTTP) → text 12건, image 3건 저장.
+- 메모리 증가량: 검색 프로세스 최대 +13,743 MiB, LLM 서버 최대 +17,879 MiB.
+- 참고: 첫 단계(캐시 생성, L0)는 "GPU 4–7 사용" 지시를 받기 전에 GPU 0에서 실행했다(+13,929 MiB, 20GB 미만, 종료 후 원복). 이후는 GPU 4·6만 썼다.
+
+### 9.3 보고서 A: 스모크 (`tests/gpu_report_smoke.py`, 결과 `tests/_artifacts/gpu_report/`)
+
+- 조건: Qwen3-VL-8B(GPU 4), 검색 L1(GPU 6). 템플릿: videomme, **규칙 4·결론 규칙 없음**. `run_report.py` 이전이라 후처리·검증은 나중에 따로 적용했다(`tests/_artifacts/pipeline_test/smoke_grounded/`).
+- 결과: **성공. 5개 섹션, 2,962단어, 382초.** LLM 16회, LLM 시간 합계 361초. planner 51.3초, query 5.1–6.4초, L1 필터 4.6–5.4초(입력 2,577–3,205토큰), writer 35.7–66.5초(출력 614–1,121토큰). 16회 모두 `finish=stop`.
+- GPU 최대 +18,757 MiB(LLM) / +13,737 MiB(검색).
+- 관찰(상세 `REPORT_ISSUES_AND_FIXES.md`)
+  - planner JSON 파싱 성공, 검색어가 영상 내용에 맞게 구체적임.
+  - 텍스트 인용 109개 모두 번호 범위 안. 본문의 HH:MM:SS 23개가 모두 해당 섹션 근거에 존재.
+  - 이미지 인용 14개 중 8개가 잘못된 형식, 섹션 4·5는 이미지 없음, 결론 섹션 없음.
+  - 근거 원문 대조로 내용 오류 확인: 규칙 검사 unsupported 4 + miscited 5 중 실제 오류 7(오탐 `SCORE 6` ×2), 장면 오인, 섹션 설명 유입, 반복 단락.
+
+### 9.4 보고서 B: `run_report.py` 첫 실행 + full 모드 (`tests/gpu_e2e.py`, 결과 `tests/_artifacts/gpu_e2e/`)
+
+- 배치: LLM 서버 GPU 4, L1 검색 서비스 GPU 6, full 검색 서비스 GPU 7.
+- 템플릿: 규칙 4 + 결정 5·6. **규칙 6·C0, absence 처리, 이미지 시간 기록, 번역 한자 감지·이름 보호는 이 실행 뒤에 구현했다.**
+- 첫 시도는 영상 id가 `-`로 시작해서 argparse가 `--preload -QuCz7kxBr8`을 값 없는 옵션으로 해석하는 바람에 실패했다(exit 2). `--preload=<id>`, `--video-id=<id>` 형식으로 해결했다.
+- **결과**: `validation.json` passed, exit 0.
+  - 시간: 사전 확인 1.0초, 생성 261.5초, 후처리 0.02초, 번역 231.8초, 전체 494.4초.
+  - 섹션 6개(상한 6 이내), 마지막이 `Conclusion:` 244단어, 결론 관련 경고 0.
+  - LLM: 생성 19회(planner 36.8초, query 3.0–4.1초, L1 필터 3.3–4.1초·입력 2,275–3,474토큰, writer 16.1–34.2초·출력 374–794토큰) + 번역 6회(섹션당 23.5–49.2초, 재시도 0).
+  - 텍스트 인용 72개 → 참조 35개, 그림 14개, `[?]` 0, 누락 프레임 0. 잘못된 이미지 형식 19개 중 4개(모두 변환).
+  - 규칙 검사(실행 당시 규칙): unsupported 6 / miscited 3 / uncited 14. 이 중 `10:85`·`9:51` 2건은 부정문 오탐(대조), 7건은 결론 섹션. 현재 규칙(absence 포함)으로 다시 계산하면 unsupported 4 / miscited 3 / uncited 12 / absence 3이다.
+  - 번역: 인용 `[n]` 72=72, HH:MM:SS 73=73 보존. 한자 혼입("햇明媚한", "미歇尔")과 이름 표기 불일치("제이mes", "재치"↔"자크") 확인.
+  - 새로 확인한 문제: 결론 섹션의 인용 불일치, 근거 없는 추측 표현 5문장.
+- **full 모드 실제 LLM** (10sec만): 질의 2개 → LLM 4회, 9.5초, 결과 12건(episodic 8, semantic 4).
+- GPU 최대: GPU 4 18,811 / GPU 6 13,749 / GPU 7 13,747 MiB. 종료 후 0 / 0 / 3 MiB.
+
+### 9.5 사전 인덱싱 시험 (A안, **사용자 지시로 중지**)
+
+- 실행: `./run_prebuild_http.sh 4,5,6 7 --videos=-QuCz7kxBr8` (LLM 서버 GPU 4·5·6, 인덱서 GPU 7).
+- 첫 시도는 출력 리디렉션 대상 `logs/` 폴더가 없어 즉시 실패했다(스크립트가 폴더를 만들기 전에 셸이 리디렉션을 처리했기 때문, GPU 미사용). 폴더를 만들고 다시 실행했다.
+- 06:31:20 시작, 서버 로드 약 20초. 계획 OpenIE 호출 222회(10sec 시드 208개, 재계산 18개).
+- **10sec 완료** (06:32:03–06:34:39, 약 2.6분)
+  - OpenIE 캐시 226 docs 저장. 재계산 18개 중 2개는 재시도 소진 오류(`RetryError`, pydantic 검증 실패)로 빈 결과.
+  - 캐시 전체에서 빈 triple 12개, 빈 entity 13개(✔ 파일 확인). 이 18개는 전처리 결과에서 triple이 비어 있거나 없어서 시드에서 제외했던 청크다.
+  - 응답 파싱 실패 로그("Input should be a valid string … None/True" 등)가 반복됐다. in-process 경로도 같은 파서와 재시도를 쓰므로 HTTP 방식 고유의 문제는 아니다(✔ 코드). 다만 in-process 결과와 직접 비교하지는 않았다.
+- **30sec 진행 중 중지**: 청크 76개 임베딩 저장, NER 완료, triple 추출 도중 사용자 지시("gpu 작업 당장 중지해")로 중지했다. 자기 PID 6개만 종료했고, GPU 4–7은 0/0/0/3 MiB로 돌아왔다. 중지 시점까지 서버 요청 수는 59/57/58회(재시도 포함, 마지막 06:39:54)다.
+- GPU 스냅샷(06:34, 최대값 아님): LLM 서버 17,395 / 17,369 / 17,401 MiB, 인덱서 14,295 MiB.
+- **남은 상태**: `cache/episodic/-QuCz7kxBr8/episodic_memory/10sec/`(완료), `30sec/`(임베딩만, OpenIE 결과 없음), `_done` 표식 없음. 다시 실행하면 10sec OpenIE 캐시를 재사용하고 30sec부터 계산한다. 불완전한 캐시이므로 검색 서비스가 409로 거부한다.
+- **측정하지 못한 것**: 영상 1개 전체 소요 시간(따라서 50개 영상 예상 시간), 3min·10min 처리, 완성된 4개 단위 캐시로 검색·보고서 생성. → §9.6에서 영상 1개 전체를 측정했다.
+
+### 9.6 영상 3개 사전 인덱싱 + 보고서 (분할 적용 전 코드, **사용자 지시로 중지**)
+
+- 결과 위치: `outputs/3videos_20261022_120438/` (`prebuild_indexer.log`, `prebuild_llm_<i>_gpu<g>.log` 7개, `summary.json`). 실행 스크립트는 당시 판 `tests/gpu_3videos.py`(현재 판은 §8.11).
+- 영상: `-QuCz7kxBr8`(Sports/Basketball), `0RxMZBLeqRI`(Knowledge/Humanity & History), `54k2g9ddy4M`(Film & Television/News Report). 서로 다른 도메인으로 골랐다(`long_test.json`의 domain·sub_category). query는 세 영상 공통 `"Write a report describing what happens in this video: the main people or subjects, the key events in the order they occur, and how the video concludes."`.
+- 배치: 20,000 MiB 규칙 해제(사용자 지시) 후, LLM 서버 7개를 GPU 4,4,5,5,6,6,7에(각 19,000 MiB 상한, 포트 18710–18716) 띄우고, 인덱서를 GPU 7에 26,000 MiB 상한으로 실행. 서버 준비 25.0초. OpenIE 동시성 12(기본 `ThreadPoolExecutor`)를 7개 서버에 순환 배분.
+- 단계별 실측 (서버 로그 `chat.completions:` 줄 기준)
+
+  | 영상/단위 | 시간 | 호출 | 상한 도달 | 비고 |
+  |---|---|---|---|---|
+  | 영상 1 30sec | 12:05:21–12:11:44 (6.4분) | 153 | 0 | 계획 152 + 재시도 1 (pydantic `True` 오류) |
+  | 영상 1 3min | 12:11:44–12:13:41 (2.0분) | 26 | 0 | |
+  | 영상 1 10min | 12:13:41–12:16:29 (2.8분) | 9 | 1 | 잘린 1건은 재시도에서 성공 |
+  | **영상 1 전체** | **668초** (10sec는 시험 실행 캐시 재사용) | 188 | 1 | 완료 표식 생성 |
+  | 영상 2 10sec | 12:16:29–12:16:49 | 8 | 0 | 시드 180, 재계산 4 |
+  | 영상 2 30sec | 12:16:49–12:23:43 (6.9분) | 124 | 0 | |
+  | 영상 2 3min | 12:23:43–12:25:52 (2.2분) | 22 | 0 | |
+  | 영상 2 10min | 12:25:52– (중지 시점까지) | 18 | 12 | 열거 폭주·긴 출력으로 잘림 반복 |
+- 완성된 영상 1 캐시: 빈 triple 10sec 12 / 30sec 0 / 3min 0 / 10min 0. 청크당 평균 triple 12.3 / 22.2 / 34.5 / 70.2. 같은 (주어, 술어) 연속 최대 7.
+- 중지: 영상 2의 10min에서 재시도가 이어져 사용자에게 보고했고, 사용자가 중단·원인 분석을 지시했다. 12:36에 인덱서만 SIGTERM으로 끝내 스크립트가 자기 서버 7개를 정리하게 했다(인덱서 exit −15, 1,938.7초). 서버별 호출 52/52/52/51/51/51/51(합계 360). 보고서 단계는 시작하지 않았다.
+- GPU 최대(우리 프로세스만, 다른 사용자 없음): GPU 4 36,662 / 5 37,192 / 6 36,700 / 7 35,782 MiB. 종료 후 0/0/0/3 MiB.
+- 원인 분석과 대응은 §5.2.1, §9.7, `REPORT_ISSUES_AND_FIXES.md` I22–I24.
+
+### 9.7 OpenIE 디코딩 비교 실험 (`analysis/openie_degeneration_exp.py`, 결과 `analysis/openie_exp/`)
+
+- 목적: 출력 상한 초과(§5.2.1)가 디코딩 설정(반복 억제)으로 해결되는지 확인.
+- 조건: 12:41:18–13:25:52, GPU 5·6·7에 설정마다 1개 프로세스(19,000 MiB 상한, 다른 사용자와 GPU 공유라 생성 속도 약 9토큰/초). WorldMM `Qwen3VLModel`과 같은 chat 템플릿·모델 기본 생성 설정을 재현한 텍스트 전용 생성. 대상: `0RxMZBLeqRI` 10min 청크 0·1·2(실패 청크)와 `-QuCz7kxBr8` 10min 청크 0, 각 2회, NER → triple.
+- 결과 (설정당 8건, NER+triple 16회)
+
+  | 설정 | 파싱 실패 | 상한 도달 | 폭주(연속 ≥4) | 생성 토큰 | 종료 |
+  |---|---|---|---|---|---|
+  | base (모델 기본) | 7 | 7 | 2 | 22,771 | 13:25:52 |
+  | rp105 (`repetition_penalty=1.05`, 프롬프트 포함) | 1 | 1 | 4 | 12,731 | 13:06:07 |
+  | rp110gen (1.10, 생성 토큰에만) | 2 | 1 | 0 | 10,799 | 13:02:17 |
+- 해석: 실패 청크만 골라 시험한 값이라 전체 비율이 아니고 표본이 작다. rp105는 폭주를 못 막았다(54·115회). rp110gen은 폭주가 없었지만 2건에서 1,300–1,400토큰을 생성하고도 유효 triple이 2개였다(원문 미저장, 원인 미확인). HF `repetition_penalty`는 프롬프트 토큰에도 적용된다(✔ transformers 코드). → 디코딩 변경 기각(결정 9).
+
+### 9.8 영상 3개 재실행 (분할·구제 적용, GPU 6·7만, **감시 장치로 중단**)
+
+- 결과 위치: `outputs/3videos_20261022_141051/` (`config.yaml`, `llm_server.log`, `prebuild_indexer.log`, `summary.json`). 실행 전 dry-run: 영상 1 12회, 영상 2 178회, 영상 3 240회(합계 430회).
+- 배치: LLM 서버 1개 GPU 7(19,000 MiB), 인덱서 GPU 6(15,000 MiB). 시작 전 다른 사용자 사용량 GPU 6 18,365 / GPU 7 23,017 MiB, 여유 확인 통과.
+- 경과: LLM 서버 준비 20.0초 → 인덱서 시작, 14:11:26 영상 1 인덱싱 시작(분할 OpenIE 진입) → GPU 7의 다른 사용자 프로세스가 약 34.2GB로 늘어 합계 48,446 MiB가 감시 기준(47,500 MiB)을 넘음 → **우리 프로세스 2개만 종료**(인덱서 exit −15, 41.2초).
+- 영향: LLM 호출 0회, 캐시 파일 변경 없음(✔ 파일 시각 확인). 종료 후 GPU 6 18,365 / GPU 7 32,661 MiB(다른 사용자만), 우리 PID 잔존 0. 다른 사용자 프로세스는 살아 있었다. 합계가 49,140 MiB의 약 98.6%까지 갔던 순간 다른 사용자 쪽 할당 실패가 있었는지는 확인할 수 없다.
+- 판단: 다른 사용자 사용량 관측 범위(GPU 6 약 18–30GB, GPU 7 약 18–34GB)에 Qwen3-VL-8B 프로세스(18–19GB)를 더하면 두 GPU 모두 용량을 넘을 수 있다. 재개 방식은 사용자 결정 대기였다(`REPORT_ISSUES_AND_FIXES.md` I27). 이후 경과는 §9.9와 §2.2(2026-10-25 GPU 4–7 허용).
+
+### 9.9 영상 3개 대기 후 자동 시작 (GPU 6·7만, **시작 조건 미충족으로 시작하지 않음**)
+
+- 사용자 지시(2026-10-22): "2시간 있다가 영상 3개에 대해서 검증 수행, report 작성까지. gpu 6,7 사용, 다른 user의 작업을 중단하지 않도록."
+- 실행: `tests/delayed_gpu_3videos.py`(§8.11)를 16:05:48에 `setsid nohup`으로 시작. 인자는 모두 기본값(`gate.json`: `delay_sec` 7200, `hold_sec` 600, `max_wait_sec` 21600, `margin_mib` 1500, `aux_cap_mib` 15000, `abort_used_mib` 47500). 시작 전 CPU 점검으로 판단·기록 동작만 확인했다(margin 99,999로 시작 불가 조건, 결과 exit 2).
+- 결과 위치: `outputs/3videos_20261022_160548_gated/` (`gate_run.log`, `gate.json`의 `choice: null`).
+- 경과: 18:05:48까지 대기 → 18:15:21부터 00:05:36까지 **698번 판단, 시작 조건(남는 여유 ≥ 1,500 MiB) 만족 0번** → 00:06:06 `no safe headroom within max wait; not starting`으로 종료(`gate.json`·`gate_run.log` 파일 시각). 가장 큰 여유는 18:35–18:36의 **−961 MiB**(LLM GPU 7, aux GPU 6). 판단 시 고른 배치는 LLM GPU 6이 382번, GPU 7이 316번.
+- 다른 사용자 사용량(판단 시점의 최근 10분 최대값, `gate_run.log`에서 집계):
+
+| 시간대 | GPU 6 | GPU 7 | 가장 큰 여유 |
+|---|---|---|---|
+| 18시 | 30.4–35.1 GB | 29.0–34.2 GB | −961 MiB |
+| 19시 | 32.2–36.1 GB | 28.5–35.6 GB | −2,221 MiB |
+| 20시 | 35.3–37.4 GB | 33.0–37.0 GB | −4,453 MiB |
+| 21시 | 32.3–37.5 GB | 33.7–37.2 GB | −3,777 MiB |
+| 22시 | 31.8–37.6 GB | 34.4–38.1 GB | −5,009 MiB |
+| 23시 | 32.6–38.2 GB | 37.3–39.2 GB | −5,715 MiB |
+| 00시 | 36.3–37.4 GB | 38.7–39.0 GB | −7,825 MiB |
+
+- 영향: 우리 GPU 프로세스는 하나도 띄우지 않았다(대기 스크립트 PID 46718만, GPU 미사용). 캐시 변경 없음.
+- 판단: 다른 사용자가 37–39GB를 쓰는 동안에는 남는 메모리가 10–12GB라 LLM 서버(19,000 MiB 상한)도 인덱서·검색 서비스(15,000 MiB 상한)도 들어갈 수 없다. 조건을 느슨하게 했다면 감시 장치가 곧 중단시켰거나 다른 사용자 프로세스의 메모리 할당이 실패했을 수 있다. 이 결과로 사용자가 서버 이전을 준비했다(`MIGRATION_HANDOFF.md`). 이후 2026-10-25에 이 서버의 GPU 4–7 사용이 허용됐다(§2.2).
+
+---
+
+## 10. 환경 변경 이력
+
+| 일시 | 변경 | 결과 |
+|---|---|---|
+| 2026-10-21 | `WorldMM/.venv`에 `flask==3.1.3` 설치 (+werkzeug 3.1.9, itsdangerous 2.2.0, blinker 1.9.0) | 기존 패키지 변화 없음. 실제 실행 환경이 `/opt/venv`라 불필요했으나 사용자 지시로 유지 |
+| 2026-10-21 15:47 | (a) `WorldMM/.venv` 텍스트 파일 76개의 `/data1/jyheo/workspace/VAU_RAG` → `/data1/jyheo/workspace/VideoRAG` 치환 (bin 72개: activate·shebang, site-packages 4개: `worldmm.pth`, `__editable__.hipporag-2.0.0a4.pth`, `direct_url.json` 2개) | 남은 항목 0, 권한 그대로 (755×67, 644×9), 백업 보관 |
+| 2026-10-21 15:47 | (b) `UV_PROJECT_ENVIRONMENT=$PWD/.venv uv sync --frozen --inexact` | (a) 이후라 decord 0.6.0만 같은 버전으로 재설치 |
+| 2026-10-21 16:26–16:31 | (의도하지 않은 변경, 2026-10-25 확인) GPU 스모크(§9.2)와 LLM 서버가 모델 4개를 환경변수 `HUGGINGFACE_HUB_CACHE` 위치(`VideoRAG/.cache/huggingface/hub`)에 내려받음. 우리 스크립트의 `HF_HOME` 설정은 이 위치를 바꾸지 못한다(§3, `REPORT_ISSUES_AND_FIXES.md` I4) | 약 30GB(snapshot 기준 17.5G + 8.1G + 4.4G + 53M) 추가. `/data1/jyheo/workspace/.cache/huggingface/hub`와 같은 내용 |
+| 검증 | — | `uv.lock`·`pyproject.toml` 해시 동일. `/opt/venv` 패키지 목록 변화 없음. `.venv` 패키지 목록은 worldmm·hipporag 경로만 바뀜. flask 유지. `import worldmm, hipporag, decord, WorldMemory, HippoRAG` 성공. `activate` → `VIRTUAL_ENV=/data1/.../WorldMM/.venv` |
+
+- **남은 사항**: `.venv` 안의 `.pyc` 4,734개에는 컴파일 당시 경로(`VAU_RAG`)가 남아 있다. Python은 `.pyc`를 소스의 수정 시각과 크기로 검증하므로 동작에는 영향이 없고, 예외 traceback에 옛 경로가 보일 수 있을 뿐이다. 문자열 길이가 달라 텍스트 치환으로 고치면 파일이 손상되므로 제외했다.
+- **⚠️ 주의**: 이 컨테이너에서 그냥 `uv sync`를 실행하면 대상이 `/opt/venv`가 되고, 기본(exact) 모드라 langgraph·langchain·flask·merit 등 20여 개를 삭제하고 openai를 2.54에서 2.29로 내린다(✔ dry-run). **반드시 `UV_PROJECT_ENVIRONMENT`로 대상을 지정하고 `--frozen --inexact`를 붙인다.**
+- 기존 repo(WorldMM, MERIT, Deep-Report)의 코드는 수정하지 않았다.
+
+---
+
+## 11. 미검증 사항과 위험
+
+| 항목 | 상태 | 대응 |
+|---|---|---|
+| 4개 granularity 실제 캐시로 검색·보고서 생성 | ✖ | 사전 인덱싱 재개 후 확인 |
+| 사전 인덱싱 영상 1개 전체 시간과 메모리 | 일부 ✔ (10sec 재계산 18개 약 2.6분, GPU 스냅샷 §9.5) / ✖ 전체 (◇ 기존 기록: 재인덱싱 영상당 30–50분) | 다시 허용되면 영상 1개를 끝까지 측정 |
+| HTTP OpenIE와 in-process OpenIE 결과 비교 | ✖ (같은 메시지·인자·파서임은 코드로 ✔. 샘플링이라 완전 일치는 기대할 수 없음) | 필요하면 소수 청크로 빈 triple 비율 비교 |
+| OpenIE 재시도 소진 시 빈 triple이 캐시에 저장되고 "완료"로 판정됨 | ✔ 2건 확인 (§9.5) | 완료 판정은 캐시 키만 본다. 완료 표식에 빈 triple·entity 수 기록(§8.3). 응답 구제로 소진이 줄 것으로 기대(✖ 미측정) |
+| 분할 OpenIE·응답 구제·폭주 절단의 실제 효과 | ✖ (CPU ✔, 실제 실패 응답 14건 구제 ✔) | GPU 실행에서 잘림·구제·절단·빈 결과 수, 시간 확인. 분할 전후 triple 비교(`backups/cache_before_split_20261022/`) |
+| 분할 경계에서 문맥 손실, 기준 1,100토큰의 실측 범위 밖 구간(1,026–1,100) | ✖ | 분할 전후 triple 비교 시 함께 확인 |
+| 폭주 절단 기준(연속 15)과 NER 구제 상한(100) | 경험적 기준, 표본 작음 | 50개 영상 실행 후 `guard_cumulative`와 캐시 분포로 재검토 |
+| 10min 캡션 잘림(32/232개, 영상 20개) | ✔ 확인, 보류(결정 11) | 잘린 뒷부분 내용은 인덱스·근거에 없음. 필요 시 10min만 재생성 |
+| **검증 영상 3개 중 잘린 캡션** (✔ 2026-10-25, `prebuild_episodic_index.count_tokens`로 4개 단위 전부 측정) | `0RxMZBLeqRI` 10min 4개 중 2개가 2,048토큰이고 문장 중간에서 끝남: 0–10분 "… This", 10–20분 "… the ominous,"(I22의 예시가 이 두 개다). 나머지 단위(10sec 최대 229, 30sec 680, 3min 1,025토큰)와 `-QuCz7kxBr8`(10min 최대 1,733), `54k2g9ddy4M`(10min 최대 1,491)은 2,048토큰 캡션 없음 | `0RxMZBLeqRI` 보고서는 planner 개요와 10min 근거의 0–20분 구간 뒷부분이 빠진 상태로 만들어진다. 영상 3개 검증 결과를 해석할 때 이 차이를 분리해서 본다 |
+| 모델 캐시 위치(§3 정정) | ✔ 컨테이너에서는 `HUGGINGFACE_HUB_CACHE`가 우선해 `paths.hf_home` 설정이 효과 없음 | 이 서버에서는 두 위치에 같은 모델이 있어 동작에 문제없음. 다른 환경(새 서버, 컨테이너 밖)에서는 모델이 `HF_HUB_CACHE` → `HUGGINGFACE_HUB_CACHE` → `$HF_HOME/hub` → `~/.cache/huggingface/hub` 순서(`huggingface_hub/constants.py:129-155`)로 정해지는 위치에 있어야 한다. 없으면 첫 로드 때 내려받는다(인터넷 필요) |
+| 디코딩 실험 rp110gen의 이상 결과 2건 | 원인 ✖ (원문 미저장) | 반복 억제를 다시 검토할 때 원문 저장 후 재현 |
+| GPU 공유: 다른 사용자 메모리 변동 | ✔ §9.8에서 중단, §9.9에서 6시간 동안 시작 불가 | 감시·자동 중단 유지. 2026-10-25 GPU 4–7 사용 허용(11:44 확인 시 비어 있음). 실행 직전 여유 확인은 계속 한다 |
+| `local_llm_server`의 `finish_reason`(텍스트 재토큰화 기준) | ✔ 부정확 사례 확인 | 구제 조건에 쓰지 않음. 서버 수정은 미승인 |
+| 결정 4(규칙 6 + C0)의 실제 효과와 지연 | ✖ | `previous_sections_context` written vs deep_reporter 다중 실행 비교 (`ANALYSIS_D4_D7.md` §1.6) |
+| 번역 보완(한자 재시도, 이름 보호)의 실제 효과, 늘어난 자리표시가 번역 실패율에 주는 영향 | ✖ | 다음 실제 실행에서 `validation.json`의 `translation` 확인 |
+| 인용이 붙은 문장의 내용 오류 | ✔ 실보고서에서 확인 | 규칙 검사로 수치·문구·시간 유형만 경고. 의미 수준 오류는 미검출 |
+| 결론 섹션의 인용 불일치, planner 설명 유입 | ✔ 실보고서에서 확인 | C0로 완화 기대(✖ 미측정) |
+| 근거 없는 추측 표현 | ✔ 보고서 B 5문장 | 대응 없음 |
+| 규칙 검사의 재현율, 다른 영상으로의 일반화 | ✖ (보고서 2건, A 정밀도 약 78%) | 평가 단계에서 표본 확대 |
+| 같은 조건 다중 실행의 편차 | ✖ (조건마다 1건, 생성은 샘플링) | 다중 실행 실험 |
+| L1 응답 파싱 실패 시 RRF로 채워져도 `meta.episodic_filter="llm"` 표시 | ✔ 코드 확인 | 필요하면 서비스에서 선택 결과를 직접 파싱해 구분 |
+| L1과 L0·full의 품질 차이 | ✖ | 4개 단위 캐시로 비교 |
+| 검색 요청 지연 vs Deep-Reporter 타임아웃 600초 | ✔ 10sec만: L1 text 5.5초, full 9.5초 / ✖ 4개 단위 | `meta.elapsed_sec`로 측정 |
+| 근거가 긴 프롬프트(10min 요약 포함)의 컨텍스트 길이와 GPU 메모리 | ✖ | 근거 수와 granularity 상한 조정 |
+| 한 GPU에 여러 모델(검색 서비스의 Qwen3-Embedding·VLM2Vec과 LLM 서버) | ✖ | 프로세스·GPU 배정 계획 필요 (◇ eval 프로세스 약 44GB) |
+| 영상 여러 개 연속 처리 시 검색 서비스의 영상 교체(메모리 해제) | ✖ | 다중 영상 실행에서 확인(현재 `tests/gpu_3videos.py`는 검색 서비스 1개로 영상을 차례로 교체한다) |
+| `llm.backend=openai` 경로 (`gpt-5-mini`의 `max_completion_tokens` 등) | ✖ | 외부 경로를 처음 쓸 때 실호출로 확인 |
+| vLLM 교체 | ✖ (미설치) | — |
+| Deep-Reporter `recursion_limit=50` | ✔ 실측: 15섹션 성공, 16섹션부터 보고서 전체 소실 | `max_sections`를 3–15로 제한 |
+| Deep-Reporter `ReasoningOpenAI`의 모델명 판정(`'r1' in name`이면 DeepSeek-R1 경로) | ✔ `qwen3vl-8b`, `gpt-5-mini`는 해당 없음 | 모델명을 바꿀 때 주의 |
+
+---
+
+## 12. 주요 코드 위치
+
+**기존 repo (읽기 전용)**
+
+| 내용 | 위치 |
+|---|---|
+| WorldMM 추론 루프 / QA 렌더링 | `WorldMM/src/worldmm/memory/memory.py:408`, `:248-272`, `:522` |
+| Episodic 검색 / LLM 필터 / HippoRAG 생성 | `WorldMM/src/worldmm/memory/episodic/memory.py:247`, `:398`, `:120` |
+| OpenIE (NER·triple, 오류 시 빈 결과) | `WorldMM/src/worldmm/memory/episodic/openie.py` |
+| Qwen3VL 생성·구조화 파싱 | `WorldMM/src/worldmm/llm/qwen3vl.py` (`generate`, `_parse_structured_response`) |
+| HippoRAG 검색 / rerank / OpenIE 경로 / 라벨 | `WorldMM/src/HippoRAG/src/hipporag/HippoRAG.py:327`, `:1179-1216`, `:119`, `:83-85` |
+| DSPy 필터 LLM 호출 | `WorldMM/src/HippoRAG/src/hipporag/rerank.py:95` |
+| Visual 검색 / 프레임 추출 | `WorldMM/src/worldmm/memory/visual/memory.py:293`, `:344-409`, `:554` |
+| Semantic evidence 버림 | `WorldMM/preprocess/semantic_memory/consolidate_semantic_memory.py` (`transformed_current_evidence`) |
+| Video-MME eval 설정 | `WorldMM/eval/eval.py` (`VIDEOMME_GRANULARITIES`, `QUERY_TIME`) |
+| Deep-Reporter 그래프 / recursion_limit | `Deep-Report/deep_reporter/core/graph.py`, `api.py:105` |
+| Deep-Reporter search / writer / context | `Deep-Report/deep_reporter/nodes/search_node.py:56,74,89,97`, `section_writing_node.py:59,214` |
+| combine | `Deep-Report/deep_reporter/nodes/combine_node.py` |
+| LLM 호출 / 실패 문자열 | `Deep-Report/deep_reporter/utils/llm_utils.py:36,82` |
+| LLM 라우팅 / 설정 | `Deep-Report/deep_reporter/llms/factory.py`, `llms/reasoning_openai.py`, `config/base_config.py` |
+| 템플릿을 읽는 노드 / 출력 파싱 | `Deep-Report/deep_reporter/nodes/planner_node.py:98`, `query_generation_node.py:67`, `section_writing_node.py:141-142`(인용 정규식) |
+| 원래 retriever topk 절단 | `Deep-Report/retriever/retriever_app.py:717` |
+| MERIT 프레임 / 프레임 수 | `MERIT/src/merit/merit_memory.py:154`, `:182` |
+
+**`report_framework/` (함수 이름 기준)**
+
+| 내용 | 위치 |
+|---|---|
+| 캐시 계획·완전성 판정 / 시드 / 라벨 클래스 / HTTP OpenIE | `prebuild_episodic_index.py`: `plan_video`, `build_seed_docs`, `make_labeled_episodic_memory_class`, `make_http_llm_model`, `check_endpoints` |
+| 긴 청크 분할 / 응답 구제 / 폭주 절단 / 캐시 병합 | `prebuild_episodic_index.py`: `count_tokens`, `split_passage`, `openie_split_docs`, `json_list_items`, `salvage_structured`, `cut_long_runs`, `write_cache_docs`, 상수 `SPLIT_MIN_TOKENS`, `SPLIT_PIECE_TOKENS`, `MAX_SAME_SUBJ_PRED_RUN`, `MAX_SALVAGED_ENTITIES` |
+| 10min 캡션 생성(잘림 원인) | `WorldMM/src/worldmm/memory/episodic/gen_multiscale.py` (`_summarize_batch`), `WorldMM/claude_output/full/process_one_video.sh:26` |
+| 검색 로드 검사 / DSPy 없는 그래프 검색 / episodic 병합·L1 | `videorag_retriever_service.py`: `check_inputs`, `_graph_search`, `search_episodic` |
+| 템플릿 / 계약 / 교체 / C0 | `domain_templates.py`: `VIDEOMME_*`, `build_templates`, `resolve_targets`, `validate_templates`, `apply_templates`, `written_context_summary`, `apply_written_context` |
+| 인용 치환 / 규칙 검사 / absence / 이미지 시간 | `grounding_postprocessor.py`: `ground_report`, `check_section_grounding`, `absence_clause`, `image_time_alignment` |
+| 사전 확인 / 검증 / 실행 | `run_report.py`: `preflight`, `validate`, `run` |
+| 번역 / 고유명사 / 보호 | `report_translator.py`: `translate_report`, `collect_proper_nouns`, `mask`, `translate_section` |
+| GPU 실행 / 감시 / 대기 후 시작 | `tests/gpu_3videos.py`: `main`, `Watch`, `stop_all`, 상수 `LLM_CAP`; `tests/delayed_gpu_3videos.py`: `main`(인자 `--gpus`) |
+
+---
+
+## 13. 인수인계
+
+### 13.1 반드시 지킬 규칙
+
+- **GPU 사용 범위(2026-10-25 최신 지시)**: 이 서버에서 **GPU 4–7 네 개를 사용할 수 있다.** 이전 지시 이력: GPU 4–7(20,000 MiB 규칙) → 규칙 해제 → 여유 메모리 안에서 → GPU 6·7만(2026-10-22, §9.8·§9.9). 새 서버로 옮기면 호스트 GPU 3·4(다른 사용자와 공유, 컨테이너 안 번호 0·1)를 쓸 계획이다(`MIGRATION_HANDOFF.md`).
+- **어느 GPU든 다른 사용자의 동작 중인 프로세스를 절대 침범하지 않는다.** 이미 돌고 있는 작업은 중단하지 않고, 자기가 띄운 PID만 종료한다. 실행 직전에 여유 메모리를 확인하고, 모든 GPU 프로세스에 상한을 건다(`tests/run_llm_server_capped.py`, `tests/run_service_capped.py` + `GPU_MEM_CAP_MIB`, `--gpu-mem-cap-mib`). 실행 중에는 메모리 감시·자동 중단(`tests/gpu_3videos.py`)을 쓴다.
+- 사용자가 GPU 작업 중지를 지시하면 즉시 자기 프로세스만 종료한다. CPU 테스트는 `CUDA_VISIBLE_DEVICES=""`로 실행한다.
+- **repo 규칙**: WorldMM, MERIT, Deep-Report 코드는 수정하지 않는다. 신규 파일은 `report_framework/`에만 둔다. Deep-Reporter 동작 변경은 §7.4의 범위 한정 교체로만 한다. `report_framework/`의 기존 파일도 수정 전에 대상·위치·내용을 보고하고 승인을 받으며, 수정 전 사본을 `backups/`에 둔다.
+- **episodic 캐시를 다시 만들 때**는 해당 granularity 폴더 전체를 지운다(OpenIE 파일만 지우면 옛 그래프가 남음, §5.2). 캐시 삭제는 사용자 승인 후에만 한다.
+- **`-`로 시작하는 영상 id**(예: `-QuCz7kxBr8`)는 항상 `--video-id=<id>`, `--preload=<id>`, `--videos=<id>` 형식으로 넘긴다.
+- **실행 환경은 `/opt/venv`**다. **대상 지정 없이 `uv sync`를 실행하지 않는다**(§10).
+- **모델 캐시**: 이 컨테이너에서 실제로 쓰이는 위치는 환경변수 `HUGGINGFACE_HUB_CACHE`(`/data1/jyheo/workspace/VideoRAG/.cache/huggingface/hub`)다. `config.yaml`의 `paths.hf_home`으로 `HF_HOME`을 바꿔도 이 위치는 바뀌지 않는다(§3 정정). 두 위치 모두에 같은 모델 4개가 있다.
+- 전수 검색에는 `/usr/bin/grep`을 쓴다. Deep-Reporter는 `deep_reporter.api`를 먼저 import한다.
+
+### 13.2 실행 방법
+
+```bash
+cd /data1/jyheo/workspace/VideoRAG/report_framework
+# --- GPU 불필요 ---
+python -B prebuild_episodic_index.py --config config.yaml --dry-run
+python -B domain_templates.py --check --overview-file <caption_dir>/<vid>/10min.json
+CUDA_VISIBLE_DEVICES="" python -B tests/test_retriever.py        # 검색 서비스
+CUDA_VISIBLE_DEVICES="" python -B tests/test_templates.py        # 템플릿·규칙 6·C0 + Deep-Reporter 통합
+CUDA_VISIBLE_DEVICES="" python -B tests/test_report_pipeline.py  # 후처리·근거 검사·run_report·번역
+CUDA_VISIBLE_DEVICES="" python -B tests/test_prebuild_http.py    # HTTP OpenIE 클라이언트
+CUDA_VISIBLE_DEVICES="" python -B tests/test_openie_split_guard.py  # 긴 청크 분할·응답 구제·폭주 절단
+python -B analysis/analyze_report.py --outline <out>/report.json --out <metrics.json>
+# --- GPU 필요 (허용될 때만) ---
+python -B tests/gpu_3videos.py --llm-gpu <A> --aux-gpu <B> [--videos=a,b,c] [--skip-prebuild]  # 사전 인덱싱 → 보고서 (감시 포함, LLM 서버 1개). 인자 생략 시 기본 7·6
+python -B tests/delayed_gpu_3videos.py --out <dir> --gpus <A>,<B> [--delay-sec 7200]  # 대기 후 여유 확인 → gpu_3videos (§8.11)
+./run_prebuild_http.sh <LLM_GPUS> <INDEXER_GPU> --videos=<vid>                        # 사전 인덱싱만 (A안, 감시 없음)
+python local_llm_server.py --config config.yaml --gpu <A>                            # LLM 서버 (:8010)
+python videorag_retriever_service.py --config config.yaml --gpu <B> --preload=<vid>  # 검색 서비스 (:8020)
+python run_report.py --config config.yaml --video-id=<vid> --query "<요청>"           # 보고서 생성
+python -B tests/gpu_e2e.py                                                            # 10sec 테스트 캐시로 전체 흐름 + full
+```
+
+- 실제 GPU 실행에서는 위 서버들 대신 상한 래퍼(`tests/run_llm_server_capped.py <port>`, `tests/run_service_capped.py <config> --preload=<vid>`)를 쓴다.
+- 사전 인덱싱 캐시가 없거나 불완전한 영상은 검색 서비스가 409로 거부한다 → `run_report.py`가 exit 2.
+- **완성된 실제 캐시**는 `tests/_artifacts/gpu_test/`의 영상 1개(`-QuCz7kxBr8`), 10sec 단위만 있다(테스트 전용). 이것으로 실행하려면 config 사본에서 `paths.episodic_cache_root`를 그 경로로, `worldmm.granularities`를 `[10sec]`으로, `retrieval.episodic_candidates_per_query`를 `{10sec: 6}`으로 바꿔 검색 서비스와 `run_report.py`에 함께 넘긴다. `tests/gpu_e2e.py`가 이 설정을 자동으로 만든다.
+- `report_framework/cache/episodic/-QuCz7kxBr8/`에는 10sec·30sec·3min만 있다(10min은 결정 10으로 삭제, `_done` 없음). `0RxMZBLeqRI`는 삭제했고, `54k2g9ddy4M`은 아직 만들지 않았다. 세 영상 모두 검색 서비스가 409로 거부한다. 다음 사전 인덱싱은 영상 1의 10min(12회), 영상 2 전체(178회), 영상 3 전체(240회)를 계산한다.
+
+### 13.3 다음 작업
+
+**(1) GPU 불필요**
+- 사용자 결정 대기: 근거 없는 추측 표현(P12) 감지, 번역본 제목 형식 통일, `local_llm_server` `finish_reason` 수정(I25), 10min 캡션 재생성용 래퍼(I22, 보류. 검증 영상 `0RxMZBLeqRI`도 해당, §11).
+- (완료 2026-10-25, 사용자 승인) 루트 `VideoRAG/CLAUDE.md`를 현재 프로젝트·규칙으로 갱신(이전 판 `backups/ROOT_CLAUDE.md.bak_20261025`). `report_framework/`를 git 저장소로 만듦(§8.1). `tests/delayed_gpu_3videos.py`에 `--gpus` 인자 추가.
+- (완료 2026-10-22) 다른 문서 3종에 분할 OpenIE·GPU 공유 내용 반영. (완료 2026-10-25) 대기 실행 기록, HF 캐시 정정, 날짜 표기 정정 반영.
+- 서버 이전(`MIGRATION_HANDOFF.md`): 파일 복사·검증까지 완료. 이 서버에서 계속 작업하는 동안 바뀐 파일은 이전할 때 다시 동기화해야 한다.
+
+**(2) GPU 작업 (2026-10-25 GPU 4–7 허용)**
+1. **영상 3개 사전 인덱싱 + 보고서**: `tests/gpu_3videos.py`. 먼저 영상 1·2로 분할·구제 효과를 확인한다(잘림·구제·절단·빈 결과 수는 완료 표식과 로그, 시간). 분할 전후 triple 비교(`backups/cache_before_split_20261022/`). 백업은 영상 1의 10min(4청크)과 영상 2의 10sec(184)·30sec(62)·3min(11) OpenIE 결과다. **분할이 적용되는 단위는 1,100토큰을 넘는 청크가 있는 10min뿐**이라 분할 전후 비교가 가능한 것은 영상 1의 10min이다. 영상 2의 10min은 분할 전 실행이 끝나지 않아 비교 기준이 없고, 영상 2의 10sec·30sec·3min 백업은 재계산 결과와의 차이(샘플링 편차) 확인에 쓸 수 있다. 이상이 없으면 영상 3과 보고서 3건으로 넘어간다. `0RxMZBLeqRI`는 10min 캡션 2개가 잘린 상태임을 감안한다(§11).
+2. **완성 캐시로 검색 확인**: 서비스 `/load`(409 없음), L0/L1/full 지연과 Deep-Reporter 600초 타임아웃 여유.
+3. **현재 코드로 보고서 생성·분석**: 규칙 6·C0, absence, 이미지 시간 기록, 번역 보완이 반영된 첫 실제 실행. 영상 3개 보고서를 `analysis/analyze_report.py`와 근거 원문 대조로 검증한다.
+4. **50개 영상 사전 인덱싱**: 13,424회(분할 포함, 빈 캐시 기준). 소요 시간 추정은 §5.2.2(서버 7개·GPU 4개 단독이면 약 13시간, 서버 1개·GPU 공유면 4–5일).
+5. **결정 4 효과 측정**: 같은 영상·query로 `previous_sections_context` written vs deep_reporter를 각 2회 이상 실행(`analysis/analyze_report.py`).
+6. **결정 7 실험**(`ANALYSIS_D4_D7.md` §3) 후 사용자에게 다시 질문한다.
+
+**(3) 이후**
+- 평가: Video-MME 150문항을 보고서만 보고 풀기, 자동 지표, 사람 검수.
+- MERIT 별도 검색 서비스(§4.2 주의점 반영).
+- 관제 도메인 템플릿과 데이터(여러 날짜 영상이면 근거 라벨과 시간 표기에 DAY 추가).
+
+### 13.4 미검증 체크리스트
+
+- [x] `run_report.py` 실제 실행 (1회, 10sec 캐시)
+- [x] writer 규칙 4의 실제 효과 (8/14 → 4/19, 1회)
+- [x] 결정 5: 결론 섹션과 섹션 수 상한 준수 (1회)
+- [x] 결정 6: 실제 번역 (6/6 성공, 표기 보존, 품질 문제 확인)
+- [x] full 모드 실제 LLM (10sec만)
+- [ ] 결정 4(규칙 6 + C0)의 실제 효과와 지연
+- [ ] 번역 보완(한자 재시도, 이름 보호)의 실제 효과
+- [x] 사전 인덱싱 영상 1개 전체 (분할 적용 전 코드, 668초, §9.6)
+- [ ] 분할 OpenIE·응답 구제·폭주 절단의 GPU 실행 효과
+- [ ] 분할 전후 triple 비교
+- [ ] 4개 granularity 캐시로 검색 (L0/L1/full), 타임아웃 여유
+- [ ] HTTP OpenIE와 in-process OpenIE 결과 비교
+- [ ] 규칙 근거 검사의 재현율·일반화
+- [ ] 같은 조건 다중 실행의 편차
+- [ ] 여러 영상 연속 처리 시 검색 서비스 영상 교체
+- [ ] `llm.backend=openai` 경로
+- [ ] vLLM 교체
+- [ ] 검색 결과·보고서 품질의 정량 평가
+
+### 13.5 산출물과 백업 위치
+
+| 위치 | 내용 |
+|---|---|
+| `report_framework/*.py`, `config.yaml`, `run_prebuild*.sh` | 코드와 설정 |
+| `report_framework/*.md` | 문서 6종 (§0.2) |
+| `tests/_artifacts/gpu_test/` | 실제 10sec 캐시와 프레임 (테스트 전용) |
+| `tests/_artifacts/gpu_report/` | 보고서 A 원본 `report.md`, `outline.json`, `llm_server.log` |
+| `tests/_artifacts/pipeline_test/smoke_grounded/` | 보고서 A를 후처리한 결과 (`report.md`, `frames/`) |
+| `tests/_artifacts/gpu_e2e/outputs/report_run1/` | 보고서 B 전체 산출물 (`report.md`, `report_ko.md`, `report_raw.md`, `report.json`, `validation.json`, `frames/`) |
+| `tests/_artifacts/gpu_e2e/` | B 실행 설정(`config_l1.yaml`, `config_full.yaml`), 서버·서비스 로그, `summary.json` |
+| `tests/_artifacts/analysis/` | `smoke_metrics.json`(A), `e2e_run1_metrics.json`(B) |
+| `tests/_artifacts/pipeline_test/{ok, bad_planner, no_conclusion, too_many, translate_*, edge}` | CPU 테스트 출력 |
+| `tests/_artifacts/test_cache/`, `dr_logs*` | 가짜 모델 캐시, Deep-Reporter 세션 로그(테스트) |
+| `cache/episodic/` | 사전 인덱싱 캐시 (`-QuCz7kxBr8`의 10sec·30sec·3min만, `_done/` 비어 있음) |
+| `outputs/3videos_20261022_120438/`, `outputs/3videos_20261022_141051/` | 영상 3개 실행 기록(§9.6, §9.8). 보고서는 없음 |
+| `outputs/3videos_20261022_160548_gated/` | 대기 후 자동 시작 기록(§9.9, `gate_run.log`, `gate.json`). 시작하지 않음 |
+| `migration/`, `MIGRATION_HANDOFF.md` | 서버 이전 준비(rsync 규칙, 영상 md5, 패키지 목록, 인수인계 메모) |
+| `analysis/openie_exp/` | OpenIE 디코딩 실험 결과(§9.7) |
+| `logs/` | 사전 인덱싱 로그(`prebuild_*.log`, `prebuild_http_pilot.out`, `prebuild_llm_*_gpu{4,5,6}.log`), 3영상 실행 콘솔 출력(`gpu_3videos.out`, `gpu_3videos_2gpu.out`) |
+| `backups/` | `.venv` 수리 전 원본, 2026-10-22 수정 전 파일(`prebuild_episodic_index.py.bak_20261022_split`, `run_service_capped.py.bak_20261022`, `REPORT_ISSUES_AND_FIXES.md.bak_20261022_i22`, `DESIGN_AND_STATUS.md.bak_20261022_split`), 2026-10-25 문서 정합성 수정 전 문서 6종(`*.md.bak_20261025_b`), 삭제 전 캐시 일부(`cache_before_split_20261022/`: 영상 1의 10min OpenIE 결과와 완료 표식, 영상 2의 10sec·30sec·3min OpenIE 결과. 2026-10-25 파일로 재확인) |
+
+- 설정 기본값의 `logs/deep_reporter/`, `cache/frames/`는 아직 만들어지지 않았다. 지금까지의 실제 실행은 테스트 스크립트가 출력 위치를 `tests/_artifacts/`나 `outputs/3videos_*` 아래로 지정했기 때문이다.
+- Claude 세션 scratchpad(`/tmp/claude-1000/...`)의 사본은 임시라 사라질 수 있다. `tests/`가 정본이다.

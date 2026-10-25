@@ -1,0 +1,554 @@
+[
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 0,
+  "sample": 0,
+  "setting": "rp105",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 470,
+   "hit_max": false,
+   "sec": 53.9,
+   "parse_ok": true,
+   "error": null,
+   "entities": 77,
+   "unique": 77
+  },
+  "triples": {
+   "prompt_tokens": 2985,
+   "completion_tokens": 1086,
+   "hit_max": false,
+   "sec": 120.2,
+   "parse_ok": true,
+   "error": null,
+   "n": 47,
+   "max_run_same_subj_pred": 1,
+   "max_count_same_subj_pred": 1
+  },
+  "triples_sample": [
+   [
+    "Gypsy",
+    "is a non-slandrous term for",
+    "Roma/Romani"
+   ],
+   [
+    "Roma/Romani",
+    "present in",
+    "Balkans"
+   ],
+   [
+    "Roma/Romani",
+    "depicted in",
+    "historical battle tables"
+   ],
+   [
+    "TITO",
+    "associated with",
+    "inventing Macedonians"
+   ],
+   [
+    "Obama",
+    "overlaid on",
+    "dilapidated buildings"
+   ],
+   [
+    "Obama image",
+    "paired with",
+    "POREKLOM SAM CIGANIN"
+   ],
+   [
+    "Roma",
+    "represented in",
+    "modern parade"
+   ],
+   [
+    "Roma",
+    "accompanied by",
+    "EU and Ukrainian flags"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 0,
+  "sample": 1,
+  "setting": "rp105",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 282,
+   "hit_max": false,
+   "sec": 31.5,
+   "parse_ok": true,
+   "error": null,
+   "entities": 46,
+   "unique": 46
+  },
+  "triples": {
+   "prompt_tokens": 2811,
+   "completion_tokens": 1867,
+   "hit_max": false,
+   "sec": 210.5,
+   "parse_ok": true,
+   "error": null,
+   "n": 124,
+   "max_run_same_subj_pred": 54,
+   "max_count_same_subj_pred": 54
+  },
+  "triples_sample": [
+   [
+    "Gypsy",
+    "is a non-slandrous term for",
+    "Roma"
+   ],
+   [
+    "Gypsy",
+    "is a non-slandrous term for",
+    "Romani"
+   ],
+   [
+    "Roma",
+    "present in",
+    "Balkans"
+   ],
+   [
+    "Roma",
+    "subject to",
+    "ethnic hatred"
+   ],
+   [
+    "Roma",
+    "subject to",
+    "political manipulation"
+   ],
+   [
+    "Roma",
+    "subject to",
+    "ethnic erasure"
+   ],
+   [
+    "Roma",
+    "subject to",
+    "systemic marginalization"
+   ],
+   [
+    "Roma",
+    "depicted in",
+    "montage of memes"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 1,
+  "sample": 0,
+  "setting": "rp105",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 359,
+   "hit_max": false,
+   "sec": 42.2,
+   "parse_ok": true,
+   "error": null,
+   "entities": 50,
+   "unique": 50
+  },
+  "triples": {
+   "prompt_tokens": 2897,
+   "completion_tokens": 2048,
+   "hit_max": true,
+   "sec": 231.3,
+   "parse_ok": false,
+   "error": "Failed to parse response as JSON: Expecting value: line 140 column 53 (char 7842)",
+   "n": 138,
+   "max_run_same_subj_pred": 115,
+   "max_count_same_subj_pred": 115
+  },
+  "triples_sample": [
+   [
+    "Tiganiada",
+    "authored by",
+    "Ion Budai-Deleanu"
+   ],
+   [
+    "Tiganiada",
+    "depicts",
+    "Gypsy-led armies"
+   ],
+   [
+    "Tiganiada",
+    "features",
+    "Vlad Cepish"
+   ],
+   [
+    "Gypsy",
+    "used as",
+    "slave labor"
+   ],
+   [
+    "Gypsy",
+    "used as",
+    "warriors"
+   ],
+   [
+    "Moldavia",
+    "ruled by",
+    "Gypsy slave laborers"
+   ],
+   [
+    "Wallachia",
+    "ruled by",
+    "Gypsy slave laborers"
+   ],
+   [
+    "Gypsy",
+    "resisted",
+    "Ottoman expansion"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 1,
+  "sample": 1,
+  "setting": "rp105",
+  "ner": {
+   "prompt_tokens": 2213,
+   "completion_tokens": 256,
+   "hit_max": false,
+   "sec": 31.0,
+   "parse_ok": true,
+   "error": null,
+   "entities": 37,
+   "unique": 37
+  },
+  "triples": {
+   "prompt_tokens": 2783,
+   "completion_tokens": 612,
+   "hit_max": false,
+   "sec": 72.1,
+   "parse_ok": true,
+   "error": null,
+   "n": 36,
+   "max_run_same_subj_pred": 3,
+   "max_count_same_subj_pred": 3
+  },
+  "triples_sample": [
+   [
+    "Tiganiada",
+    "authored by",
+    "Ion Budai-Deleanu"
+   ],
+   [
+    "Tiganiada",
+    "depicts",
+    "Gypsy-led armies"
+   ],
+   [
+    "Tiganiada",
+    "features",
+    "Vlad Cepish"
+   ],
+   [
+    "Tiganiada",
+    "is referenced as",
+    "historical record"
+   ],
+   [
+    "Tiganiada",
+    "is referenced as",
+    "cultural myth"
+   ],
+   [
+    "Romanian rulers",
+    "used",
+    "Gypsy slave labor"
+   ],
+   [
+    "Romanian rulers",
+    "used",
+    "Gypsy warriors"
+   ],
+   [
+    "Moldavian rulers",
+    "resisted",
+    "Ottoman expansion"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 2,
+  "sample": 0,
+  "setting": "rp105",
+  "ner": {
+   "prompt_tokens": 1941,
+   "completion_tokens": 456,
+   "hit_max": false,
+   "sec": 54.2,
+   "parse_ok": true,
+   "error": null,
+   "entities": 69,
+   "unique": 69
+  },
+  "triples": {
+   "prompt_tokens": 2687,
+   "completion_tokens": 1369,
+   "hit_max": false,
+   "sec": 160.8,
+   "parse_ok": true,
+   "error": null,
+   "n": 77,
+   "max_run_same_subj_pred": 4,
+   "max_count_same_subj_pred": 4
+  },
+  "triples_sample": [
+   [
+    "Romani people",
+    "marginalized in",
+    "German-speaking territories"
+   ],
+   [
+    "Romani people",
+    "targeted by",
+    "Nazi rule"
+   ],
+   [
+    "Otto von Bismarck",
+    "associated with",
+    "state-building in unified Germany"
+   ],
+   [
+    "Otto von Bismarck",
+    "associated with",
+    "militarization of society"
+   ],
+   [
+    "Alfred Dillmann",
+    "established",
+    "Central Office for Gypsy Affairs"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "located in",
+    "Bavaria"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "created in",
+    "1899"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "involved in",
+    "bureaucratic racialization"
+   ]
+  ]
+ },
+ {
+  "video": "0RxMZBLeqRI",
+  "chunk": 2,
+  "sample": 1,
+  "setting": "rp105",
+  "ner": {
+   "prompt_tokens": 1941,
+   "completion_tokens": 184,
+   "hit_max": false,
+   "sec": 22.0,
+   "parse_ok": true,
+   "error": null,
+   "entities": 25,
+   "unique": 25
+  },
+  "triples": {
+   "prompt_tokens": 2455,
+   "completion_tokens": 866,
+   "hit_max": false,
+   "sec": 102.3,
+   "parse_ok": true,
+   "error": null,
+   "n": 49,
+   "max_run_same_subj_pred": 4,
+   "max_count_same_subj_pred": 4
+  },
+  "triples_sample": [
+   [
+    "Romani people",
+    "marginalized in",
+    "German-speaking territories"
+   ],
+   [
+    "Romani people",
+    "targeted by",
+    "Nazi rule"
+   ],
+   [
+    "Otto von Bismarck",
+    "associated with",
+    "state-building in unified Germany"
+   ],
+   [
+    "Otto von Bismarck",
+    "associated with",
+    "militarization of society"
+   ],
+   [
+    "Alfred Dillmann",
+    "established",
+    "Central Office for Gypsy Affairs"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "located in",
+    "Bavaria"
+   ],
+   [
+    "Central Office for Gypsy Affairs",
+    "created in",
+    "1899"
+   ],
+   [
+    "Zigeuner-Buch",
+    "used for",
+    "racial classification of Romani people"
+   ]
+  ]
+ },
+ {
+  "video": "-QuCz7kxBr8",
+  "chunk": 0,
+  "sample": 0,
+  "setting": "rp105",
+  "ner": {
+   "prompt_tokens": 1898,
+   "completion_tokens": 93,
+   "hit_max": false,
+   "sec": 11.5,
+   "parse_ok": true,
+   "error": null,
+   "entities": 14,
+   "unique": 14
+  },
+  "triples": {
+   "prompt_tokens": 2323,
+   "completion_tokens": 1299,
+   "hit_max": false,
+   "sec": 150.4,
+   "parse_ok": true,
+   "error": null,
+   "n": 64,
+   "max_run_same_subj_pred": 1,
+   "max_count_same_subj_pred": 2
+  },
+  "triples_sample": [
+   [
+    "Chris",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Zach",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Cass",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "James",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Mitchell",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Unnamed sixth player",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Chris",
+    "demonstrates dribbling skill",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Zach",
+    "demonstrates dribbling skill",
+    "SPORTS DRIBBLE SPECS"
+   ]
+  ]
+ },
+ {
+  "video": "-QuCz7kxBr8",
+  "chunk": 0,
+  "sample": 1,
+  "setting": "rp105",
+  "ner": {
+   "prompt_tokens": 1898,
+   "completion_tokens": 93,
+   "hit_max": false,
+   "sec": 12.3,
+   "parse_ok": true,
+   "error": null,
+   "entities": 14,
+   "unique": 14
+  },
+  "triples": {
+   "prompt_tokens": 2323,
+   "completion_tokens": 1391,
+   "hit_max": false,
+   "sec": 163.9,
+   "parse_ok": true,
+   "error": null,
+   "n": 60,
+   "max_run_same_subj_pred": 3,
+   "max_count_same_subj_pred": 3
+  },
+  "triples_sample": [
+   [
+    "Chris",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Zach",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Cass",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "James",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Mitchell",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Unnamed sixth player",
+    "participates in",
+    "SPORTS DRIBBLE SPECS test"
+   ],
+   [
+    "Chris",
+    "demonstrates dribbling skill",
+    "SPORTS DRIBBLE SPECS"
+   ],
+   [
+    "Zach",
+    "demonstrates dribbling skill",
+    "SPORTS DRIBBLE SPECS"
+   ]
+  ]
+ }
+]
