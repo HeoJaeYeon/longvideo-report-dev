@@ -1,6 +1,6 @@
 # 보고서 생성 파이프라인 (Video-RAG × Deep-Reporter)
 
-- 작성: 2026-10-22. 최종 갱신: 2026-10-25 (대기 실행 결과, GPU 4–7 허용, 검증 영상의 10min 캡션 잘림)
+- 작성: 2026-10-22. 최종 갱신: 2026-10-25 (대기 실행 결과, GPU 4–7 허용, 검증 영상의 10min 캡션 잘림, C-1–C-5 결과)
 - 기준 코드: `report_framework/` (`run_report.py`, `videorag_retriever_service.py`, `local_llm_server.py`, `domain_templates.py`, `grounding_postprocessor.py`, `report_translator.py`, `prebuild_episodic_index.py`, `config.yaml`)
 - 이 문서는 **보고서 1건이 어떻게 만들어지는지**를 단계별로 설명한다. 설계 배경·결정·검증 이력·인수인계는 `DESIGN_AND_STATUS.md`, 문제와 개선 이력은 `REPORT_ISSUES_AND_FIXES.md`에 있다.
 - 별도 표시가 없으면 기본 설정(4개 단위 episodic, L1)을 기준으로 설명한다.
@@ -59,11 +59,12 @@
      - LLM 서버(`local_llm_server.py`)를 GPU마다 1개씩 띄운다.
      - 인덱서는 임베딩 모델만 올리고 OpenIE를 서버들에 HTTP로 순서대로 돌아가며 보낸다.
      - 요청은 in-process 호출과 같은 메시지, `max_tokens=2048`, 샘플링 인자 없음, 같은 JSON 파서, 같은 재시도 깊이를 쓴다.
-     - 모든 GPU 프로세스에 메모리 상한을 건다(LLM 서버 19,000 MiB, 인덱서 `--gpu-mem-cap-mib`).
+     - GPU 프로세스에는 기본으로 메모리 상한을 건다(LLM 서버 19,000 MiB, 인덱서 `--gpu-mem-cap-mib`). 2026-10-25 C 단계는 사용자 지시로 상한 없이 실행했다(`tests/gpu_3videos.py --llm-cap-mib 0 --aux-cap-mib 0`).
      - GPU를 다른 사용자와 같이 쓸 때는 `tests/gpu_3videos.py`(실행 전 여유 확인, 실행 중 감시·자동 중단)를 쓴다.
-   - **현재 상태** (`DESIGN_AND_STATUS.md` §9.5–9.11)
+   - **현재 상태** (`DESIGN_AND_STATUS.md` §9.5–9.15)
      - 10/22에는 분할 적용 전 영상 1개만 완주했고, 분할 적용 후 실행은 GPU 공유 문제로 중단·미시작이었다(§9.8·§9.9).
      - **2026-10-25 C-1에서 검증 영상 3개(`-QuCz7kxBr8`, `0RxMZBLeqRI`, `54k2g9ddy4M`)의 4개 단위 캐시를 완성했다**(GPU 4–7, LLM 서버 7개, 1,643초, 호출 430회 = 계획, 실패 0). 나머지 47개 영상은 캐시가 없다.
+     - 이 캐시로 검색(C-3)과 보고서 생성(C-4 3건, C-5 8건)을 했다. 서비스 여러 개가 같은 영상을 동시에 불러오면 실패하므로(I29) 영상별로 차례로 불러온다. 보고서 품질 문제는 `REPORT_ISSUES_AND_FIXES.md` P9·P19·P15.
    - 다시 실행하면 저장된 OpenIE 결과는 재사용되고, 완료한 영상은 `_done` 표식으로 건너뛴다.
    - 검색 서비스는 캐시가 불완전한 영상을 거부한다(409). HippoRAG의 OpenIE가 LLM 오류를 삼키고 빈 결과를 캐시에 저장하는 것을 막기 위해서다. 다만 재시도 후에도 파싱에 실패한 청크는 빈 triple로 저장되고 "완료"로 간주된다(HippoRAG·WorldMM 동작, 시험 실행 10sec에서 2건).
 
