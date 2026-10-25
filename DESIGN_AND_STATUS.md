@@ -1,6 +1,6 @@
 # Video-RAG × Deep-Reporter 장편 비디오 보고서 프레임워크 — 분석·설계·구현 현황
 
-- 작성: 2026-10-21~22 (Claude Code, 사용자 지시와 승인에 따라 작성). 최종 갱신: 2026-10-25 (C-1–C-5 결과 §9.10–§9.14, 재시도·수정 이력 §9.15, 상태 절 §2·§6.2·§13 갱신, I29·I30, 대기 실행·HF 캐시 정정·10min 잘림·GPU 지시는 같은 날 앞선 갱신)
+- 작성: 2026-10-21~22 (Claude Code, 사용자 지시와 승인에 따라 작성). 최종 갱신: 2026-10-25 (P9·P19·I28 수정 §8.12와 실제 확인 §9.16, 결정 16. 같은 날 앞선 갱신: C-1–C-5 결과 §9.10–§9.14, 재시도 이력 §9.15, I29·I30)
 - 위치: `/data1/jyheo/workspace/VideoRAG/report_framework/DESIGN_AND_STATUS.md`
 - **처음 이어받는 사람은 §2(현재 상태)와 §13(인수인계)부터 읽는다.**
 
@@ -57,7 +57,7 @@
 |---|---|---|---|
 | 설정 | `config.yaml` | 완료 | — |
 | 오프라인 사전 인덱싱 | `prebuild_episodic_index.py`, `run_prebuild.sh`, `run_prebuild_http.sh` | 완료. 결정 1 = A안(OpenIE를 LLM 서버 HTTP로) + **긴 청크 분할 OpenIE·응답 구제·폭주 절단**(2026-10-22, §8.3) | dry-run ✔ / CPU ✔ / 실제 실행: 영상 1개 완주(분할 적용 전, §9.6) / **분할·구제 적용 후 영상 3개 완주 ✔**(2026-10-25 C-1, §9.10) |
-| 로컬 LLM 서버 | `local_llm_server.py` | 완료 | GPU 실검증 ✔ |
+| 로컬 LLM 서버 | `local_llm_server.py` | 완료 (2026-10-25: `max_tokens_cap` 3,072, 토큰 계산을 생성 잠금 안으로, §8.12) | GPU 실검증 ✔ / 상한 동작 ✔(§9.16) |
 | [A] 검색 서비스 | `videorag_retriever_service.py` | 완료 | CPU 통합 ✔ / GPU ✔ 10sec(§9.2) / **4개 단위 ✔**(C-3, §9.12: L0·L1·full, 영상 3개, 요청 36건 성공) / 같은 영상을 서비스 2개가 동시에 불러오면 실패(I29, §9.14) |
 | 템플릿·맥락 교체 | `domain_templates.py` | 완료 (videomme 템플릿, 결론·상한, 규칙 4·6, C0) | CPU ✔ / 실제 보고서: A·B(규칙 6·C0 추가 전), C-4 3건(§9.13), C-5 8건(C0 켬 4·끔 4, §9.14). C0 효과 확인 안 됨, writer 반복 루프 2건(P9) |
 | [C] 후처리기·규칙 근거 검사 | `grounding_postprocessor.py` | 완료 (absence 처리, 이미지 시간 기록 포함) | CPU ✔ / 실제 실행: B 1회(absence·시간 기록 추가 전), C-4 3건·C-5 8건(현재 판). 결말 오인(P19)·writer 루프(P9)는 잡지 못함 |
@@ -102,6 +102,7 @@
 | C-4 보고서 3건 (4개 단위) | 2026-10-25 13:02–13:17 | 묶음 3개(GPU 4/5/6), 영상당 1건, 번역 포함 | 3건 exit 0·`passed`. 결말 오인(P19)·흐름 오류·번역 실패 5/17 확인 | §9.13 |
 | C-5 첫 시도 (C0 켬/끔 8건) | 2026-10-25 13:21–13:27 | 묶음 4개(GPU 4–7) | 1건 서비스 불러오기 실패(HTTP 500, I29) → Claude가 중단하고 사후 보고, 완료된 4건은 비교에 미사용 | §9.14 |
 | C-5 재실행 | 2026-10-25 13:28–13:46 | 같은 조건 + 영상별 불러오기 잠금 | 8건 exit 0·`passed`. C0 효과 확인 안 됨, writer 반복 루프 2건(P9) | §9.14 |
+| P9·P19 수정 후 확인 | 2026-10-25 14:14–14:32 | 영상 3개 × C0 켬 × 3회, 번역 끔, GPU 4–7 | 9건 exit 0·`passed`. 상한 도달 2건(130–134초에 끊김, 문장 37·39개 제거). 결말 오인은 검사로 표시되지만 writer 규칙만으로 막지 못함 | §9.16 |
 
 ### 2.4 알려진 품질 문제 (요약, 상세는 `REPORT_ISSUES_AND_FIXES.md`)
 
@@ -111,10 +112,10 @@
 | 다른 장면을 같은 사건으로 엮음 | 감지 안 됨 |
 | planner 섹션 설명의 내용이 근거 없이 본문에 들어감 | 경고만. C0의 완화 효과는 C-5에서 확인되지 않음 |
 | 결론 섹션이 앞 섹션의 사실을 자기 근거에 붙임 | C0의 완화 효과는 C-5에서 확인되지 않음(결론 지적 수: 켬 7·1·1·1, 끔 4·4·0·0) |
-| 반복 단락, **writer 반복 루프** | 규칙 6 + C0 구현. C-4는 B보다 단락 유사도가 낮았다. 그러나 C-5에서 writer가 같은 문장 묶음을 8,192토큰까지 되풀이한 루프 2건(둘 다 C0 켬, §9.14). 루프 대응 없음(P9, 사용자 결정 대기) |
+| 반복 단락, **writer 반복 루프** | 규칙 6 + C0. C-5에서 루프 2/8건. 2026-10-25 대응(§8.12): 서버 상한 3,072, 같은 문장 제거, 경고. 확인(§9.16): 루프 2/9건이 130–134초에 끊기고 반복 문장이 보고서에서 빠짐. 끊긴 섹션은 문장 중간에서 끝남 |
 | 근거 없는 추측 표현 | 대응 없음 |
 | 번역의 한자 혼입·이름 표기 불일치 | 감지·재시도, 이름 보호 구현. C-4 실측: 17섹션 중 5개 자리표시자 불일치로 실패(영어 유지), 한자·가나 잔존 3섹션(§9.13). 제목 형식 불일치는 미대응 |
-| 구간 요약의 "the video closes" 표현이 영상 전체 결말로 옮겨짐(P19), 섹션 시간 순서 뒤집힘, 화자 뒤바뀜 | C-4에서 확인(§9.13). 대응 없음 |
+| 구간 요약의 "the video closes" 표현이 영상 전체 결말로 옮겨짐(P19), 섹션 시간 순서 뒤집힘, 화자 뒤바뀜 | P19 대응(§8.12): writer 규칙 7(실제 영상 끝 시각 포함), 결말·시작 서술 검사. 확인(§9.16): 검사가 표시하지만 writer 규칙만으로 오인이 줄었다고 단정할 수 없음(보고서당 1.22건, 수정 전 1.25–2.0). 순서·화자 오류는 대응 없음 |
 | 이미지와 텍스트 근거의 시간 차이 | `validation.json`에 기록. 출력 변경은 결정 7 보류 |
 | (인덱스 품질) 10min 캡션 32/232개가 전처리에서 2,048토큰에 잘림. **검증 영상 3개 중 `0RxMZBLeqRI`의 10min 0–10분·10–20분 캡션이 여기에 해당**(§11) | 원인 확인, 재생성은 보류(I22) |
 | (인덱스 품질) 10min OpenIE 출력 잘림·재시도 폭증, 열거 폭주 triple | 분할 OpenIE + 구제 + 연속 15개 초과 절단, GPU 검증(C-1: 호출 = 계획, 구제 5건, 절단 146개). 분할 기준 아래 입력의 잘림 3건, 정당한 나열 절단 확인(I23·I24) |
@@ -404,6 +405,7 @@ episodic_memory.retrieve(query)                          episodic/memory.py:247
 | 13 | GPU 사용 범위 (2026-10-25) | "지금 gpu 4~7번 4개를 모두 사용할 수 있어" | 적용(C-1–C-5) |
 | 14 | C 단계 실행 방식 (2026-10-25) | "서버당 memory 상한 20000으로 제한하지 않고, 사용 가능한 메모리를 모두 사용", "골고루 작업을 gpu 4-7번에 분배", "C-1부터 순차적으로", "아직 C-7은 수행하지 마". `tests/gpu_3videos.py` 수정(여러 서버·상한 선택·`--skip-reports`), GPU 배치, 새 스크립트 3개 승인 | C-1–C-5 실행 ✅, C-6 질문 전, C-7 ✖ |
 | 15 | 정합성·관리 (2026-10-25) | 문서·기록 정합성 정리(B 항목) 지시. `tests/delayed_gpu_3videos.py`에 `--gpus`, 루트 `CLAUDE.md` 갱신, `report_framework` git 관리 승인 | ✅ |
+| 16 | 보고서 품질 대응 (2026-10-25) | P9: "(a) + (c) + (d)로 적용". C0: "앞 문단의 문장은 전달하자. 나중에 표본을 늘려서 재측정". P19: "1,3을 추가 적용". 번역: "지금 신경쓰지 않을게. 영어 report의 품질을 집중적으로". 결정 7: "D와 C를 후보로, 결정 1·3을 적용한 뒤 실험해서 비교 결과로 다시 물어봐줘". I28 "승인". GPU: "gpu 4-7을 1시간만 더", "당장 실행해야 하는것만 수행하고 보류" | P9·P19·I28 구현·확인 ✅(§8.12, §9.16). C/D 실험은 코드 수정·GPU 필요로 보류. C-7 보류 |
 
 ---
 
@@ -496,6 +498,7 @@ repo 파일은 수정하지 않는다. 바꾸는 대상은 두 가지다.
 | `run_report.py` | [D] 보고서 생성 진입점 | CPU ✔, 실제 1회 |
 | `report_translator.py` | 한국어 번역 (결정 6) | CPU ✔, 실제 1회 |
 | `analysis/analyze_report.py` | 반복·근거 구성 지표 (읽기 전용) | 보고서 A·B 적용 |
+| `analysis/summarize_batch.py` | 보고서 배치 결과 요약(읽기 전용, §8.12) | 실행 ✔(§9.16) |
 | `analysis/compare_openie_cache.py`, `analysis/c2_openie_compare.json` | C-2 분할 전후·재계산 OpenIE 캐시 비교(읽기 전용) | 실행 ✔(§9.11) |
 | `analysis/openie_degeneration_exp.py`, `analysis/openie_exp/` | OpenIE 디코딩 설정 비교 실험과 결과(건별 `.json`, `.log`, 요약 `summarize.py`) | 실행 ✔(§9.7) |
 | `tests/` | CPU 테스트 5종, GPU 실행 스크립트 5종, 메모리 상한 래퍼 2종 (§8.11) | — |
@@ -668,8 +671,21 @@ repo 파일은 수정하지 않는다. 바꾸는 대상은 두 가지다.
 | `tests/gpu_3videos.py` | GPU | 영상 3개 사전 인덱싱 → 보고서. LLM 서버 1개(`--llm-gpu`) 또는 여러 개(`--llm-gpus 4,4,5,…`, 포트 18810+i, 사전 인덱싱은 전부 순환 사용, 보고서는 첫 서버), 서버 상한 `--llm-cap-mib`(기본 19,000, 0 = 상한 없음) + 인덱서·검색 서비스(`--aux-gpu`, `--aux-cap-mib` 기본 15,000, 0 = 상한 없음), `--skip-reports`(사전 인덱싱만). 2026-10-25 사용자 승인으로 여러 서버·상한 선택·`--skip-reports` 추가(사본 `backups/gpu_3videos.py.bak_20261025`). 시작 전 여유 확인: GPU마다 그 GPU에 올릴 프로세스들의 상한 합(상한이 없으면 프로세스당 19,000 MiB) + 2,000 MiB. 감시: 합계 > `--abort-used-mib` 47,500이면 우리 프로세스만 종료 | §9.6(이전 판), §9.8, §9.10 |
 | `tests/delayed_gpu_3videos.py` | GPU | `--delay-sec`(기본 7,200) 대기 → GPU를 30초마다 재서 최근 `--hold-sec`(600초)의 최대 사용량을 구함 → `최대[llm] + 19,000 + margin ≤ --abort-used-mib`과 `최대[aux] + --aux-cap-mib + margin ≤ --abort-used-mib`(margin `--margin-mib` 1,500)을 만족하면 `gpu_3videos.py`를 1회 실행. 두 배치(LLM·aux를 `--gpus`의 두 GPU에 이 순서 또는 반대 순서로) 중 두 GPU의 남는 여유 가운데 작은 값이 더 큰 배치를 고른다. `--max-wait-sec`(6시간) 안에 못 맞추면 exit 2. 자동 재시도 없음. 대상 GPU 2개는 `--gpus`(기본 `6,7`)로 지정한다(2026-10-25 사용자 승인으로 고정값 `GPUS = (6, 7)`을 인자로 바꿈, 수정 전 사본 `backups/delayed_gpu_3videos.py.bak_20261025`. `--gpus 4,5`·잘못된 입력 거부를 GPU 미사용 조건으로 확인) | §9.9 (시작 안 함) |
 | `tests/run_llm_server_capped.py`, `tests/run_service_capped.py` | 래퍼 | 상한을 건 LLM 서버(19,000 MiB)·검색 서비스(환경변수 `GPU_MEM_CAP_MIB`, 기본 19,000) 실행 | — |
+| `tests/test_p9_p19.py` | CPU | 2026-10-25 P9·P19·I28 수정: 같은 문장 제거(합성 루프, 실제 C-5 루프 섹션), 결말·시작 서술 검사(early/late/unverifiable, "concludes this section" 제외), `load_video_end`(10sec 기준 00:37:37), writer 규칙 7과 `<<VIDEO_END>>` 채움, 경고 문구, 서버 상한(3,072 / 없음)과 `count_tokens` 잠금 위치 | ALL PASS (16개) |
 
 CPU 테스트는 `CUDA_VISIBLE_DEVICES=""`로 실행하고, 산출물은 `tests/_artifacts/`에 쓴다.
+
+### 8.12 P9·P19·I28 수정 (2026-10-25, 사용자 승인, 수정 전 사본 `backups/*.bak_20261025_p9p19`, 커밋 `baf08d8`)
+
+| 대상 | 파일 / 함수 | 내용 |
+|---|---|---|
+| P9 (a) 출력 상한 | `local_llm_server.py` `create_app(..., max_tokens_cap)`, `config.yaml` `llm.local.endpoint.max_tokens_cap: 3072` | 요청 `max_tokens`를 3,072로 자른다(Deep-Reporter는 항상 8,192 요청). 값 근거: C-3–C-5 정상 출력 최대 2,182토큰(번역), writer 정상 최대 1,766. 비우면 상한 없음 |
+| P9 (c) 같은 문장 제거 | `grounding_postprocessor.dedupe_repeated_sentences`, `run_report.run` | 후처리(인용 치환) 전에 섹션마다 같은 문장(공백 정규화 후 완전 일치)의 두 번째 이후를 지운다. 제목·이미지 줄은 그대로. 섹션이 문장 부호 없이 끝나는지도 기록. `report_raw.md`는 원본(Deep-Reporter 출력) 그대로, `report.md`·`report.json`은 제거 후 |
+| P9 (d) 검증 표시 | `run_report.validate` | 제거가 있으면 경고 "section i: removed N repeated sentence(s), a sentence occurred up to K times"(K ≥ 3이면 "writer repetition loop suspected"), 문장 중간 끝이면 "ends mid-sentence (likely cut at the LLM max_tokens cap)". 상태(`passed`/`failed`)는 바꾸지 않는다. `validation.json`에 `repetition`(섹션별) 추가 |
+| P19 (1) writer 규칙 | `domain_templates.py` writer 템플릿 Grounding Rule 7, `VIDEO_END_SLOT`, `build_templates(..., video_end)`, `load_video_end` | "구간 요약의 'the video opens/closes…'는 그 구간의 시작·끝이다. 영상 전체는 00:00:00–<실제 끝>이다. 영상 전체의 시작·끝은 처음·마지막 몇 분에 닿는 근거로만 서술". 결론 섹션 지시에 "결말을 쓰면 규칙 7을 따름" 추가. 실제 끝은 10sec 캡션 마지막 `end_time`(10min 개요의 마지막 구간은 40:00·50:00처럼 창 경계라 실제 끝 37:37·30:32·45:14보다 길다) |
+| P19 (3) 결말·시작 서술 검사 | `grounding_postprocessor.boundary_claims`, `run_report` | "the video closes/ends/concludes/wraps up/finishes", "final/closing/last scene/shot/moments of the video"("…concludes this section/segment" 제외)와 "opens/begins/starts" 문장의 인용 근거 시간을 본다. 가장 늦은 인용 근거 끝이 영상 끝보다 120초 넘게 이르면 `ending_early`, 가장 이른 시작이 120초보다 늦으면 `opening_late`, 시간 있는 근거가 없으면 `*_unverifiable`. 경고 1줄 + `validation.json` `boundary_findings`, `video_end` |
+| I28 | `local_llm_server.py` | `count_tokens`를 `generate_lock` 안으로 옮김 |
+| 분석 도구 | `analysis/summarize_batch.py`(새 파일) | 배치 결과 폴더 요약(작업별 상한 도달, 제거 문장, 결말·시작 서술, 규칙 검사, 결론 마지막 문장) |
 
 ---
 
@@ -910,6 +926,30 @@ CPU 테스트는 `CUDA_VISIBLE_DEVICES=""`로 실행하고, 산출물은 `tests/
 - 요약: 루프는 C0 켬 2/4, 끔 0/4(C-4의 C0 켬 3건은 0/3). writer 프롬프트는 켬이 평균 142토큰 길다(5,191 vs 5,049). 루프를 뺀 단락 유사도·섹션 간 유사 문장·결론 지적 수는 켬과 끔 사이에 일관된 차이가 없다.
 - 판단: 표본 4 대 4로는 C0가 루프의 원인인지, 반복·결론 지적을 줄이는지 판단할 수 없다(2/4 대 0/4의 Fisher 정확검정 양측 p ≈ 0.43, 계산값). C0의 기대 효과(반복·결론 인용 불일치 감소)는 이 표본에서 확인되지 않았다. 확실한 것은 (1) writer가 상한까지 반복하는 루프가 실제로 생기고 (2) 지금의 검증·지표가 그것을 막지도 표시하지도 못한다는 것이다(`REPORT_ISSUES_AND_FIXES.md` P9).
 
+### 9.16 P9·P19 수정 후 실제 모델 확인 (`outputs/p9p19_check_20261025_141401/`, 요약 `batch_summary.json`)
+
+- 조건: 영상 3개 × C0 켬(`written`, 결정 16에서 유지) × 3회 = 9건, 번역 끔(결정 16: 영어 보고서 품질 우선), 묶음 4개(GPU 4–7, 상한 없음, 서버 `max_tokens_cap` 3,072). 14:14–14:32. 사용자가 허용한 GPU 시간(약 15:08까지) 안에 끝나도록 15:00 강제 종료 감시를 걸었고 발동하지 않았다. GPU 최대 37.1/40.3/37.1/39.2GB(4/5/6/7), 감시 중단 없음, 종료 후 GPU 4–7 0/0/0/3 MiB, 우리 PID 잔존 0. GPU 0–3의 다른 사용자 프로세스는 건드리지 않았다.
+- 실행: 9건 모두 exit 0·`passed`. 생성 296.9–417.5초.
+- **P9 (a)(c)(d)**
+  - 상한 도달 2/9(둘 다 `0RxMZBLeqRI`, 섹션 5): 130.5초·133.9초에 끊김(수정 전 C-5 루프는 8,192토큰까지 약 6분). 그 두 보고서의 생성은 403.8·417.5초, 나머지 7건은 296.9–361.7초.
+  - 같은 문장 제거: 상한 도달 섹션에서 37개(최대 38회 반복)·39개(최대 15회) 제거, 두 섹션 모두 "문장 중간 끝" 경고. 그 밖에 `-QuCz7kxBr8` r2 섹션 3에서 10개(최대 3회), `54k2g9ddy4M` r1–r3에서 1–3개(최대 2–4회) 제거.
+  - 경고 기준(최대 반복 ≥ 3이면 "loop suspected")은 3–4회 반복인 일반 반복에도 붙었다(9건 중 3건). 실제 루프(상한 도달)와 구분하려면 기준을 올리거나 상한 도달과 묶어야 한다(사용자 결정 필요).
+- **P19 (1)(3)**: 같은 검사 함수(`boundary_claims`)를 수정 전 보고서에도 적용해 비교했다.
+
+| 기준 | 보고서 | `ending_early` 문장(보고서당) | 결론 섹션의 `ending_early` | `ending_unverifiable` |
+|---|---|---|---|---|
+| C-4 (수정 전, 번역 포함) | 3 | 6 (2.0) | 2/3 | 0 |
+| C-5 C0 켬 (수정 전) | 4 | 5 (1.25) | 3/4 | 2 |
+| C-5 C0 끔 (수정 전) | 4 | 7 (1.75) | 2/4 | 4 |
+| **수정 후** | 9 | 11 (1.22) | 4/9 | 8 |
+
+  - writer는 규칙 7이 있어도 3min 캡션의 "The video closes with a close-up of the Shot Coach device"(18:00–21:00 구간 요약) 같은 문장을 그대로 옮겼다(`-QuCz7kxBr8` r1 섹션 3·4에서 각 1번, r3 섹션 4에서 3번, 인용 근거 끝 20:00–21:00). 결론 섹션의 결말 오인 비율은 표본상 줄었지만(수정 전 7/11, 후 4/9) 표본이 작아 효과로 단정할 수 없다.
+  - 결론 마지막 문장을 실제 결말(10sec 캡션)과 대조: `-QuCz7kxBr8` r1은 "The video ends at 00:37:37 with a static screen displaying 'Thank you for watching' …"로 정확했다. `54k2g9ddy4M` r2("pet psychics and goats on the road")는 41:30 개·44:20 염소 장면과 맞는다. `54k2g9ddy4M` r1·r3("concludes … Liendo's gold medal")은 틀렸고 검사가 `ending_early`(인용 근거 끝 40:00 < 45:14)로 표시했다.
+  - 검사 오탐 1건: "the final shot of the video’s opening montage"(`0RxMZBLeqRI` r1 섹션 1)가 결말 서술로 잡혔다("of the video’s …" 소유격 표현).
+- 규칙 검사 합계(9건, 문장 1,104): unsupported 9, miscited 21, uncited 69.
+- I28: 이번 실행에서 `Already borrowed` 0건. 다만 보고서 생성은 서버당 요청이 한 번에 하나라 수정 전(C-4·C-5)에도 0건이었으므로 이 실행으로 효과를 판단할 수는 없다(코드와 CPU 테스트로만 확인).
+- 판단: (a)는 루프 시간을 줄였고 (c)는 루프 문장을 보고서에서 없앴으며 (d)는 그 사실을 표시한다. 다만 상한에서 끊긴 섹션은 문장 중간에서 끝나고 그 섹션의 나머지 내용은 생성되지 않는다. P19는 검사(3)가 결말 오인을 잡아 표시하지만, writer 규칙(1)만으로는 오인을 막지 못했다.
+
 ### 9.15 재시도·수정 이력 요약 (2026-10-22 – 10-25)
 
 실행이 중단·실패·미시작된 뒤 무엇을 바꿔 다시 했는지를 한 곳에 모았다. 상세는 각 절과 `REPORT_ISSUES_AND_FIXES.md`.
@@ -958,8 +998,8 @@ CPU 테스트는 `CUDA_VISIBLE_DEVICES=""`로 실행하고, 산출물은 `tests/
 | 폭주 절단이 정당한 나열도 자른다 | ✔ C-2(§9.11): 절단에 걸린 예에 `basketball court – features – hoop, trampoline, …` 같은 장면 요소 나열과 `Joshua Liendo – is – …` 같은 반복 서술이 섞여 있다 | 경험적 기준(15)의 한계. C-8에서 검토 |
 | OpenIE 결과의 실행 간 편차 | ✔ C-2: 같은 입력(분할 대상 아님)을 다시 계산하면 청크별 triple 집합 Jaccard 평균 0.27(30sec)·0.22(3min), 같은 청크 0개 | 샘플링 생성(T=0.7) 때문. 캐시를 다시 만들면 그래프 내용이 달라진다. 비교·평가 때 감안 |
 | LLM 서버 토크나이저 동시 사용 오류 `Already borrowed` | ✔ C-1 261건(10/22 실행에도 229건 + 76건). WorldMM 생성 함수의 재시도로 모두 성공(500 응답 0) | 원인은 `local_llm_server.py`가 생성 잠금 밖에서 `count_tokens`로 같은 토크나이저를 쓰는 것(코드 근거). 수정은 승인 대기(`REPORT_ISSUES_AND_FIXES.md` I28) |
-| writer 반복 루프가 보고서에 그대로 들어감(P9) | ✔ C-5 8건 중 2건(C0 켬), 각 섹션 약 6분·8,192토큰 | 검증(`validation.json`)은 `passed`, `analyze_report.py`의 단락 유사도도 한 단락 안 루프를 못 잡음(영상 1 켬 r1: 완전 중복 문장 295개인데 0.5 이상 쌍 0). 대응은 사용자 결정 대기 |
-| 구간 요약의 "the video closes"가 영상 결말로 옮겨짐(P19) | ✔ C-4 보고서 1 | 인용 문구가 근거와 같아 규칙 검사로 잡히지 않는다. 대응은 사용자 결정 대기 |
+| writer 반복 루프(P9) | ✔ C-5 2/8건, 수정 후 2/9건(§9.16) | 서버 상한 3,072로 130–134초에 끊기고 같은 문장 제거·경고(§8.12). 남은 위험: 끊긴 섹션이 문장 중간에서 끝나고 나머지 내용이 없음, 비슷하지만 완전히 같지 않은 반복은 지워지지 않음, "loop suspected" 경고가 3–4회 일반 반복에도 붙음 |
+| 구간 요약의 "the video closes"가 영상 결말로 옮겨짐(P19) | ✔ C-4, 수정 후에도 9건 중 결론 4건(§9.16) | writer 규칙 7 + 결말·시작 서술 검사(§8.12). 검사는 경고만 하고 문장을 고치지 않는다. 오탐 1건("final shot of the video’s opening montage") |
 | 같은 영상 동시 불러오기(I29) | ✔ C-5 첫 시도 1건 실패 | `tests/gpu_report_batch.py` 영상별 잠금. 서비스 코드 자체는 그대로라 다른 실행 방식에서는 다시 생길 수 있다 |
 | 같은 작업 폴더의 Claude 세션 중복(I30) | ✔ 2026-10-25 13:39–13:49 두 세션이 겹쳐 실행, 이전 세션이 문서 5종을 고치고 커밋(`fbfb796`) | 동시에 같은 파일을 고치면 서로 덮어쓸 수 있다. 세션 하나만 쓰기 |
 | 세션이 바뀌면 백그라운드 작업 추적이 끊김 | ✔ 2026-10-25: 새 세션 시작 시 이전 세션의 백그라운드 작업 2개가 "stopped"로 표시됐지만, `setsid`로 띄운 C-5 배치는 끝까지 돌아 8건을 완료했다 | 실행은 `setsid`로 띄우고, 상태는 결과 파일(`summary.json`, 로그)과 `ps`로 확인한다 |
@@ -1091,15 +1131,13 @@ python -B tests/gpu_e2e.py                                                      
 5. **(완료 C-5, §9.14: 효과 확인 안 됨, writer 루프 발견)** **결정 4 효과 측정**: 같은 영상·query로 `previous_sections_context` written vs deep_reporter를 각 2회 이상 실행(`analysis/analyze_report.py`).
 6. **결정 7 실험**(`ANALYSIS_D4_D7.md` §3) 후 사용자에게 다시 질문한다(C-6, 질문 전).
 
-**(2-1) 2026-10-25 C-5 이후 사용자 결정 대기 (상세 선택지는 `REPORT_ISSUES_AND_FIXES.md` P9·P19·P15·I28 및 이번 보고)**
-1. writer 반복 루프(P9) 대응 방식
-2. C0(`previous_sections_context: written`) 유지·해제·재측정
-3. 결말 오인(P19) 대응
-4. 번역 실패(P15) 원인 분석·이름 보호 유지 여부
-5. 결정 7(근거 구성)
-6. I28 서버 수정 승인
-7. C-7(50개 영상) 시점: 1–3번 대응 전/후
-8. 보류 항목(I22 10min 캡션 재생성, P12, I25, 번역 제목 형식)
+**(2-1) 2026-10-25 결정 16 이후 상태**
+1. (완료 §8.12·§9.16) P9 (a)(c)(d), P19 (1)(3), I28.
+2. (유지) C0 켬. 나중에 표본을 늘려 재측정.
+3. (보류) 번역(P15) — 영어 보고서 품질 우선.
+4. (다음, 코드 수정 승인·GPU 필요) 결정 7 후보 C(semantic 경량 필터)·D(이미지를 텍스트 근거 시간 근처로 제한) 구현 → A/C/D 비교 실험 → 사용자에게 질문. 구현 계획은 이번 보고에 정리.
+5. (사용자 결정 필요, 이번 검증에서 나옴) "loop suspected" 경고 기준(현재 최대 반복 ≥ 3), 상한에 끊긴 섹션 처리(그대로 둘지·그 섹션만 다시 생성할지), writer 규칙 7만으로 막지 못한 P19의 추가 대응(결론 섹션에 마지막 구간 근거 넣기 등), 검사 오탐 수정.
+6. (보류) C-7 50개 영상 사전 인덱싱(12,780회, 약 12.5–15시간 추정), I22, P12, I25, 번역 제목 형식.
 
 **(3) 이후**
 - 평가: Video-MME 150문항을 보고서만 보고 풀기, 자동 지표, 사람 검수.

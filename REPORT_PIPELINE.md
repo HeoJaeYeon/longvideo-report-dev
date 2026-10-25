@@ -91,7 +91,8 @@
 ### ③ 영상 개요와 템플릿 적용
 - 개요: 10min 캡션들을 `[HH:MM:SS-HH:MM:SS] 캡션` 블록으로 이어 붙인다. 예시 영상은 4개 블록이고, planner 프롬프트는 A 5,050토큰, B 5,213토큰이었다.
   - 주의: 50영상 중 20영상의 10min 캡션 32개가 전처리에서 2,048토큰에 잘려 문장 중간에서 끝난다. 그 영상들은 개요에 잘린 뒷부분이 빠진다(재생성은 보류, `REPORT_ISSUES_AND_FIXES.md` I22). 예시 영상 `-QuCz7kxBr8`은 해당하지 않는다(10min 최대 1,733토큰). 검증 영상 3개 중에서는 `0RxMZBLeqRI`의 0–10분·10–20분 캡션이 해당한다(2026-10-25 확인).
-- `with apply_templates(build_templates("videomme", 개요, max_sections)):` 블록 안에서만 Deep-Reporter의 planner, query, writer 프롬프트가 비디오용으로 바뀐다.
+- 영상 끝 시각은 10sec 캡션 마지막 `end_time`으로 정한다(2026-10-25, P19). 10min 개요의 마지막 구간 끝(40:00, 50:00 등)은 창 경계라 실제 끝보다 길다. 이 시각은 writer 규칙 7("구간 요약의 'the video closes/opens'는 그 구간의 끝·시작이며, 영상 전체는 00:00:00–<끝>")에 들어간다.
+- `with apply_templates(build_templates("videomme", 개요, max_sections, video_end=…)):` 블록 안에서만 Deep-Reporter의 planner, query, writer 프롬프트가 비디오용으로 바뀐다.
   - `max_sections`(`report.max_sections`, 기본 6)는 결론을 포함한 전체 섹션 수 상한이다.
   - 허용 범위는 3–15이고, 범위를 벗어나면 생성 전에 exit 2로 끝난다.
   - 상한이 필요한 이유: Deep-Reporter `recursion_limit=50` 때문에 **16섹션부터는 그래프가 오류로 멈추고 보고서 전체가 사라진다**(가짜 LLM으로 실측).
@@ -167,6 +168,7 @@
 **④-3 combine**: 섹션 본문을 `"\n\n"`으로 이어 붙인다. 인용은 아직 섹션 내 번호(placeholder) 상태다.
 
 ### ⑤ 후처리 (`grounding_postprocessor.ground_report`)
+- (2026-10-25, P9) 그 전에 섹션마다 같은 문장(완전 일치)의 두 번째 이후를 지운다(`dedupe_repeated_sentences`). writer 반복 루프 대응이다. `report_raw.md`는 원본 그대로 둔다. 같은 단계에서 결말·시작 서술 문장의 인용 근거 시간을 영상 끝·처음과 비교한다(`boundary_claims`, P19).
 - 섹션마다 writer와 같은 근거 목록(filter off면 `retrieved_*`)으로 번호를 해석한다.
 - 텍스트 인용 → 전역 번호 `[n]` (같은 근거는 같은 번호) + 끝에 `# References`.
 - 이미지 → `Figure k`로 번호를 매기고, 프레임을 `<out>/frames/`로 복사해 이미지와 캡션(프레임 시각, 클립 구간)을 넣는다.
@@ -218,7 +220,7 @@
 | 수준 | 조건 |
 |---|---|
 | 오류 → exit 1 (산출물은 저장) | `success=False` · 빈 outline · **planner fallback**(섹션 1개이고 설명 == query) · 본문의 `Call failed:` 또는 `[Section generation failed` · 빈 본문 · 텍스트 근거 0건인 섹션 · 잘못된 인용(`[?]`) · 프레임 파일 누락 |
-| 경고 (exit 코드 영향 없음) | query 생성 fallback · 인용 없는 섹션 · 잘못된 이미지 형식을 변환한 수 · 규칙 검사 unsupported·miscited·uncited 수 · **(결정 5)** 섹션 수가 `max_sections` 초과 · 마지막 섹션이 `Conclusion:`으로 시작하지 않음 · 결론이 아닌 섹션이 `Conclusion:`으로 시작 · 결론 본문 300단어 초과 · **(결정 6)** 섹션 번역 실패(영어 원문 유지) · 번역에 한자·가나가 재시도 후에도 남음 |
+| 경고 (exit 코드 영향 없음) | (2026-10-25) 반복 문장 제거 수와 "loop suspected"(최대 반복 ≥ 3) · 문장 중간 끝(서버 `max_tokens_cap`에서 끊김) · 결말·시작 서술 검사(`ending_early` 등) · query 생성 fallback · 인용 없는 섹션 · 잘못된 이미지 형식을 변환한 수 · 규칙 검사 unsupported·miscited·uncited 수 · **(결정 5)** 섹션 수가 `max_sections` 초과 · 마지막 섹션이 `Conclusion:`으로 시작하지 않음 · 결론이 아닌 섹션이 `Conclusion:`으로 시작 · 결론 본문 300단어 초과 · **(결정 6)** 섹션 번역 실패(영어 원문 유지) · 번역에 한자·가나가 재시도 후에도 남음 |
 
 Deep-Reporter는 LLM 호출이 실패해도 예외 대신 `"Call failed: …"` 문자열을 본문에 넣고 `success=True`로 끝날 수 있다. 그래서 이 검증이 필요하다.
 
@@ -297,6 +299,7 @@ Deep-Reporter 세션 로그(JSONL)는 `report.deep_reporter_log_dir`에 쌓인�
 | `report.{outputs_dir, deep_reporter_log_dir}` | `outputs/`, `logs/deep_reporter` | 산출물과 세션 로그 |
 | `report.max_sections` | 6 | 결정 5: 결론 포함 전체 섹션 수 상한 (허용 3–15) |
 | `report.previous_sections_context` | `written` | 결정 4 C0: `written` = 앞 섹션에서 실제로 쓴 문장 전달 / `deep_reporter` = 원래 동작 |
+| `llm.local.endpoint.max_tokens_cap` | 3072 | (2026-10-25, P9) 서버가 요청 `max_tokens`(Deep-Reporter는 8,192)를 이 값으로 자름. 정상 출력 최대 2,182(실측) |
 | `report.{translate_ko, translation_max_tokens}` | true, 4096 | 결정 6: 한국어 번역본 생성 여부와 섹션당 최대 출력 토큰 |
 | `worldmm.episodic_cache_label` | `qwen3vl-8b` | 검색 서비스가 읽을 HippoRAG 캐시 라벨 (= 사전 인덱싱 LLM 이름) |
 
