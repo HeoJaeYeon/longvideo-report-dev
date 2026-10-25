@@ -28,7 +28,7 @@ import os
 import threading
 import time
 import uuid
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import yaml
 
@@ -89,7 +89,7 @@ def error_response(message: str, status: int, error_type: str = "invalid_request
     return jsonify({"error": {"message": message, "type": error_type}}), status
 
 
-def create_app(llm, served_model: str, default_max_tokens: int):
+def create_app(llm, served_model: str, default_max_tokens: int, max_tokens_cap: Optional[int] = None):
     from flask import Flask, jsonify, request
 
     app = Flask(__name__)
@@ -117,6 +117,10 @@ def create_app(llm, served_model: str, default_max_tokens: int):
             return error_response(str(e), 400)
 
         max_tokens = int(body.get("max_tokens") or body.get("max_completion_tokens") or default_max_tokens)
+        if max_tokens_cap:
+            # P9: a writer repetition loop runs to the requested limit (Deep-Reporter always asks for 8192);
+            # the cap bounds the time such a loop can take. Normal outputs measured on 2026-10-25 stayed <= 2,182.
+            max_tokens = min(max_tokens, max_tokens_cap)
         gen_kwargs: Dict[str, Any] = {"max_new_tokens": max_tokens}
         if body.get("temperature") is not None:
             temperature = float(body["temperature"])
@@ -128,11 +132,13 @@ def create_app(llm, served_model: str, default_max_tokens: int):
         try:
             with generate_lock:
                 content = llm.generate(messages, **gen_kwargs)
+                # I28: the tokenizer is not thread-safe; counting outside the lock collided with the next
+                # request's tokenization ("Already borrowed", retried inside WorldMM).
+                usage = count_tokens(processor, messages, content)
         except Exception as e:
             logger.exception("Generation failed")
             return error_response(f"Generation failed: {e}", 500, "server_error")
 
-        usage = count_tokens(processor, messages, content)
         finish_reason = "length" if usage["completion_tokens"] >= max_tokens else "stop"
         logger.info(f"chat.completions: prompt={usage['prompt_tokens']} completion={usage['completion_tokens']} "
                     f"finish={finish_reason} {time.time() - start:.1f}s")
@@ -173,7 +179,9 @@ def main() -> None:
     logger.info(f"Loading {served_model} (HF_HOME={os.environ['HF_HOME']}, GPU={os.environ.get('CUDA_VISIBLE_DEVICES')})")
     llm = LLMModel(model_name=served_model)
 
-    app = create_app(llm, served_model, int(endpoint["default_max_tokens"]))
+    cap = endpoint.get("max_tokens_cap")
+    app = create_app(llm, served_model, int(endpoint["default_max_tokens"]), int(cap) if cap else None)
+    logger.info(f"max_tokens cap: {cap or 'none'}")
     port = args.port or int(endpoint["port"])
     logger.info(f"Serving OpenAI-compatible API at http://{endpoint['host']}:{port}/v1")
     app.run(host=endpoint["host"], port=port, threaded=True)

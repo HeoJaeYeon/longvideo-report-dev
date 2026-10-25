@@ -40,7 +40,7 @@ import string
 import sys
 import threading
 from contextlib import contextmanager
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 DEEP_REPORT_ROOT = "/data1/jyheo/workspace/VideoRAG/Deep-Report"
 
@@ -72,6 +72,7 @@ REQUIRED_MARKERS = {
 # Pre-filled slots (not .format placeholders): filled by build_templates().
 VIDEO_OVERVIEW_SLOT = "<<VIDEO_OVERVIEW>>"
 MAX_SECTIONS_SLOT = "<<MAX_SECTIONS>>"
+VIDEO_END_SLOT = "<<VIDEO_END>>"   # P19: real end of the video (last 10sec caption), not the 10min window boundary
 SLOT_RE = re.compile(r"<<[A-Z_]+>>")
 
 # The last outline section must start with this (planner rule 6; checked by run_report).
@@ -211,6 +212,7 @@ You are an expert writer producing one section of a report about ONE specific vi
 4. If the evidence does not cover a requirement, say briefly that the retrieved footage does not show it instead of filling the gap. If no evidence was retrieved at all, write a short section that says so.
 5. Describe events in chronological order unless the section needs another structure.
 6. Do not repeat a fact, sentence, or paragraph you have already written in this section. If a fact was already covered in a previous section (see "Context from Previous Sections"), mention it in at most one short sentence and focus on what is new in this section. Exception: a conclusion section (see "Conclusion Section") restates earlier results briefly by design.
+7. Each text source covers only its own time span. Words such as "the video opens", "begins", "closes", "ends" or "concludes" inside a 30sec, 3min or 10min summary refer to the start or end of THAT span, not of the whole video. The whole video runs from 00:00:00 to <<VIDEO_END>>. Describe how the whole video begins or ends only with sources whose time range reaches its first or last minutes; otherwise do not claim how the video begins or ends.
 
 # Citation Rules (CRITICAL)
 1. Text citation: put [citation:txt1], [citation:txt2], ... at the end of each sentence or claim that uses a text source. Every factual sentence needs at least one citation.
@@ -226,7 +228,7 @@ You are an expert writer producing one section of a report about ONE specific vi
 - LAST section: you may synthesize the main points of the whole report, using only evidence-supported statements.
 
 # Conclusion Section
-If the Section Description starts with "Conclusion:", write a brief conclusion of 100-250 words: summarize only the main results already covered by the previous sections and answer the report topic at a high level. Do not introduce new events or details, keep at most one short paragraph per checklist item, and still cite the evidence above for every factual statement.
+If the Section Description starts with "Conclusion:", write a brief conclusion of 100-250 words: summarize only the main results already covered by the previous sections and answer the report topic at a high level. Do not introduce new events or details, keep at most one short paragraph per checklist item, and still cite the evidence above for every factual statement. If you state how the video ends, follow Grounding Rule 7.
 
 # Format
 - Start with a section title written as "# Title"; use "##" for subsections if needed.
@@ -263,6 +265,14 @@ def load_video_overview(caption_file: str) -> str:
     return "\n\n".join(blocks)
 
 
+def load_video_end(caption_file: str) -> Tuple[str, int]:
+    """End of the video from the last entry of a fine caption JSON (10sec.json): ('HH:MM:SS', seconds).
+    The 10min file is not used because its last window ends at the window boundary, after the real end."""
+    with open(caption_file, "r", encoding="utf-8") as f:
+        last = str(json.load(f)[-1]["end_time"]).zfill(8)
+    return _hms(last), int(last[0:2]) * 3600 + int(last[2:4]) * 60 + int(last[4:6])
+
+
 def _escape_format(text: str) -> str:
     return text.replace("{", "{{").replace("}", "}}")
 
@@ -275,8 +285,10 @@ def check_max_sections(max_sections: int) -> int:
     return max_sections
 
 
-def build_templates(domain: str, video_overview: Optional[str] = None, max_sections: int = 6) -> Dict[str, str]:
-    """Template set for `domain` with the video overview and the section cap filled into their slots."""
+def build_templates(domain: str, video_overview: Optional[str] = None, max_sections: int = 6,
+                    video_end: Optional[str] = None) -> Dict[str, str]:
+    """Template set for `domain` with the video overview, the section cap and the video end time (HH:MM:SS;
+    "the end of the video" when unknown) filled into their slots."""
     if domain not in TEMPLATE_SETS:
         raise KeyError(f"Unknown template domain: {domain} (available: {sorted(TEMPLATE_SETS)})")
     check_max_sections(max_sections)
@@ -286,6 +298,7 @@ def build_templates(domain: str, video_overview: Optional[str] = None, max_secti
             if not video_overview:
                 raise ValueError(f"{domain}/{var} needs a video overview")
             template = template.replace(VIDEO_OVERVIEW_SLOT, _escape_format(video_overview))
+        template = template.replace(VIDEO_END_SLOT, video_end or "the end of the video")
         templates[var] = template.replace(MAX_SECTIONS_SLOT, str(max_sections))
     return templates
 
@@ -351,7 +364,7 @@ def validate_templates(templates: Dict[str, str], targets: List[Dict[str, Any]])
             problems.append(f"{var}: missing from template set")
             continue
         template = templates[var]
-        unfilled = sorted(set(SLOT_RE.findall(template)) & {VIDEO_OVERVIEW_SLOT, MAX_SECTIONS_SLOT})
+        unfilled = sorted(set(SLOT_RE.findall(template)) & {VIDEO_OVERVIEW_SLOT, MAX_SECTIONS_SLOT, VIDEO_END_SLOT})
         if unfilled:
             problems.append(f"{var}: unfilled {', '.join(unfilled)}")
         try:

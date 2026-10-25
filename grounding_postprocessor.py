@@ -217,6 +217,75 @@ def split_sentences(content: str) -> List[str]:
     return sentences
 
 
+def dedupe_repeated_sentences(content: str) -> Tuple[str, Dict[str, Any]]:
+    """P9: drop exact repeats of a sentence already written earlier in the same section (keeps the first one).
+    A writer repetition loop repeats the same few sentences until max_tokens; headings and image-embed lines are
+    kept as they are. Also reports whether the section ends without terminal punctuation (cut at max_tokens)."""
+    seen: Dict[str, int] = {}
+    removed = 0
+    out_lines: List[str] = []
+    for line in content.split("\n"):
+        text = line.strip()
+        if not text or text.startswith("#") or IMG_EMBED_RE.fullmatch(text):
+            out_lines.append(line)
+            continue
+        kept = []
+        for part in SENTENCE_SPLIT_RE.split(text):
+            key = re.sub(r"\s+", " ", part).strip()
+            if not key:
+                continue
+            seen[key] = seen.get(key, 0) + 1
+            if seen[key] == 1:
+                kept.append(part)
+            else:
+                removed += 1
+        if kept:
+            out_lines.append(" ".join(kept))
+    new = re.sub(r"\n{3,}", "\n\n", "\n".join(out_lines)).strip()
+    body = [ln.strip() for ln in new.split("\n") if ln.strip() and not ln.strip().startswith("#")
+            and not IMG_EMBED_RE.fullmatch(ln.strip())]
+    last = CITE_GROUP_RE.sub("", body[-1]).strip() if body else ""
+    return new, {"removed_sentences": removed, "max_repeat": max(seen.values(), default=0),
+                 "ends_mid_sentence": bool(last) and last[-1] not in ".!?\"”'\u2019)"}
+
+
+ENDING_RE = re.compile(r"\b(?:the\s+)?video\s+(?:closes|ends|concludes|wraps\s+up|finishes)\b"
+                       r"(?!\s+(?:this|that|the)\s+(?:section|segment|part|portion|sequence))|"
+                       r"\b(?:final|closing|last)\s+(?:scene|shot|moments?|frames?|segment)\s+of\s+the\s+video\b", re.I)
+OPENING_RE = re.compile(r"\b(?:the\s+)?video\s+(?:opens|begins|starts)\b|"
+                        r"\b(?:first|opening)\s+(?:scene|shot|moments?|frames?|segment)\s+of\s+the\s+video\b", re.I)
+
+
+def boundary_claims(content: str, texts: List[Dict], video_end_sec: Optional[float],
+                    margin_sec: float = 120.0) -> List[Dict[str, Any]]:
+    """P19: sentences that say how the whole video ends (or begins), checked against the time range of their
+    cited text evidence. 'ending_early': the latest cited evidence ends more than margin_sec before the video end;
+    'opening_late': the earliest cited evidence starts more than margin_sec after 00:00:00; '*_unverifiable': the
+    sentence cites no timed text evidence."""
+    findings = []
+    for sentence in split_sentences(content):
+        claim = CITE_GROUP_RE.sub(" ", sentence)
+        idxs = [i for g in CITE_GROUP_RE.findall(sentence) for kind, i in parse_tokens(g)[0] if kind == "txt"]
+        timed = [texts[i - 1] for i in idxs if 1 <= i <= len(texts) and texts[i - 1].get("end_sec") is not None]
+        if ENDING_RE.search(claim) and video_end_sec:
+            if not timed:
+                findings.append({"status": "ending_unverifiable", "sentence": sentence[:300], "cited": idxs})
+            else:
+                latest = max(float(t["end_sec"]) for t in timed)
+                if video_end_sec - latest > margin_sec:
+                    findings.append({"status": "ending_early", "sentence": sentence[:300], "cited": idxs,
+                                     "latest_cited_end": hms(latest), "video_end": hms(video_end_sec)})
+        if OPENING_RE.search(claim):
+            if not timed:
+                findings.append({"status": "opening_unverifiable", "sentence": sentence[:300], "cited": idxs})
+            else:
+                earliest = min((float(t["start_sec"]) for t in timed if t.get("start_sec") is not None), default=None)
+                if earliest is not None and earliest > margin_sec:
+                    findings.append({"status": "opening_late", "sentence": sentence[:300], "cited": idxs,
+                                     "earliest_cited_start": hms(earliest)})
+    return findings
+
+
 def check_section_grounding(content: str, texts: List[Dict], images: List[Dict]) -> Dict[str, Any]:
     """Check quoted strings / numbers / HH:MM:SS of each sentence against its cited evidence."""
     sources = {("txt", i): t for i, t in enumerate(texts, 1)}

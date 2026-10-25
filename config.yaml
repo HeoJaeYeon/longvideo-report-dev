@@ -32,6 +32,7 @@ llm:
       model: qwen3vl-8b             # hf: WorldMM 모델 키 / vllm: --served-model-name. 이름에 "qwen"이 있어야 Deep-Reporter가 QWEN_* env로 라우팅
       api_key: EMPTY
       default_max_tokens: 8192      # 요청에 max_tokens가 없을 때 (Deep-Reporter는 항상 8192를 보냄)
+      max_tokens_cap: 3072          # P9(2026-10-25): 요청 max_tokens 상한. writer 반복 루프가 8,192토큰까지 가는 시간을 줄임. 정상 출력 최대 2,182(C-3–C-5 실측). 비우면 상한 없음
   openai:
     worldmm_model: gpt-5-mini       # OPENAI_API_KEY 필요 (키는 env로만, 이 파일에 저장 금지)
     endpoint:

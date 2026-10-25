@@ -36,7 +36,7 @@ import sys
 import time
 from contextlib import nullcontext
 from datetime import datetime
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 import yaml
@@ -124,7 +124,8 @@ def translation_llm(cfg: Dict[str, Any], model: str, base_url: str, env: Dict[st
 # ---------------------------------------------------------------------------
 
 def validate(result: Dict[str, Any], grounded: Dict[str, Any], query: str, enable_filter: bool,
-             max_sections: int) -> Tuple[List[str], List[str]]:
+             max_sections: int, repetition: Optional[List[Dict[str, Any]]] = None,
+             boundary: Optional[List[Dict[str, Any]]] = None) -> Tuple[List[str], List[str]]:
     errors, warnings = [], []
     if not result.get("success"):
         errors.append(f"generate_article failed: {result.get('error')}")
@@ -173,6 +174,21 @@ def validate(result: Dict[str, Any], grounded: Dict[str, Any], query: str, enabl
     for key in ("unsupported", "miscited", "uncited_claims"):
         if gstats.get(key):
             warnings.append(f"rule-based evidence check: {gstats[key]} {key} (see validation.json grounding_findings)")
+    # P9: repeated sentences removed before grounding, and sections cut at the server max_tokens cap.
+    for r in repetition or []:
+        if r["removed_sentences"]:
+            loop = " (writer repetition loop suspected)" if r["max_repeat"] >= 3 else ""
+            warnings.append(f"section {r['index']}: removed {r['removed_sentences']} repeated sentence(s), "
+                            f"a sentence occurred up to {r['max_repeat']} times{loop}")
+        if r["ends_mid_sentence"]:
+            warnings.append(f"section {r['index']}: ends mid-sentence (likely cut at the LLM max_tokens cap)")
+    # P19: claims about how the whole video ends/begins whose cited evidence does not reach the end/start.
+    if boundary:
+        counts: Dict[str, int] = {}
+        for f in boundary:
+            counts[f["status"]] = counts.get(f["status"], 0) + 1
+        warnings.append("video start/end claim check: " + ", ".join(f"{n} {k}" for k, n in sorted(counts.items()))
+                        + " (see validation.json boundary_findings)")
     return errors, warnings
 
 
@@ -199,6 +215,12 @@ def run(cfg: Dict[str, Any], video_id: str, query: str, checklist: List[str], ou
         for e in errors:
             logger.error(f"preflight: {e}")
         return 2
+    # P19: real video end from the last 10sec caption (the 10min overview ends at a window boundary).
+    try:
+        video_end, video_end_sec = D.load_video_end(os.path.join(cfg["paths"]["caption_dir"], video_id, "10sec.json"))
+    except (OSError, ValueError, KeyError, IndexError) as e:
+        logger.warning(f"video end unknown ({e}); writer rule 7 and the start/end claim check use no end time")
+        video_end, video_end_sec = None, None
 
     os.environ.update(env)  # must precede create_openai_api (BaseConfig reads env at construction)
     from deep_reporter.api import create_openai_api
@@ -213,7 +235,7 @@ def run(cfg: Dict[str, Any], video_id: str, query: str, checklist: List[str], ou
     overview = D.load_video_overview(info["overview_file"])
     logger.info(f"Generating report for {video_id} (model={model}, domain={rcfg['domain']})")
     t1 = time.time()
-    with D.apply_templates(D.build_templates(rcfg["domain"], overview, max_sections)), \
+    with D.apply_templates(D.build_templates(rcfg["domain"], overview, max_sections, video_end=video_end)), \
             (D.apply_written_context() if context_mode == "written" else nullcontext()):
         result = api.generate_article(
             overall_query=query, overall_checklist=checklist, generation_mode="with_planner",
@@ -229,12 +251,21 @@ def run(cfg: Dict[str, Any], video_id: str, query: str, checklist: List[str], ou
               f"({cfg['llm']['backend']}) · **Retrieval**: WorldMM memories, episodic filter {mode}  \n"
               f"> Numbers in brackets refer to the References at the end; times are video timestamps (HH:MM:SS).")
     t2 = time.time()
+    repetition: List[Dict[str, Any]] = []
+    boundary: List[Dict[str, Any]] = []
+    if result.get("success"):
+        for idx, section in enumerate(result.get("outline") or [], 1):
+            if section.get("content"):
+                section["content"], rep = G.dedupe_repeated_sentences(section["content"])
+                repetition.append(dict(rep, index=idx))
+                texts, _ = G.section_evidence(section, bool(rcfg["enable_filter"]))
+                boundary += [dict(f, section=idx) for f in G.boundary_claims(section["content"], texts, video_end_sec)]
     grounded = G.ground_report(result, bool(rcfg["enable_filter"]), out_dir, header=header) if result.get("success") \
         else {"markdown": "", "references": [], "figures": [], "sections": [],
               "citation_stats": {k: 0 for k in ("invalid_citations", "missing_frame_files", "wrong_form_image_citations")},
               "grounding_stats": {}, "image_time_alignment": {}}
     timings["postprocess_sec"] = round(time.time() - t2, 2)
-    errors, warnings = validate(result, grounded, query, bool(rcfg["enable_filter"]), max_sections)
+    errors, warnings = validate(result, grounded, query, bool(rcfg["enable_filter"]), max_sections, repetition, boundary)
 
     translation: Dict[str, Any] = {"status": "disabled"}
     if rcfg.get("translate_ko") and result.get("success"):
@@ -281,6 +312,7 @@ def run(cfg: Dict[str, Any], video_id: str, query: str, checklist: List[str], ou
     with open(os.path.join(out_dir, "validation.json"), "w", encoding="utf-8") as f:
         json.dump({"status": status, "errors": errors, "warnings": warnings, "timings": timings,
                    "max_sections": max_sections, "previous_sections_context": context_mode,
+                   "video_end": video_end, "repetition": repetition, "boundary_findings": boundary,
                    "translation": translation,
                    "citation_stats": grounded["citation_stats"], "grounding_stats": grounded["grounding_stats"],
                    "image_time_alignment": grounded["image_time_alignment"],
