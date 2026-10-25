@@ -277,7 +277,7 @@
 - 메시지: 인용이 있다고 근거가 뒷받침하는 것은 아니다.
 
 ### 부록 A3. 개발·환경 이슈 목록
-- `REPORT_ISSUES_AND_FIXES.md` §1.2 표(I1–I28) 요약
+- `REPORT_ISSUES_AND_FIXES.md` §1.2 표(I1–I29) 요약
 
 ### 부록 A4. 산출물과 실행 방법
 - 파일 구조(`report_framework/`), 실행 명령 4줄, 산출물 5종(`report.md`, `report_ko.md`, `report.json`, `validation.json`, `frames/`)
