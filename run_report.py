@@ -177,7 +177,9 @@ def validate(result: Dict[str, Any], grounded: Dict[str, Any], query: str, enabl
     # P9: repeated sentences removed before grounding, and sections cut at the server max_tokens cap.
     for r in repetition or []:
         if r["removed_sentences"]:
-            loop = " (writer repetition loop suspected)" if r["max_repeat"] >= 3 else ""
+            # 2026-10-26: label as a loop only when the section was cut at the max_tokens cap or a sentence repeats
+            # >= 5 times (3-4 repeats were ordinary repetition in the 2026-10-25 check, DESIGN_AND_STATUS §9.16).
+            loop = " (writer repetition loop suspected)" if r["max_repeat"] >= 5 or r["ends_mid_sentence"] else ""
             warnings.append(f"section {r['index']}: removed {r['removed_sentences']} repeated sentence(s), "
                             f"a sentence occurred up to {r['max_repeat']} times{loop}")
         if r["ends_mid_sentence"]:
@@ -221,6 +223,12 @@ def run(cfg: Dict[str, Any], video_id: str, query: str, checklist: List[str], ou
     except (OSError, ValueError, KeyError, IndexError) as e:
         logger.warning(f"video end unknown ({e}); writer rule 7 and the start/end claim check use no end time")
         video_end, video_end_sec = None, None
+    # P19 (2026-10-26): last ~60 s of 10sec captions, shown to the writer as source txt0 (LAST section only).
+    try:
+        ending_block, ending_item = D.load_video_ending(os.path.join(cfg["paths"]["caption_dir"], video_id, "10sec.json"))
+    except (OSError, ValueError, KeyError, IndexError) as e:
+        logger.warning(f"end-of-video source unavailable ({e})")
+        ending_block, ending_item = None, None
 
     os.environ.update(env)  # must precede create_openai_api (BaseConfig reads env at construction)
     from deep_reporter.api import create_openai_api
@@ -235,7 +243,8 @@ def run(cfg: Dict[str, Any], video_id: str, query: str, checklist: List[str], ou
     overview = D.load_video_overview(info["overview_file"])
     logger.info(f"Generating report for {video_id} (model={model}, domain={rcfg['domain']})")
     t1 = time.time()
-    with D.apply_templates(D.build_templates(rcfg["domain"], overview, max_sections, video_end=video_end)), \
+    with D.apply_templates(D.build_templates(rcfg["domain"], overview, max_sections, video_end=video_end,
+                                                 video_ending=ending_block)), \
             (D.apply_written_context() if context_mode == "written" else nullcontext()):
         result = api.generate_article(
             overall_query=query, overall_checklist=checklist, generation_mode="with_planner",
@@ -253,8 +262,11 @@ def run(cfg: Dict[str, Any], video_id: str, query: str, checklist: List[str], ou
     t2 = time.time()
     repetition: List[Dict[str, Any]] = []
     boundary: List[Dict[str, Any]] = []
+    ending_cited: List[int] = []
     if result.get("success"):
         for idx, section in enumerate(result.get("outline") or [], 1):
+            if section.get("content") and ending_item and G.attach_ending_source(section, ending_item, bool(rcfg["enable_filter"])):
+                ending_cited.append(idx)
             if section.get("content"):
                 section["content"], rep = G.dedupe_repeated_sentences(section["content"])
                 repetition.append(dict(rep, index=idx))
@@ -266,6 +278,9 @@ def run(cfg: Dict[str, Any], video_id: str, query: str, checklist: List[str], ou
               "grounding_stats": {}, "image_time_alignment": {}}
     timings["postprocess_sec"] = round(time.time() - t2, 2)
     errors, warnings = validate(result, grounded, query, bool(rcfg["enable_filter"]), max_sections, repetition, boundary)
+    n_sections = len(result.get("outline") or [])
+    if [i for i in ending_cited if i != n_sections]:
+        warnings.append(f"end-of-video source (txt0) cited outside the last section: sections {[i for i in ending_cited if i != n_sections]}")
 
     translation: Dict[str, Any] = {"status": "disabled"}
     if rcfg.get("translate_ko") and result.get("success"):
@@ -313,6 +328,8 @@ def run(cfg: Dict[str, Any], video_id: str, query: str, checklist: List[str], ou
         json.dump({"status": status, "errors": errors, "warnings": warnings, "timings": timings,
                    "max_sections": max_sections, "previous_sections_context": context_mode,
                    "video_end": video_end, "repetition": repetition, "boundary_findings": boundary,
+                   "ending_source": {"available": bool(ending_item), "cited_in_sections": ending_cited,
+                                     "span": (f"{G.hms_from_time_str(ending_item['start_time'])}-{video_end}" if ending_item else None)},
                    "translation": translation,
                    "citation_stats": grounded["citation_stats"], "grounding_stats": grounded["grounding_stats"],
                    "image_time_alignment": grounded["image_time_alignment"],

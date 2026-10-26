@@ -63,6 +63,34 @@ check("warnings: removal + loop suspected + mid-sentence + start/end check",
       any("removed 38 repeated sentence(s)" in x and "loop suspected" in x for x in warns)
       and any("ends mid-sentence" in x for x in warns) and any("1 ending_early" in x for x in warns))
 
+_, warns2 = R.validate(result, grounded, "q", False, 6,
+                      [{"index": 1, "removed_sentences": 3, "max_repeat": 4, "ends_mid_sentence": False}], [])
+check("2026-10-26: 4 repeats without a cut -> removal warning but no 'loop suspected'",
+      any("removed 3 repeated" in x for x in warns2) and not any("loop suspected" in x for x in warns2))
+_, warns3 = R.validate(result, grounded, "q", False, 6,
+                      [{"index": 1, "removed_sentences": 2, "max_repeat": 2, "ends_mid_sentence": True}], [])
+check("2026-10-26: cut section (mid-sentence end) -> 'loop suspected'", any("loop suspected" in x for x in warns3))
+
+# --- P19 (2026-10-26): end-of-video source txt0 + possessive false positive ----------------------
+block, item = D.load_video_ending(f"{CAP}/-QuCz7kxBr8/10sec.json")
+check(f"end-of-video source spans the last 60 s ({item['start_time']}-{item['end_time']})",
+      block.startswith("[Source txt0 begin]") and item["end_sec"] == 2257.0 and 2257 - item["start_sec"] <= 70
+      and "Thank you for watching" in item["text"])
+t2 = D.build_templates("videomme", "[x] o", 6, video_end=end, video_ending=block)["SECTION_WRITING_TEMPLATE"]
+check("writer template shows txt0 block, LAST-section rule, no unfilled slot",
+      "[Source txt0 begin]" in t2 and "cite it as [citation:txt0] ONLY in the LAST section" in t2 and "<<" not in t2)
+check("no ending -> 'do not cite txt0'", "do not cite txt0" in D.build_templates("videomme", "[x] o")["SECTION_WRITING_TEMPLATE"])
+sec_ = {"content": "# C\n\nThe video ends with an end screen [citation:txt0]. Earlier [citation:txt1, txt0].",
+        "retrieved_texts": [{"content": "[00:10:00-00:10:10 | episodic 10sec] a", "start_sec": 600, "end_sec": 610}]}
+check("txt0 cited -> item appended as txt2 and citations rewritten",
+      G.attach_ending_source(sec_, item, False) and len(sec_["retrieved_texts"]) == 2
+      and "[citation:txt2]" in sec_["content"] and "[citation:txt1, txt2]" in sec_["content"] and "txt0" not in sec_["content"])
+check("rewritten ending claim passes the start/end check",
+      G.boundary_claims(sec_["content"], sec_["retrieved_texts"], 2257) == [])
+check("no txt0 -> section untouched", not G.attach_ending_source({"content": "A [citation:txt1].", "retrieved_texts": []}, item, False))
+check("'final shot of the video’s opening montage' is not an ending claim",
+      G.boundary_claims("This is the final shot of the video’s opening montage [citation:txt1].", texts, 2257) == [])
+
 # --- P9 (a) + I28: server cap and token counting inside the lock ---------------------------------
 class Tok:
     def __call__(self, text, add_special_tokens=True):

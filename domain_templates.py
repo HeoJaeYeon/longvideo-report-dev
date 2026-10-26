@@ -35,6 +35,7 @@ import argparse
 import ast
 import inspect
 import json
+import os
 import re
 import string
 import sys
@@ -73,6 +74,7 @@ REQUIRED_MARKERS = {
 VIDEO_OVERVIEW_SLOT = "<<VIDEO_OVERVIEW>>"
 MAX_SECTIONS_SLOT = "<<MAX_SECTIONS>>"
 VIDEO_END_SLOT = "<<VIDEO_END>>"   # P19: real end of the video (last 10sec caption), not the 10min window boundary
+VIDEO_ENDING_SLOT = "<<VIDEO_ENDING>>"   # P19 (2026-10-26): last ~60 s of 10sec captions as citable source txt0
 SLOT_RE = re.compile(r"<<[A-Z_]+>>")
 
 # The last outline section must start with this (planner rule 6; checked by run_report).
@@ -205,6 +207,10 @@ You are an expert writer producing one section of a report about ONE specific vi
 - Text sources starting with "[video-level knowledge | semantic]" are facts inferred from the whole video, written as (subject, predicate, object). They have NO timestamp.
 - Image sources "[Source imgN: [HH:MM:SS-HH:MM:SS | video frame at Xs] description]" are frames taken from the video at that moment, with a description of that moment.
 
+# End of the Video (reference for the LAST section)
+<<VIDEO_ENDING>>
+- This source shows how the whole video actually ends. Use it and cite it as [citation:txt0] ONLY in the LAST section, and only when you describe how the video ends. Other sections must not use or cite it.
+
 # Grounding Rules (CRITICAL)
 1. State only what the evidence supports. Do not add outside knowledge, assumptions, or speculation about intentions or feelings unless the evidence states them.
 2. When describing an event, give its time from the evidence in HH:MM:SS form (e.g., "At 00:12:40, ..."). Never invent or estimate times that are not in the evidence. Do not attach times to video-level knowledge.
@@ -212,7 +218,7 @@ You are an expert writer producing one section of a report about ONE specific vi
 4. If the evidence does not cover a requirement, say briefly that the retrieved footage does not show it instead of filling the gap. If no evidence was retrieved at all, write a short section that says so.
 5. Describe events in chronological order unless the section needs another structure.
 6. Do not repeat a fact, sentence, or paragraph you have already written in this section. If a fact was already covered in a previous section (see "Context from Previous Sections"), mention it in at most one short sentence and focus on what is new in this section. Exception: a conclusion section (see "Conclusion Section") restates earlier results briefly by design.
-7. Each text source covers only its own time span. Words such as "the video opens", "begins", "closes", "ends" or "concludes" inside a 30sec, 3min or 10min summary refer to the start or end of THAT span, not of the whole video. The whole video runs from 00:00:00 to <<VIDEO_END>>. Describe how the whole video begins or ends only with sources whose time range reaches its first or last minutes; otherwise do not claim how the video begins or ends.
+7. Each text source covers only its own time span. Words such as "the video opens", "begins", "closes", "ends" or "concludes" inside a 30sec, 3min or 10min summary refer to the start or end of THAT span, not of the whole video. The whole video runs from 00:00:00 to <<VIDEO_END>>. Describe how the whole video begins or ends only with sources whose time range reaches its first or last minutes; otherwise do not claim how the video begins or ends. To describe how the whole video ends, use the "End of the Video" source above and cite it as [citation:txt0] (LAST section only).
 
 # Citation Rules (CRITICAL)
 1. Text citation: put [citation:txt1], [citation:txt2], ... at the end of each sentence or claim that uses a text source. Every factual sentence needs at least one citation.
@@ -273,6 +279,28 @@ def load_video_end(caption_file: str) -> Tuple[str, int]:
     return _hms(last), int(last[0:2]) * 3600 + int(last[2:4]) * 60 + int(last[4:6])
 
 
+def load_video_ending(caption_file: str, window_sec: int = 60) -> Tuple[str, Dict[str, Any]]:
+    """P19: the 10sec captions of the last `window_sec` seconds as one text source.
+    Returns (block for the writer template, shown as source txt0; evidence item in the retrieval service's text-item
+    format, appended by run_report to a section that cites txt0)."""
+    with open(caption_file, "r", encoding="utf-8") as f:
+        entries = json.load(f)
+    def sec(t):
+        t = str(t).zfill(8)
+        return int(t[0:2]) * 3600 + int(t[2:4]) * 60 + int(t[4:6])
+    end = sec(entries[-1]["end_time"])
+    tail = [e for e in entries if sec(e["end_time"]) > end - window_sec]
+    start_time, end_time = str(tail[0]["start_time"]).zfill(8), str(entries[-1]["end_time"]).zfill(8)
+    text = " ".join(str(e.get("text", "")).strip() for e in tail)
+    label = f"[{_hms(start_time)}-{_hms(end_time)} | episodic 10sec, end of video]"
+    block = f"[Source txt0 begin]\n{label} {text}\n[Source txt0 end]"
+    item = {"content": f"{label} {text}", "text": text, "type": "text", "source": "worldmm-episodic",
+            "granularity": "10sec", "start_time": start_time, "end_time": end_time,
+            "start_sec": float(sec(start_time)), "end_sec": float(end),
+            "uid": f"{os.path.basename(os.path.dirname(caption_file))}:episodic:end_of_video", "rank": 0}
+    return block, item
+
+
 def _escape_format(text: str) -> str:
     return text.replace("{", "{{").replace("}", "}}")
 
@@ -286,7 +314,7 @@ def check_max_sections(max_sections: int) -> int:
 
 
 def build_templates(domain: str, video_overview: Optional[str] = None, max_sections: int = 6,
-                    video_end: Optional[str] = None) -> Dict[str, str]:
+                    video_end: Optional[str] = None, video_ending: Optional[str] = None) -> Dict[str, str]:
     """Template set for `domain` with the video overview, the section cap and the video end time (HH:MM:SS;
     "the end of the video" when unknown) filled into their slots."""
     if domain not in TEMPLATE_SETS:
@@ -299,6 +327,8 @@ def build_templates(domain: str, video_overview: Optional[str] = None, max_secti
                 raise ValueError(f"{domain}/{var} needs a video overview")
             template = template.replace(VIDEO_OVERVIEW_SLOT, _escape_format(video_overview))
         template = template.replace(VIDEO_END_SLOT, video_end or "the end of the video")
+        template = template.replace(VIDEO_ENDING_SLOT, _escape_format(video_ending) if video_ending
+                                    else "(No end-of-video source is available for this video; do not cite txt0.)")
         templates[var] = template.replace(MAX_SECTIONS_SLOT, str(max_sections))
     return templates
 
@@ -364,7 +394,7 @@ def validate_templates(templates: Dict[str, str], targets: List[Dict[str, Any]])
             problems.append(f"{var}: missing from template set")
             continue
         template = templates[var]
-        unfilled = sorted(set(SLOT_RE.findall(template)) & {VIDEO_OVERVIEW_SLOT, MAX_SECTIONS_SLOT, VIDEO_END_SLOT})
+        unfilled = sorted(set(SLOT_RE.findall(template)) & {VIDEO_OVERVIEW_SLOT, MAX_SECTIONS_SLOT, VIDEO_END_SLOT, VIDEO_ENDING_SLOT})
         if unfilled:
             problems.append(f"{var}: unfilled {', '.join(unfilled)}")
         try:

@@ -251,9 +251,26 @@ def dedupe_repeated_sentences(content: str) -> Tuple[str, Dict[str, Any]]:
 
 ENDING_RE = re.compile(r"\b(?:the\s+)?video\s+(?:closes|ends|concludes|wraps\s+up|finishes)\b"
                        r"(?!\s+(?:this|that|the)\s+(?:section|segment|part|portion|sequence))|"
-                       r"\b(?:final|closing|last)\s+(?:scene|shot|moments?|frames?|segment)\s+of\s+the\s+video\b", re.I)
+                       r"\b(?:final|closing|last)\s+(?:scene|shot|moments?|frames?|segment)\s+of\s+the\s+video\b(?!['’]s)", re.I)
 OPENING_RE = re.compile(r"\b(?:the\s+)?video\s+(?:opens|begins|starts)\b|"
-                        r"\b(?:first|opening)\s+(?:scene|shot|moments?|frames?|segment)\s+of\s+the\s+video\b", re.I)
+                        r"\b(?:first|opening)\s+(?:scene|shot|moments?|frames?|segment)\s+of\s+the\s+video\b(?!['’]s)", re.I)
+
+
+def attach_ending_source(section: Dict[str, Any], item: Dict[str, Any], enable_filter: bool) -> bool:
+    """P19: the writer template shows the end of the video as source txt0. If the section cites txt0, append the
+    ending item to the section's evidence list (the list the writer numbered) and rewrite txt0 to its new number,
+    so references, the rule check and the start/end claim check treat it as ordinary evidence."""
+    content = section.get("content") or ""
+    if not any(kind == "txt" and i == 0 for g in CITE_GROUP_RE.findall(content) for kind, i in parse_tokens(g)[0]):
+        return False
+    key = "filtered_texts" if enable_filter and section.get("filtered_texts") is not None else "retrieved_texts"
+    texts = list(section.get(key) or [])
+    texts.append(dict(item))
+    k = len(texts)
+    section[key] = texts
+    section["content"] = CITE_GROUP_RE.sub(
+        lambda m: "[citation:" + re.sub(r"\btxt\s*0\b", f"txt{k}", m.group(1), flags=re.I) + "]", content)
+    return True
 
 
 def boundary_claims(content: str, texts: List[Dict], video_end_sec: Optional[float],
