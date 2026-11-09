@@ -1,0 +1,72 @@
+# Section 5 — post-processing
+
+## 1. Repeated-sentence removal (`dedupe_repeated_sentences`)
+
+- removed sentences: 0, a sentence occurred up to 1 times, ends mid-sentence: False
+- raw writer output 724 words → after removal 724 words
+
+## 2. Start/end claim check (`boundary_claims`)
+
+- none
+
+## 3. Rule-based evidence check (`check_section_grounding`)
+
+- stats: `{"sentences": 26, "cited_sentences": 5, "checked_tokens": 5, "unsupported": 0, "miscited": 0, "uncited_claims": 0, "absence_statements": 0}`
+
+- no findings
+
+## 4. Citation conversion stats
+
+- `{"text_citations": 33, "invalid_citations": 0, "malformed_tokens": 0, "image_embeds": 0, "wrong_form_image_citations": 0, "duplicate_image_embeds": 0}`
+- text evidence not cited in this section: 5 of 12
+
+## 5. Image-text time alignment
+
+- no cited image
+
+## 6. Section body after removal (input to the conversion, still with txtN/imgN)
+
+```
+# Aftermath of the Eabametoong School Fire: Community Grief, Federal Aid, and New Beginnings
+
+At 00:36:30, the video documents the aftermath of a devastating fire that destroyed the only school on Eabametoong First Nation, Northwestern Ontario, leaving behind charred ruins blanketed in snow and triggering widespread community grief [citation:txt4]. Footage shows the collapsed metal roof under a cloudy sky, with Canadian and First Nation flags flying at half-mast as the community mourns [citation:txt4][citation:txt5]. The blaze overwhelmed local firefighting efforts due to inadequate water infrastructure, forcing children to relocate for education and deepening grief among residents [citation:txt5]. A woman, likely a community member or reporter, speaks to the camera in front of the wreckage, while on-screen text notes that four teenagers have been charged in connection with the fire [citation:txt5]. Chief Solomon Atlookan, standing beside a red fire hydrant, emphasized that even with operational firefighting equipment, the lack of adequate water infrastructure severely limited their ability to contain the fire — a critical factor in the building’s destruction [citation:txt5]. The scene underscores the systemic vulnerabilities faced by remote Indigenous communities in emergency response [citation:txt5].
+
+In response, the federal government pledged over $13 million to construct five modular classrooms as temporary solutions to restore educational continuity for affected children [citation:txt3][citation:txt6]. The Canadian and First Nations flags fly at half-mast as the community mourns and begins the long road to recovery [citation:txt1]. A CBC News segment features reporter Sarah Law in studio discussing the school fire with correspondent details, highlighting cleanup operations, arrival of supplies via winter road, and logistical strategies using the cold snap to transport materials for a temporary school [citation:txt3]. The segment also covers repurposing community facilities — extending a hall for education and installing artificial ice in an arena for youth recreation — while underscoring Ontario’s Minister of Indigenous Affairs’ involvement and the community’s cautious optimism [citation:txt3].
+
+By June 2023, Pikangikum First Nation unveiled its newly built school — a modern facility with vehicles parked outside — symbolizing a decade-long wait for replacement after the original school was lost to fire [citation:txt2][citation:txt8]. The narration underscores the urgency of the rebuild, highlighting the community’s prolonged struggle for educational infrastructure [citation:txt2]. In September 2023, Wapekeka First Nation celebrated the grand opening of its new school — a colorful, modern building adorned with festive decorations, balloons, and banners [citation:txt2]. The event marked the end of an eight-year wait following the fire, showcasing community resilience and the government’s eventual fulfillment of long-delayed promises [citation:txt2]. The video shows the new school at Pikangikum with numerous vehicles parked in front, reinforcing the community’s long-awaited restoration [citation:txt8]. The grand openings in Pikangikum and Wapekeka signify the eventual rebuilding of educational infrastructure after the fire’s devastation [citation:txt2].
+
+The video briefly transitions to unrelated segments on pet psychics and goats crossing a street, illustrating its thematic diversity [citation:txt1]. These segments, while thematically disconnected, are presented within the same video, indicating a broader editorial scope that juxtaposes crises with lighter or unrelated content [citation:txt1]. The footage of the pet psychic trend segment, featuring various dogs in park-like settings, is paired with human interaction and expressive close-ups — including a fluffy light-brown dog with a pink flower, a wrinkled pug, and a chocolate Labrador — while a lower third graphic and news ticker announce rising demand for pet psychic services [citation:txt1]. The goats crossing a street segment, though not detailed, further underscores the video’s thematic range [citation:txt1].
+
+The video’s coverage of the Eabametoong school fire and its aftermath highlights the community’s resilience and the federal government’s commitment to restoring educational infrastructure [citation:txt1][citation:txt2]. The destruction of the only school on Eabametoong First Nation left a void in educational services, prompting both community mourning and federal intervention [citation:txt1][citation:txt5]. The $13 million pledge for modular classrooms represents a tangible response to the crisis, aiming to restore educational continuity for affected children [citation:txt3][citation:txt6]. The grand openings of new schools in Pikangikum and Wapekeka First Nation mark significant milestones in the recovery process, symbolizing the community’s perseverance and the government’s eventual delivery on long-delayed promises [citation:txt2]. The video’s inclusion of unrelated segments, such as pet psychics and goats crossing a street, further illustrates its thematic diversity and editorial scope [citation:txt1]. The narrative of the Eabametoong fire and its aftermath, therefore, stands as a testament to the community’s resilience and the complex interplay between local tragedy and federal response [citation:txt1][citation:txt2].
+```
+
+## 7. Grounded body (exactly as in report.md)
+
+```
+# Aftermath of the Eabametoong School Fire: Community Grief, Federal Aid, and New Beginnings
+
+At 00:36:30, the video documents the aftermath of a devastating fire that destroyed the only school on Eabametoong First Nation, Northwestern Ontario, leaving behind charred ruins blanketed in snow and triggering widespread community grief [32]. Footage shows the collapsed metal roof under a cloudy sky, with Canadian and First Nation flags flying at half-mast as the community mourns [32][33]. The blaze overwhelmed local firefighting efforts due to inadequate water infrastructure, forcing children to relocate for education and deepening grief among residents [33]. A woman, likely a community member or reporter, speaks to the camera in front of the wreckage, while on-screen text notes that four teenagers have been charged in connection with the fire [33]. Chief Solomon Atlookan, standing beside a red fire hydrant, emphasized that even with operational firefighting equipment, the lack of adequate water infrastructure severely limited their ability to contain the fire — a critical factor in the building’s destruction [33]. The scene underscores the systemic vulnerabilities faced by remote Indigenous communities in emergency response [33].
+
+In response, the federal government pledged over $13 million to construct five modular classrooms as temporary solutions to restore educational continuity for affected children [34][35]. The Canadian and First Nations flags fly at half-mast as the community mourns and begins the long road to recovery [36]. A CBC News segment features reporter Sarah Law in studio discussing the school fire with correspondent details, highlighting cleanup operations, arrival of supplies via winter road, and logistical strategies using the cold snap to transport materials for a temporary school [34]. The segment also covers repurposing community facilities — extending a hall for education and installing artificial ice in an arena for youth recreation — while underscoring Ontario’s Minister of Indigenous Affairs’ involvement and the community’s cautious optimism [34].
+
+By June 2023, Pikangikum First Nation unveiled its newly built school — a modern facility with vehicles parked outside — symbolizing a decade-long wait for replacement after the original school was lost to fire [37][38]. The narration underscores the urgency of the rebuild, highlighting the community’s prolonged struggle for educational infrastructure [37]. In September 2023, Wapekeka First Nation celebrated the grand opening of its new school — a colorful, modern building adorned with festive decorations, balloons, and banners [37]. The event marked the end of an eight-year wait following the fire, showcasing community resilience and the government’s eventual fulfillment of long-delayed promises [37]. The video shows the new school at Pikangikum with numerous vehicles parked in front, reinforcing the community’s long-awaited restoration [38]. The grand openings in Pikangikum and Wapekeka signify the eventual rebuilding of educational infrastructure after the fire’s devastation [37].
+
+The video briefly transitions to unrelated segments on pet psychics and goats crossing a street, illustrating its thematic diversity [36]. These segments, while thematically disconnected, are presented within the same video, indicating a broader editorial scope that juxtaposes crises with lighter or unrelated content [36]. The footage of the pet psychic trend segment, featuring various dogs in park-like settings, is paired with human interaction and expressive close-ups — including a fluffy light-brown dog with a pink flower, a wrinkled pug, and a chocolate Labrador — while a lower third graphic and news ticker announce rising demand for pet psychic services [36]. The goats crossing a street segment, though not detailed, further underscores the video’s thematic range [36].
+
+The video’s coverage of the Eabametoong school fire and its aftermath highlights the community’s resilience and the federal government’s commitment to restoring educational infrastructure [36][37]. The destruction of the only school on Eabametoong First Nation left a void in educational services, prompting both community mourning and federal intervention [36][33]. The $13 million pledge for modular classrooms represents a tangible response to the crisis, aiming to restore educational continuity for affected children [34][35]. The grand openings of new schools in Pikangikum and Wapekeka First Nation mark significant milestones in the recovery process, symbolizing the community’s perseverance and the government’s eventual delivery on long-delayed promises [37]. The video’s inclusion of unrelated segments, such as pet psychics and goats crossing a street, further illustrates its thematic diversity and editorial scope [36]. The narrative of the Eabametoong fire and its aftermath, therefore, stands as a testament to the community’s resilience and the complex interplay between local tragedy and federal response [36][37].
+```
+
+## 8. References used by this section (global numbers)
+
+```
+[32] 00:36:30–00:37:00 · episodic 30sec: The video documents the aftermath of a devastating school fire in Eabametoong First Nation, Northwestern Ontario, showing charred ruins under snow and flags flown at half-mast as the community mourns. A news anchor in...
+[33] 00:37:30–00:38:00 · episodic 30sec: A devastating fire destroyed a school on the Eabametong First Nation, overwhelming the community’s capacity to respond despite the presence of a fire truck. The blaze left behind charred ruins blanketed in snow, promp...
+[34] 00:38:30–00:39:00 · episodic 30sec: **[Event 1: Aerial and Ground Views of Fire-Damaged School]**  
+The video opens with an aerial shot from an airplane, revealing a snowy landscape dotted with dark water patches and a small snow-covered island, with th...
+[35] 00:38:50–00:39:00 · episodic 10sec: The video shows the aftermath of a fire that destroyed a school in a remote First Nation community, with shots of the charred and collapsed structure, including twisted metal roofing and debris scattered across snow-c...
+[36] 00:30:00–00:40:00 · episodic 10min: **[Event Summary]**  
+Joshua Liendo, Canada’s first Black swimmer to reach elite milestones, reflects on his journey from Trinidad to global podiums, framed by personal memories, cultural roots, and athletic triumph....
+[37] 00:39:00–00:39:30 · episodic 30sec: **[Event Summary]**  
+A fire destroyed a school at a remote First Nation community, leaving behind charred ruins and prompting widespread grief — as captured in footage showing the collapsed metal roof under a cloudy...
+[38] 00:39:10–00:39:20 · episodic 10sec: The video shows the aftermath of a fire that destroyed a school, with the charred remains visible under a cloudy sky, alongside Canadian and First Nation flags. The scene then transitions to a modern, newly constructe...
+```

@@ -1,0 +1,429 @@
+{
+ "-QuCz7kxBr8": {
+  "planner": {
+   "input_md5": [
+    "a447867c461bdd2f8fc8bb34feb305c5",
+    "a447867c461bdd2f8fc8bb34feb305c5",
+    "a447867c461bdd2f8fc8bb34feb305c5"
+   ],
+   "input_identical": true,
+   "output_chars": [
+    3833,
+    3418,
+    3891
+   ],
+   "first_divergence": {
+    "r1-r2": {
+     "common_prefix_chars": 179,
+     "context": "ach, Cass, James, Mitchell, and an unnamed sixth player—and ",
+     "r1": "establishes the setting: a sunny outdoor",
+     "r2": "the setting: a sunny outdoor basketball "
+    },
+    "r1-r3": {
+     "common_prefix_chars": 175,
+     "context": "s, Zach, Cass, James, Mitchell, and an unnamed sixth player—",
+     "r1": "and establishes the setting: a sunny out",
+     "r3": "who gather on a sunny outdoor basketball"
+    },
+    "r2-r3": {
+     "common_prefix_chars": 175,
+     "context": "s, Zach, Cass, James, Mitchell, and an unnamed sixth player—",
+     "r2": "and the setting: a sunny outdoor basketb",
+     "r3": "who gather on a sunny outdoor basketball"
+    }
+   }
+  },
+  "stages": {
+   "first_section": {
+    "r1-r2": {
+     "plan": 0.727,
+     "queries": 0.587,
+     "retrieved_episodic": 0.455,
+     "cited_episodic": 0.444,
+     "body": 0.722
+    },
+    "r1-r3": {
+     "plan": 0.626,
+     "queries": 0.058,
+     "retrieved_episodic": 0.231,
+     "cited_episodic": 0.273,
+     "body": 0.551
+    },
+    "r2-r3": {
+     "plan": 0.597,
+     "queries": 0.079,
+     "retrieved_episodic": 0.143,
+     "cited_episodic": 0.182,
+     "body": 0.519
+    }
+   },
+   "conclusion": {
+    "r1-r2": {
+     "plan": 1.0,
+     "queries": 0.076,
+     "retrieved_episodic": 0.067,
+     "cited_episodic": 0.0,
+     "body": 0.26
+    },
+    "r1-r3": {
+     "plan": 1.0,
+     "queries": 0.087,
+     "retrieved_episodic": 0.0,
+     "cited_episodic": 0.0,
+     "body": 0.285
+    },
+    "r2-r3": {
+     "plan": 1.0,
+     "queries": 0.216,
+     "retrieved_episodic": 0.067,
+     "cited_episodic": 0.0,
+     "body": 0.376
+    }
+   }
+  },
+  "conclusion": [
+   {
+    "run": 1,
+    "checklist": [
+     "Summarize the main outcomes shown in the video",
+     "Answer the user request in one or two sentences"
+    ],
+    "text_queries": [
+     "final score displayed as 3-1 after one-on-one game",
+     "players wear ZHYPE branded gear during instructional segment",
+     "video ends with blue and white static end screen"
+    ],
+    "earlier_section_titles": [
+     "Introduction to the Participants and Setting",
+     "Testing the SKLZ Dribble Stick and the Straight Shooter Strap",
+     "Testing the Flick Glove and Shot Coach: Rules, Performance, and Consequences",
+     "First Made Shot Shoots Silly String Game, Defensive Drills, and Never Ending Defender Chal",
+     "Final Scoring Segment and Closing Instructional Content"
+    ]
+   },
+   {
+    "run": 2,
+    "checklist": [
+     "Summarize the main outcomes shown in the video",
+     "Answer the user request in one or two sentences"
+    ],
+    "text_queries": [
+     "group rates SKLZ Dribble Stick performance",
+     "man in white hoodie demonstrates Straight Shooter Strap",
+     "Flick Glove challenge ends with synchronized shot"
+    ],
+    "earlier_section_titles": [
+     "Introduction: Participants, Setting, and Initial Goal",
+     "First Gadget Test: SPORTS DRIBBLE SPECS Time Trial",
+     "SKLZ Dribble Stick Test and Transition to Next Challenge",
+     "Straight Shooter Strap Test: Demonstration, Shooting Drill, and Forfeit Challenge",
+     "Flick Glove Challenge: Rules, Performance, and Conclusion"
+    ]
+   },
+   {
+    "run": 3,
+    "checklist": [
+     "Summarize the main outcomes shown in the video",
+     "Answer the user request in one or two sentences"
+    ],
+    "text_queries": [
+     "group rates Straight Shooter Strap with exaggerated scores",
+     "coach uses SHOT COACH device with young players",
+     "men play final game with NEVER ENDING DEFENDER drills"
+    ],
+    "earlier_section_titles": [
+     "Section 1: Introduction of Participants, Setting, and Tone",
+     "First Gadget Tested: SPORTS DRIBBLE SPECS and SKLZ Dribble Stick Challenge",
+     "Testing the Straight Shooter Strap and Flick Glove",
+     "Synchronized Shooting Challenge and Shot Coach Training Drill",
+     "Never Ending Defender Training Device and Final Game Setup"
+    ]
+   }
+  ]
+ },
+ "0RxMZBLeqRI": {
+  "planner": {
+   "input_md5": [
+    "4b55b1b5e0f64ac11a5503c3ad5804c4",
+    "4b55b1b5e0f64ac11a5503c3ad5804c4",
+    "4b55b1b5e0f64ac11a5503c3ad5804c4"
+   ],
+   "input_identical": true,
+   "output_chars": [
+    4078,
+    4086,
+    4698
+   ],
+   "first_divergence": {
+    "r1-r2": {
+     "common_prefix_chars": 104,
+     "context": "n_description\": \"This section introduces the video’s framing",
+     "r1": ", including its disclaimer about termino",
+     "r2": " of Roma identity through historical and"
+    },
+    "r1-r3": {
+     "common_prefix_chars": 104,
+     "context": "n_description\": \"This section introduces the video’s framing",
+     "r1": ", including its disclaimer about termino",
+     "r3": " of Roma identity through historical and"
+    },
+    "r2-r3": {
+     "common_prefix_chars": 169,
+     "context": "oma identity through historical and cultural context, using ",
+     "r2": "maps, memes, and symbolic imagery (00:00",
+     "r3": "visual montages and text overlays from 0"
+    }
+   }
+  },
+  "stages": {
+   "first_section": {
+    "r1-r2": {
+     "plan": 0.404,
+     "queries": 0.294,
+     "retrieved_episodic": 0.333,
+     "cited_episodic": 0.8,
+     "body": 0.586
+    },
+    "r1-r3": {
+     "plan": 0.449,
+     "queries": 0.369,
+     "retrieved_episodic": 0.231,
+     "cited_episodic": 0.4,
+     "body": 0.562
+    },
+    "r2-r3": {
+     "plan": 0.734,
+     "queries": 0.403,
+     "retrieved_episodic": 0.455,
+     "cited_episodic": 0.6,
+     "body": 0.547
+    }
+   },
+   "conclusion": {
+    "r1-r2": {
+     "plan": 0.7,
+     "queries": 0.232,
+     "retrieved_episodic": 0.067,
+     "cited_episodic": 0.0,
+     "body": 0.321
+    },
+    "r1-r3": {
+     "plan": 0.672,
+     "queries": 0.172,
+     "retrieved_episodic": 0.067,
+     "cited_episodic": 0.0,
+     "body": 0.263
+    },
+    "r2-r3": {
+     "plan": 0.723,
+     "queries": 0.225,
+     "retrieved_episodic": 0.778,
+     "cited_episodic": 0.5,
+     "body": 0.475
+    }
+   }
+  },
+  "conclusion": [
+   {
+    "run": 1,
+    "checklist": [
+     "Summarize the video’s portrayal of Roma as both historically marginalized and culturally resilient",
+     "Confirm that the video concludes with a global perspective and credits",
+     "State that the video’s final moments transition to a stylized globe and credits"
+    ],
+    "text_queries": [
+     "video concludes with global perspective and credits",
+     "Roma resilience highlighted through visual contrast of historical and modern imagery"
+    ],
+    "earlier_section_titles": [
+     "Section 1: Framing the Video — Disclaimers, Visual Montage, and the Opening Narrative on R",
+     "Historical and Cultural Framing of Roma Identity",
+     "Depiction of Roma as Historically Misclassified and Systematically Stigmatized",
+     "Historical Narrative of Roma Origins and Early Misidentification",
+     "Depiction of Roma Persecution under Nazi and Communist Regimes"
+    ]
+   },
+   {
+    "run": 2,
+    "checklist": [
+     "Summarize the video’s portrayal of Roma identity from erasure to resilience",
+     "Confirm the video’s conclusion with a global, symbolic coda"
+    ],
+    "text_queries": [
+     "video concludes with global symbolic coda featuring anime girl and stylized globe",
+     "summary of Roma identity journey from erasure to resilience across historical and modern visuals",
+     "final segment confirms cultural endurance through symbolic imagery and international scope"
+    ],
+    "earlier_section_titles": [
+     "Section 1: Framing Roma Identity Through Historical and Cultural Context",
+     "Historical and Cultural Representation of Roma",
+     "Institutionalized Persecution: From Bismarck-Era Surveillance to Post-War Acknowledgment",
+     "Roma Resilience Amid Systemic Hardship: Cultural Endurance and Personal Agency",
+     "Global Perspective: From Paris to the World"
+    ]
+   },
+   {
+    "run": 3,
+    "checklist": [
+     "Summarize the video’s depiction of Roma as historically marginalized, culturally resilient, and globally connected",
+     "Confirm that the video concludes with symbolic imagery rather than a narrative resolution"
+    ],
+    "text_queries": [
+     "video concludes with global symbolic imagery",
+     "Roma resilience shown through public rally and dancing youth",
+     "video uses anime girl at Arc de Triomphe as closing symbol"
+    ],
+    "earlier_section_titles": [
+     "Framing Roma Identity Through Historical and Cultural Context",
+     "Historical and Cultural Portrayal of Roma from 00:10:00–00:20:00",
+     "Institutionalized Persecution of Roma under German and Eastern European Regimes",
+     "Roma Resilience and Cultural Endurance Amid Oppression",
+     "Global and Symbolic Conclusion: A Reflective Pause Across Continents"
+    ]
+   }
+  ]
+ },
+ "54k2g9ddy4M": {
+  "planner": {
+   "input_md5": [
+    "2954e5a62afe1a943e3f25ccfba4787e",
+    "2954e5a62afe1a943e3f25ccfba4787e",
+    "2954e5a62afe1a943e3f25ccfba4787e"
+   ],
+   "input_identical": true,
+   "output_chars": [
+    4105,
+    3961,
+    4104
+   ],
+   "first_divergence": {
+    "r1-r2": {
+     "common_prefix_chars": 74,
+     "context": "utline\": [\n    {\n      \"section_description\": \"This section ",
+     "r1": "introduces the video’s opening segments ",
+     "r2": "covers the opening of the video (00:00:0"
+    },
+    "r1-r3": {
+     "common_prefix_chars": 74,
+     "context": "utline\": [\n    {\n      \"section_description\": \"This section ",
+     "r1": "introduces the video’s opening segments ",
+     "r3": "covers the opening of the video (00:00:0"
+    },
+    "r2-r3": {
+     "common_prefix_chars": 166,
+     "context": "(00:00:00-00:10:00), which introduces the main subjects and ",
+     "r2": "key events: a measles resurgence in Cana",
+     "r3": "events: a measles outbreak in Canada and"
+    }
+   }
+  },
+  "stages": {
+   "first_section": {
+    "r1-r2": {
+     "plan": 0.496,
+     "queries": 0.221,
+     "retrieved_episodic": 0.231,
+     "cited_episodic": 0.3,
+     "body": 0.492
+    },
+    "r1-r3": {
+     "plan": 0.485,
+     "queries": 0.064,
+     "retrieved_episodic": 0.067,
+     "cited_episodic": 0.077,
+     "body": 0.434
+    },
+    "r2-r3": {
+     "plan": 0.705,
+     "queries": 0.172,
+     "retrieved_episodic": 0.231,
+     "cited_episodic": 0.25,
+     "body": 0.605
+    }
+   },
+   "conclusion": {
+    "r1-r2": {
+     "plan": 0.728,
+     "queries": 0.157,
+     "retrieved_episodic": 0.067,
+     "cited_episodic": 0.071,
+     "body": 0.232
+    },
+    "r1-r3": {
+     "plan": 0.719,
+     "queries": 0.179,
+     "retrieved_episodic": 0.143,
+     "cited_episodic": 0.083,
+     "body": 0.364
+    },
+    "r2-r3": {
+     "plan": 0.689,
+     "queries": 0.034,
+     "retrieved_episodic": 0.067,
+     "cited_episodic": 0.0,
+     "body": 0.207
+    }
+   }
+  },
+  "conclusion": [
+   {
+    "run": 1,
+    "checklist": [
+     "Summarize the video’s coverage of public health crises, institutional failures, and athletic triumph",
+     "State that the video concludes with community recovery and athletic legacy as its final themes"
+    ],
+    "text_queries": [
+     "video concludes with community recovery after school fire",
+     "Joshua Liendo reflects on his legacy as Canada’s first Black Olympic gold medalist swimmer",
+     "public health crisis summary including measles outbreak and hospital misidentification tragedy"
+    ],
+    "earlier_section_titles": [
+     "Introduction to the Video’s Opening Segments (00:00:00-00:10:00)",
+     "Unfolding Public Health Crisis: Measles Outbreak, Hospital Tragedy, and Emergency Response",
+     "Shift to Personal Tragedy and Institutional Failure, Followed by Athletic Triumph",
+     "Liendo’s Journey and Legacy",
+     "Community Disaster and Recovery"
+    ]
+   },
+   {
+    "run": 2,
+    "checklist": [
+     "Summarize the video’s coverage of public health, political disruption, and athletic achievement",
+     "Note the inclusion of systemic failures and community resilience as recurring themes"
+    ],
+    "text_queries": [
+     "video concludes with studio anchor wrapping up segments on public health crisis, political protest, and athletic victory",
+     "systemic failures in hospital patient transport highlighted by man in white shirt with red collar",
+     "community resilience shown through Canadian swimmer's gold medal and goat herd crossing road"
+    ],
+    "earlier_section_titles": [
+     "Opening of the Video: Public Health, Political Disruption, and Athletic Achievement",
+     "Unfolding Crisis: Measles Outbreak, Hospital Strain, and Third Patient Death in Montreal",
+     "Joshua Liendo’s Gold Medal Triumph and Personal Reflections",
+     "Tragic Misidentification at Montfort Hospital and Fire Disaster in Eabametoong First Natio",
+     "Final Segments: Pet Psychics, Goats on the Road, and Studio Wrap-Up"
+    ]
+   },
+   {
+    "run": 3,
+    "checklist": [
+     "Summarize the video’s coverage of public health, political protest, and athletic achievement",
+     "Highlight the contrast between institutional failures and personal triumphs",
+     "Confirm the video’s conclusion with Liendo’s gold medal and community recovery stories"
+    ],
+    "text_queries": [
+     "Joshua Liendo discusses systemic barriers in swimming",
+     "Montfort Hospital misidentification tragedy confirmed February 23, 2024",
+     "Eabametoong First Nation school fire aftermath and federal aid announcement"
+    ],
+    "earlier_section_titles": [
+     "Opening of the Video: Public Health, Politics, and Athletic Ascent",
+     "Measles Outbreak Escalates, Hospital Strain Mounts, and Broader Crises Emerge",
+     "Misidentification Tragedy at Montfort Hospital and Joshua Liendo’s Gold Medal Triumph",
+     "Joshua Liendo’s Personal Journey and Historic Legacy",
+     "Aftermath of the Eabametoong School Fire: Community Grief, Federal Aid, and New Beginnings"
+    ]
+   }
+  ]
+ }
+}

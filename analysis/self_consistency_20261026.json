@@ -1,0 +1,1224 @@
+{
+ "-QuCz7kxBr8": {
+  "video": "-QuCz7kxBr8",
+  "video_end": "00:37:37",
+  "runs": [
+   {
+    "run": 1,
+    "sections": [
+     {
+      "index": 1,
+      "title": "Introduction to the Participants and Setting",
+      "words": 403,
+      "position": "00:01:45",
+      "position_sec": 105.0
+     },
+     {
+      "index": 2,
+      "title": "Testing the SKLZ Dribble Stick and the Straight Shooter Strap",
+      "words": 585,
+      "position": "00:04:38",
+      "position_sec": 277.5
+     },
+     {
+      "index": 3,
+      "title": "Testing the Flick Glove and Shot Coach: Rules, Performance, and Consequences",
+      "words": 764,
+      "position": "00:08:25",
+      "position_sec": 505.0
+     },
+     {
+      "index": 4,
+      "title": "First Made Shot Shoots Silly String Game, Defensive Drills, and Never Ending Defender Challenge",
+      "words": 727,
+      "position": "00:18:40",
+      "position_sec": 1120.0
+     },
+     {
+      "index": 5,
+      "title": "Final Scoring Segment and Closing Instructional Content",
+      "words": 329,
+      "position": "00:37:05",
+      "position_sec": 2225.0
+     },
+     {
+      "index": 6,
+      "title": "Conclusion",
+      "words": 253,
+      "position": "00:37:25",
+      "position_sec": 2245.0
+     }
+    ],
+    "n_claims": 83,
+    "retrieved_uids": 54,
+    "cited_uids": 35,
+    "validation": {
+     "generation_sec": 319.7,
+     "grounding": {
+      "sentences": 123,
+      "cited_sentences": 39,
+      "checked_tokens": 68,
+      "unsupported": 0,
+      "miscited": 5,
+      "uncited_claims": 12,
+      "absence_statements": 0
+     },
+     "removed_sentences": 0,
+     "cut_sections": [],
+     "boundary": [
+      "ending_early",
+      "ending_unverifiable",
+      "ending_early",
+      "ending_unverifiable",
+      "ending_unverifiable"
+     ]
+    }
+   },
+   {
+    "run": 2,
+    "sections": [
+     {
+      "index": 1,
+      "title": "Introduction: Participants, Setting, and Initial Goal",
+      "words": 445,
+      "position": "00:01:22",
+      "position_sec": 82.5
+     },
+     {
+      "index": 2,
+      "title": "First Gadget Test: SPORTS DRIBBLE SPECS Time Trial",
+      "words": 322,
+      "position": "00:01:30",
+      "position_sec": 90.0
+     },
+     {
+      "index": 3,
+      "title": "SKLZ Dribble Stick Test and Transition to Next Challenge",
+      "words": 474,
+      "position": "00:02:55",
+      "position_sec": 175.0
+     },
+     {
+      "index": 4,
+      "title": "Straight Shooter Strap Test: Demonstration, Shooting Drill, and Forfeit Challenge",
+      "words": 449,
+      "position": "00:07:10",
+      "position_sec": 430.0
+     },
+     {
+      "index": 5,
+      "title": "Flick Glove Challenge: Rules, Performance, and Conclusion",
+      "words": 573,
+      "position": "00:08:20",
+      "position_sec": 500.0
+     },
+     {
+      "index": 6,
+      "title": "Conclusion",
+      "words": 217,
+      "position": "00:04:52",
+      "position_sec": 292.5
+     }
+    ],
+    "n_claims": 54,
+    "retrieved_uids": 42,
+    "cited_uids": 29,
+    "validation": {
+     "generation_sec": 296.9,
+     "grounding": {
+      "sentences": 101,
+      "cited_sentences": 36,
+      "checked_tokens": 56,
+      "unsupported": 1,
+      "miscited": 1,
+      "uncited_claims": 3,
+      "absence_statements": 0
+     },
+     "removed_sentences": 10,
+     "cut_sections": [],
+     "boundary": [
+      "ending_unverifiable",
+      "ending_unverifiable"
+     ]
+    }
+   },
+   {
+    "run": 3,
+    "sections": [
+     {
+      "index": 1,
+      "title": "Section 1: Introduction of Participants, Setting, and Tone",
+      "words": 399,
+      "position": "00:01:30",
+      "position_sec": 90.0
+     },
+     {
+      "index": 2,
+      "title": "First Gadget Tested: SPORTS DRIBBLE SPECS and SKLZ Dribble Stick Challenge",
+      "words": 519,
+      "position": "00:02:45",
+      "position_sec": 165.0
+     },
+     {
+      "index": 3,
+      "title": "Testing the Straight Shooter Strap and Flick Glove",
+      "words": 481,
+      "position": "00:07:30",
+      "position_sec": 450.0
+     },
+     {
+      "index": 4,
+      "title": "Synchronized Shooting Challenge and Shot Coach Training Drill",
+      "words": 753,
+      "position": "00:19:08",
+      "position_sec": 1147.5
+     },
+     {
+      "index": 5,
+      "title": "Never Ending Defender Training Device and Final Game Setup",
+      "words": 808,
+      "position": "00:28:15",
+      "position_sec": 1695.0
+     },
+     {
+      "index": 6,
+      "title": "Conclusion",
+      "words": 199,
+      "position": "00:17:15",
+      "position_sec": 1035.0
+     }
+    ],
+    "n_claims": 68,
+    "retrieved_uids": 58,
+    "cited_uids": 31,
+    "validation": {
+     "generation_sec": 331.5,
+     "grounding": {
+      "sentences": 129,
+      "cited_sentences": 38,
+      "checked_tokens": 65,
+      "unsupported": 1,
+      "miscited": 2,
+      "uncited_claims": 7,
+      "absence_statements": 1
+     },
+     "removed_sentences": 0,
+     "cut_sections": [],
+     "boundary": [
+      "ending_early",
+      "ending_early",
+      "ending_early",
+      "ending_unverifiable",
+      "ending_early"
+     ]
+    }
+   }
+  ],
+  "pairs": {
+   "r1-r2": {
+    "retrieved_episodic": 0.354,
+    "retrieved_semantic": 0.24,
+    "cited_episodic": 0.366,
+    "retrieved_images": 0.348,
+    "cited_images": 0.0,
+    "coverage_fine": 0.574,
+    "coverage_all": 0.6,
+    "claims": 0.457,
+    "tfidf_text": 0.71,
+    "tfidf_conclusion": 0.247
+   },
+   "r1-r3": {
+    "retrieved_episodic": 0.333,
+    "retrieved_semantic": 0.286,
+    "cited_episodic": 0.364,
+    "retrieved_images": 0.143,
+    "cited_images": 0.0,
+    "coverage_fine": 0.568,
+    "coverage_all": 0.426,
+    "claims": 0.425,
+    "tfidf_text": 0.825,
+    "tfidf_conclusion": 0.289
+   },
+   "r2-r3": {
+    "retrieved_episodic": 0.232,
+    "retrieved_semantic": 0.292,
+    "cited_episodic": 0.244,
+    "retrieved_images": 0.16,
+    "cited_images": 0.167,
+    "coverage_fine": 0.432,
+    "coverage_all": 0.324,
+    "claims": 0.386,
+    "tfidf_text": 0.751,
+    "tfidf_conclusion": 0.355
+   }
+  },
+  "coverage": {
+   "runs_0": 0.389,
+   "runs_1": 0.279,
+   "runs_2": 0.093,
+   "runs_3": 0.239,
+   "per_run_fine": [
+    0.389,
+    0.265,
+    0.527
+   ],
+   "per_run_all": [
+    0.416,
+    0.292,
+    0.739
+   ],
+   "windows_3min": {
+    "total": 13,
+    "per_run": [
+     7,
+     5,
+     8
+    ],
+    "covered_by_runs": {
+     "0": 2,
+     "1": 5,
+     "2": 3,
+     "3": 3
+    },
+    "per_window": {
+     "00:00:00": [
+      1,
+      2,
+      3
+     ],
+     "00:03:00": [
+      1,
+      2,
+      3
+     ],
+     "00:06:00": [
+      1,
+      2,
+      3
+     ],
+     "00:09:00": [
+      1,
+      2
+     ],
+     "00:12:00": [],
+     "00:15:00": [],
+     "00:18:00": [
+      1,
+      3
+     ],
+     "00:21:00": [
+      3
+     ],
+     "00:24:00": [
+      1,
+      3
+     ],
+     "00:27:00": [
+      3
+     ],
+     "00:30:00": [
+      2
+     ],
+     "00:33:00": [
+      3
+     ],
+     "00:36:00": [
+      1
+     ]
+    }
+   }
+  },
+  "claims": {
+   "number": {
+    "in_1_runs": {
+     "claims": 8,
+     "supported": 8
+    },
+    "in_2_runs": {
+     "claims": 4,
+     "supported": 4
+    },
+    "in_3_runs": {
+     "claims": 10,
+     "supported": 10
+    }
+   },
+   "quote": {
+    "in_1_runs": {
+     "claims": 27,
+     "supported": 27
+    },
+    "in_2_runs": {
+     "claims": 23,
+     "supported": 23
+    },
+    "in_3_runs": {
+     "claims": 11,
+     "supported": 11
+    }
+   },
+   "name": {
+    "in_1_runs": {
+     "claims": 5,
+     "supported": 4
+    },
+    "in_2_runs": {
+     "claims": 3,
+     "supported": 3
+    },
+    "in_3_runs": {
+     "claims": 8,
+     "supported": 8
+    }
+   },
+   "time": {
+    "in_1_runs": {
+     "claims": 8,
+     "supported": null
+    },
+    "in_2_runs": {
+     "claims": 5,
+     "supported": null
+    },
+    "in_3_runs": {
+     "claims": 0,
+     "supported": null
+    }
+   }
+  },
+  "unsupported_unique_claims": {
+   "r1": [
+    "name:Flick Glove's"
+   ],
+   "r2": [],
+   "r3": []
+  },
+  "conclusions": {
+   "r1": "The video presents a dynamic, lighthearted basketball experience centered around testing and demonstrating training gadgets, structured gameplay, and competitive drills. Six main participants — Chris, Zach, Cass, James, Mitchell, and an unnamed sixth player — engage in a series of activities that blend product evaluation with recreational play, consistently framed by branded “ZHYPE” and “F1HYPE” environments under clear skies and scenic outdoor backdrops. The core outcomes include the evaluation of several training devices — such as the SKLZ Dribble Stick, Straight Shooter Strap, Flick Glove, and Shot Coach — each tested in context with gameplay, often tied to performance-based consequences or scoring systems. The video concludes with a one-on-one game that ends in a 3-1 score, celebrated by players including Zak Jesse and Kris, followed by a branded instructional segment featuring players in ZHYPE attire and a static end screen encouraging viewers to subscribe. The final moments show a player in a white and red “ZHYPE” jersey with the number 8 gesturing with teammates before transitioning to the closing graphic . The video’s tone remains casual and humorous, with teammates reacting to performance with approval and score graphics reinforcing progression and competition. The entire sequence, from gadget testing to final game and instructional wrap-up, serves as a promotional showcase for basketball training products and branded athletic culture, culminating in a clear call to action for viewer engagement. The video ends at 00:37:37 with a static screen displaying “Thank you for watching” and “DON’T FORGET TO SUBSCRIBE!” alongside the “F1HYPE” logo .",
+   "r2": "The video concludes with the group still actively engaged in basketball-related activities on the outdoor court, maintaining the competitive yet lighthearted tone established throughout. After testing multiple gadgets—including the SPORTS DRIBBLE SPECS, SKLZ Dribble Stick, Straight Shooter Strap, and Flick Glove—the participants wrap up with a final demonstration involving the “POWERHANDZ Dribble Sleeve,” as seen when the group gathers holding a basketball with the sleeve overlay . The final moments show players continuing drills, including shooting challenges and physical forfeits like jumping jacks, underscoring the video’s focus on interactive, gadget-assisted basketball training . The video ends without declaring a winner or final score, but the participants remain in motion, suggesting the testing is ongoing or open-ended. The setting remains consistent: a sunny outdoor court with trees, a hoop, and a pool in the background, reinforcing the casual, recreational atmosphere . The group’s camaraderie and humor persist, as seen in playful banter, exaggerated scoring, and self-deprecating jokes, even during physical challenges . The video’s primary purpose—evaluating 12 viral sports gadgets for basketball performance—is fulfilled through structured drills, real-time feedback, and participant reactions, all captured under bright, clear skies . The final frames show the group still preparing for the next test, leaving the viewer with the impression that the basketball experimentation continues beyond the video’s runtime.",
+   "r3": "The video concludes with a dynamic, game-driven testing of 12 viral sports gadgets on an outdoor basketball court under clear, sunny conditions. The main outcomes center on the practical application and performance of each device, with participants engaging in timed challenges, shooting drills, and competitive play. Notably, the “Straight Shooter Strap” was tested in a shooting sequence where a player achieved 3/16 successful shots while using it, and the “SHOT COACH” training device was demonstrated in a half-court drill with young players, emphasizing structured, tech-assisted training . The “NEVER ENDING DEFENDER” training device was also featured, with players actively using it in defensive drills, and the video ends with them continuing the game under the “FIRST TO 3 WINS” rule, reinforcing the gadget’s role in competitive play . The video’s tone remains lighthearted and collaborative, with humor, camaraderie, and playful scoring systems like “FIRST MADE SHOT SHOOTS SILLY STRING AT LOSER” adding to the entertainment value . The final scenes show players deeply engaged in the game, underscoring the gadgets’ integration into real-time sports activity. Overall, the video successfully demonstrates how these gadgets enhance skill development, competitive play, and training efficiency in a casual, outdoor basketball setting."
+  }
+ },
+ "0RxMZBLeqRI": {
+  "video": "0RxMZBLeqRI",
+  "video_end": "00:30:32",
+  "runs": [
+   {
+    "run": 1,
+    "sections": [
+     {
+      "index": 1,
+      "title": "Section 1: Framing the Video — Disclaimers, Visual Montage, and the Opening Narrative on Roma Identi",
+      "words": 361,
+      "position": "00:00:52",
+      "position_sec": 52.5
+     },
+     {
+      "index": 2,
+      "title": "Historical and Cultural Framing of Roma Identity",
+      "words": 535,
+      "position": "00:00:25",
+      "position_sec": 25.0
+     },
+     {
+      "index": 3,
+      "title": "Depiction of Roma as Historically Misclassified and Systematically Stigmatized",
+      "words": 529,
+      "position": "00:00:50",
+      "position_sec": 50.0
+     },
+     {
+      "index": 4,
+      "title": "Historical Narrative of Roma Origins and Early Misidentification",
+      "words": 483,
+      "position": "00:01:20",
+      "position_sec": 80.0
+     },
+     {
+      "index": 5,
+      "title": "Depiction of Roma Persecution under Nazi and Communist Regimes",
+      "words": 927,
+      "position": "00:23:25",
+      "position_sec": 1405.0
+     },
+     {
+      "index": 6,
+      "title": "Conclusion",
+      "words": 294,
+      "position": "00:04:30",
+      "position_sec": 270.0
+     }
+    ],
+    "n_claims": 107,
+    "retrieved_uids": 56,
+    "cited_uids": 22,
+    "validation": {
+     "generation_sec": 403.8,
+     "grounding": {
+      "sentences": 116,
+      "cited_sentences": 27,
+      "checked_tokens": 44,
+      "unsupported": 2,
+      "miscited": 0,
+      "uncited_claims": 13,
+      "absence_statements": 4
+     },
+     "removed_sentences": 37,
+     "cut_sections": [
+      5
+     ],
+     "boundary": [
+      "ending_early",
+      "opening_unverifiable",
+      "ending_unverifiable"
+     ]
+    }
+   },
+   {
+    "run": 2,
+    "sections": [
+     {
+      "index": 1,
+      "title": "Section 1: Framing Roma Identity Through Historical and Cultural Context",
+      "words": 478,
+      "position": "00:00:15",
+      "position_sec": 15.0
+     },
+     {
+      "index": 2,
+      "title": "Historical and Cultural Representation of Roma",
+      "words": 455,
+      "position": "00:01:30",
+      "position_sec": 90.0
+     },
+     {
+      "index": 3,
+      "title": "Institutionalized Persecution: From Bismarck-Era Surveillance to Post-War Acknowledgment",
+      "words": 550,
+      "position": "00:21:55",
+      "position_sec": 1315.0
+     },
+     {
+      "index": 4,
+      "title": "Roma Resilience Amid Systemic Hardship: Cultural Endurance and Personal Agency",
+      "words": 685,
+      "position": "00:28:45",
+      "position_sec": 1725.0
+     },
+     {
+      "index": 5,
+      "title": "Global Perspective: From Paris to the World",
+      "words": 834,
+      "position": "00:30:31",
+      "position_sec": 1831.0
+     },
+     {
+      "index": 6,
+      "title": "Conclusion",
+      "words": 274,
+      "position": "00:30:30",
+      "position_sec": 1830.0
+     }
+    ],
+    "n_claims": 89,
+    "retrieved_uids": 59,
+    "cited_uids": 34,
+    "validation": {
+     "generation_sec": 417.5,
+     "grounding": {
+      "sentences": 116,
+      "cited_sentences": 26,
+      "checked_tokens": 51,
+      "unsupported": 1,
+      "miscited": 1,
+      "uncited_claims": 3,
+      "absence_statements": 0
+     },
+     "removed_sentences": 39,
+     "cut_sections": [
+      5
+     ],
+     "boundary": []
+    }
+   },
+   {
+    "run": 3,
+    "sections": [
+     {
+      "index": 1,
+      "title": "Framing Roma Identity Through Historical and Cultural Context",
+      "words": 497,
+      "position": "00:00:15",
+      "position_sec": 15.0
+     },
+     {
+      "index": 2,
+      "title": "Historical and Cultural Portrayal of Roma from 00:10:00–00:20:00",
+      "words": 828,
+      "position": "00:13:12",
+      "position_sec": 792.5
+     },
+     {
+      "index": 3,
+      "title": "Institutionalized Persecution of Roma under German and Eastern European Regimes",
+      "words": 647,
+      "position": "00:22:50",
+      "position_sec": 1370.0
+     },
+     {
+      "index": 4,
+      "title": "Roma Resilience and Cultural Endurance Amid Oppression",
+      "words": 404,
+      "position": "00:28:55",
+      "position_sec": 1735.0
+     },
+     {
+      "index": 5,
+      "title": "Global and Symbolic Conclusion: A Reflective Pause Across Continents",
+      "words": 384,
+      "position": "00:30:35",
+      "position_sec": 1835.0
+     },
+     {
+      "index": 6,
+      "title": "Conclusion",
+      "words": 213,
+      "position": "00:29:55",
+      "position_sec": 1795.0
+     }
+    ],
+    "n_claims": 102,
+    "retrieved_uids": 63,
+    "cited_uids": 28,
+    "validation": {
+     "generation_sec": 325.4,
+     "grounding": {
+      "sentences": 103,
+      "cited_sentences": 21,
+      "checked_tokens": 37,
+      "unsupported": 1,
+      "miscited": 6,
+      "uncited_claims": 12,
+      "absence_statements": 0
+     },
+     "removed_sentences": 0,
+     "cut_sections": [],
+     "boundary": [
+      "opening_unverifiable",
+      "ending_unverifiable"
+     ]
+    }
+   }
+  ],
+  "pairs": {
+   "r1-r2": {
+    "retrieved_episodic": 0.213,
+    "retrieved_semantic": 0.108,
+    "cited_episodic": 0.116,
+    "retrieved_images": 0.065,
+    "cited_images": 0.0,
+    "coverage_fine": 0.315,
+    "coverage_all": 0.619,
+    "claims": 0.225,
+    "tfidf_text": 0.714,
+    "tfidf_conclusion": 0.417
+   },
+   "r1-r3": {
+    "retrieved_episodic": 0.242,
+    "retrieved_semantic": 0.105,
+    "cited_episodic": 0.119,
+    "retrieved_images": 0.097,
+    "cited_images": 0.0,
+    "coverage_fine": 0.33,
+    "coverage_all": 0.333,
+    "claims": 0.29,
+    "tfidf_text": 0.736,
+    "tfidf_conclusion": 0.352
+   },
+   "r2-r3": {
+    "retrieved_episodic": 0.411,
+    "retrieved_semantic": 0.194,
+    "cited_episodic": 0.341,
+    "retrieved_images": 0.292,
+    "cited_images": 0.125,
+    "coverage_fine": 0.182,
+    "coverage_all": 0.245,
+    "claims": 0.345,
+    "tfidf_text": 0.736,
+    "tfidf_conclusion": 0.556
+   }
+  },
+  "coverage": {
+   "runs_0": 0.397,
+   "runs_1": 0.288,
+   "runs_2": 0.261,
+   "runs_3": 0.054,
+   "per_run_fine": [
+    0.408,
+    0.228,
+    0.337
+   ],
+   "per_run_all": [
+    0.538,
+    0.457,
+    0.788
+   ],
+   "windows_3min": {
+    "total": 11,
+    "per_run": [
+     5,
+     6,
+     8
+    ],
+    "covered_by_runs": {
+     "0": 2,
+     "1": 3,
+     "2": 2,
+     "3": 4
+    },
+    "per_window": {
+     "00:00:00": [
+      1,
+      2,
+      3
+     ],
+     "00:03:00": [
+      3
+     ],
+     "00:06:00": [
+      1,
+      3
+     ],
+     "00:09:00": [],
+     "00:12:00": [
+      3
+     ],
+     "00:15:00": [],
+     "00:18:00": [
+      2
+     ],
+     "00:21:00": [
+      1,
+      2,
+      3
+     ],
+     "00:24:00": [
+      1,
+      2,
+      3
+     ],
+     "00:27:00": [
+      1,
+      2,
+      3
+     ],
+     "00:30:00": [
+      2,
+      3
+     ]
+    }
+   }
+  },
+  "claims": {
+   "quote": {
+    "in_1_runs": {
+     "claims": 36,
+     "supported": 32
+    },
+    "in_2_runs": {
+     "claims": 5,
+     "supported": 5
+    },
+    "in_3_runs": {
+     "claims": 13,
+     "supported": 13
+    }
+   },
+   "name": {
+    "in_1_runs": {
+     "claims": 56,
+     "supported": 55
+    },
+    "in_2_runs": {
+     "claims": 26,
+     "supported": 25
+    },
+    "in_3_runs": {
+     "claims": 11,
+     "supported": 11
+    }
+   },
+   "time": {
+    "in_1_runs": {
+     "claims": 22,
+     "supported": null
+    },
+    "in_2_runs": {
+     "claims": 5,
+     "supported": null
+    },
+    "in_3_runs": {
+     "claims": 3,
+     "supported": null
+    }
+   },
+   "number": {
+    "in_1_runs": {
+     "claims": 10,
+     "supported": 10
+    },
+    "in_2_runs": {
+     "claims": 6,
+     "supported": 6
+    },
+    "in_3_runs": {
+     "claims": 3,
+     "supported": 3
+    }
+   }
+  },
+  "unsupported_unique_claims": {
+   "r1": [
+    "quote:-marked scientist and the",
+    "quote:-marked scientist symbolizing how roma have been systematically excluded from scholarly and institutional frameworks . the",
+    "quote:very little public knowledge"
+   ],
+   "r2": [
+    "name:Bismarck-era"
+   ],
+   "r3": [
+    "quote:couple barrels"
+   ]
+  },
+  "conclusions": {
+   "r1": "The video portrays the Roma as a people marked by historical marginalization, yet enduring through systemic persecution with remarkable cultural resilience. From its opening disclaimer affirming the non-slandrous use of “Gypsy,” the video frames Roma identity as both deeply rooted in Balkan history — evidenced by sepia-toned photographs of families in traditional attire and modern parades featuring Roma flags alongside EU and Ukrainian banners — and persistently misunderstood, as shown by recurring visual motifs of exclusion, such as the “X”-marked scientist and the “UNWANTED” overlay on historical scenes . The narrative traces their origins from South Asia through the Ghaznavid Empire and into Byzantine territories, where they were misidentified as Seljuk Turks, embedding their identity within geopolitical conflict . This historical misclassification and subsequent institutionalization under Nazi and communist regimes — though the latter is only referenced via a title card — are depicted as tools of erasure, with archival visuals of Gestapo mugshots and bureaucratic “Zigeuner” labels reinforcing state-sanctioned persecution . Despite this, the video highlights moments of quiet resistance: a Roma woman asserting “I am also a Roma” at a rally, a dancing boy in front of a satellite-dish-covered building, and an animated character symbolizing cultural endurance — all underscoring resilience amid systemic oppression . The video concludes not with a resolution but with a global perspective, transitioning to a stylized globe rotating against a backdrop of international flags, before fading to black — a visual that frames Roma experiences as part of a broader, interconnected global narrative . Credits appear at 00:30:08, marking the formal end of the video’s content . This final sequence confirms the video’s focus on Roma identity, historical marginalization, systemic persecution, and cultural resilience — all synthesized through layered visuals, historical context, and symbolic imagery.",
+   "r2": "The video portrays Roma identity as one that has endured systematic erasure yet persists through cultural resilience, as demonstrated across its narrative arc. It begins by acknowledging the historical and cultural presence of Roma in the Balkans, juxtaposing this with moments of institutionalized persecution—from Bismarck-era surveillance to Nazi racial categorization and post-war repression under communism . These episodes of erasure are visually underscored by archival footage, bureaucratic documents like the “Zigeuner-Buch,” and scenes of forced labor and state control . Despite this, the video consistently returns to imagery of cultural endurance: an animated woman with open arms against a cityscape, a Roma woman asserting identity at a rally with the slogan “Én is cigány vagyok,” and symbolic overlays of animated characters onto urban and historical settings . These visuals affirm Roma agency and continuity amid hardship. The video’s global perspective is reinforced through its final sequence, which features an anime-style girl standing before the Arc de Triomphe in Paris, then transitioning to a rotating globe centered on international flags, symbolizing Roma presence and interconnectedness across continents . This global imagery culminates in a stylized globe centered on Asia and Australia, encircled by national flags, before abruptly cutting to black—a visual pause that invites reflection rather than closure . The absence of audio during the globe sequence and the sudden transition emphasize the symbolic weight of the imagery, aligning with the video’s broader thematic arc from erasure to resilience. The video concludes not with a definitive statement but with this open-ended visual pause, reinforcing the idea that Roma identity, though historically marginalized, continues to exist, adapt, and assert itself across the world .",
+   "r3": "The video portrays Roma as historically marginalized through visual depictions of institutionalized persecution under German and Eastern European regimes, including archival footage of forced labor and concentration camp marches from 1945, as well as Nazi-era racial categorization documents . These scenes, juxtaposed with symbolic imagery such as the mugshot of Maria Bihari and the stylized animation of a Roma girl superimposed over a historical painting, reinforce the group’s enduring presence despite systemic erasure . The video further illustrates cultural resilience through scenes of community gathering, public rallies asserting identity (“I am also a Roma”), and animated figures dancing or standing with open arms in urban and rural settings — all suggesting continuity amid hardship . Globally, the video connects Roma experience across continents, culminating in a stylized globe centered on Asia and Australia, encircled by national flags, which visually symbolizes international scope and unity . The video concludes not with a narrative resolution but with symbolic imagery: an anime-style girl posing before the Arc de Triomphe, followed by a rotating globe and a final black screen, inviting reflection without offering closure . This visual pause aligns with the video’s thematic emphasis on Roma identity as both historically burdened and globally interconnected, leaving the viewer with a sense of ongoing, unresolved presence."
+  }
+ },
+ "54k2g9ddy4M": {
+  "video": "54k2g9ddy4M",
+  "video_end": "00:45:14",
+  "runs": [
+   {
+    "run": 1,
+    "sections": [
+     {
+      "index": 1,
+      "title": "Introduction to the Video’s Opening Segments (00:00:00-00:10:00)",
+      "words": 491,
+      "position": "00:02:10",
+      "position_sec": 130.0
+     },
+     {
+      "index": 2,
+      "title": "Unfolding Public Health Crisis: Measles Outbreak, Hospital Tragedy, and Emergency Response Failures",
+      "words": 623,
+      "position": "00:04:25",
+      "position_sec": 265.0
+     },
+     {
+      "index": 3,
+      "title": "Shift to Personal Tragedy and Institutional Failure, Followed by Athletic Triumph",
+      "words": 716,
+      "position": "00:21:10",
+      "position_sec": 1270.0
+     },
+     {
+      "index": 4,
+      "title": "Liendo’s Journey and Legacy",
+      "words": 439,
+      "position": "00:31:20",
+      "position_sec": 1880.0
+     },
+     {
+      "index": 5,
+      "title": "Community Disaster and Recovery",
+      "words": 602,
+      "position": "00:39:05",
+      "position_sec": 2345.0
+     },
+     {
+      "index": 6,
+      "title": "Conclusion",
+      "words": 341,
+      "position": "00:38:35",
+      "position_sec": 2315.0
+     }
+    ],
+    "n_claims": 110,
+    "retrieved_uids": 64,
+    "cited_uids": 42,
+    "validation": {
+     "generation_sec": 346.3,
+     "grounding": {
+      "sentences": 122,
+      "cited_sentences": 26,
+      "checked_tokens": 33,
+      "unsupported": 2,
+      "miscited": 1,
+      "uncited_claims": 4,
+      "absence_statements": 0
+     },
+     "removed_sentences": 1,
+     "cut_sections": [],
+     "boundary": [
+      "ending_early",
+      "ending_early"
+     ]
+    }
+   },
+   {
+    "run": 2,
+    "sections": [
+     {
+      "index": 1,
+      "title": "Opening of the Video: Public Health, Political Disruption, and Athletic Achievement",
+      "words": 818,
+      "position": "00:02:05",
+      "position_sec": 125.0
+     },
+     {
+      "index": 2,
+      "title": "Unfolding Crisis: Measles Outbreak, Hospital Strain, and Third Patient Death in Montreal",
+      "words": 559,
+      "position": "00:04:45",
+      "position_sec": 285.0
+     },
+     {
+      "index": 3,
+      "title": "Joshua Liendo’s Gold Medal Triumph and Personal Reflections",
+      "words": 449,
+      "position": "00:27:45",
+      "position_sec": 1665.0
+     },
+     {
+      "index": 4,
+      "title": "Tragic Misidentification at Montfort Hospital and Fire Disaster in Eabametoong First Nation",
+      "words": 615,
+      "position": "00:21:30",
+      "position_sec": 1290.0
+     },
+     {
+      "index": 5,
+      "title": "Final Segments: Pet Psychics, Goats on the Road, and Studio Wrap-Up",
+      "words": 491,
+      "position": "00:43:35",
+      "position_sec": 2615.0
+     },
+     {
+      "index": 6,
+      "title": "Conclusion",
+      "words": 368,
+      "position": "00:05:00",
+      "position_sec": 300.0
+     }
+    ],
+    "n_claims": 119,
+    "retrieved_uids": 64,
+    "cited_uids": 40,
+    "validation": {
+     "generation_sec": 335.7,
+     "grounding": {
+      "sentences": 133,
+      "cited_sentences": 35,
+      "checked_tokens": 41,
+      "unsupported": 1,
+      "miscited": 1,
+      "uncited_claims": 7,
+      "absence_statements": 0
+     },
+     "removed_sentences": 3,
+     "cut_sections": [],
+     "boundary": [
+      "opening_unverifiable",
+      "opening_late",
+      "ending_early"
+     ]
+    }
+   },
+   {
+    "run": 3,
+    "sections": [
+     {
+      "index": 1,
+      "title": "Opening of the Video: Public Health, Politics, and Athletic Ascent",
+      "words": 1135,
+      "position": "00:05:22",
+      "position_sec": 322.5
+     },
+     {
+      "index": 2,
+      "title": "Measles Outbreak Escalates, Hospital Strain Mounts, and Broader Crises Emerge",
+      "words": 777,
+      "position": "00:13:08",
+      "position_sec": 787.5
+     },
+     {
+      "index": 3,
+      "title": "Misidentification Tragedy at Montfort Hospital and Joshua Liendo’s Gold Medal Triumph",
+      "words": 537,
+      "position": "00:21:20",
+      "position_sec": 1280.0
+     },
+     {
+      "index": 4,
+      "title": "Joshua Liendo’s Personal Journey and Historic Legacy",
+      "words": 437,
+      "position": "00:31:30",
+      "position_sec": 1890.0
+     },
+     {
+      "index": 5,
+      "title": "Aftermath of the Eabametoong School Fire: Community Grief, Federal Aid, and New Beginnings",
+      "words": 724,
+      "position": "00:38:45",
+      "position_sec": 2325.0
+     },
+     {
+      "index": 6,
+      "title": "Conclusion",
+      "words": 195,
+      "position": "00:25:00",
+      "position_sec": 1500.0
+     }
+    ],
+    "n_claims": 155,
+    "retrieved_uids": 63,
+    "cited_uids": 41,
+    "validation": {
+     "generation_sec": 361.7,
+     "grounding": {
+      "sentences": 161,
+      "cited_sentences": 36,
+      "checked_tokens": 50,
+      "unsupported": 0,
+      "miscited": 4,
+      "uncited_claims": 8,
+      "absence_statements": 0
+     },
+     "removed_sentences": 2,
+     "cut_sections": [],
+     "boundary": [
+      "opening_unverifiable",
+      "ending_early"
+     ]
+    }
+   }
+  ],
+  "pairs": {
+   "r1-r2": {
+    "retrieved_episodic": 0.273,
+    "retrieved_semantic": 0.257,
+    "cited_episodic": 0.23,
+    "retrieved_images": 0.062,
+    "cited_images": 0.056,
+    "coverage_fine": 0.269,
+    "coverage_all": 0.667,
+    "claims": 0.396,
+    "tfidf_text": 0.735,
+    "tfidf_conclusion": 0.269
+   },
+   "r1-r3": {
+    "retrieved_episodic": 0.277,
+    "retrieved_semantic": 0.333,
+    "cited_episodic": 0.286,
+    "retrieved_images": 0.1,
+    "cited_images": 0.071,
+    "coverage_fine": 0.353,
+    "coverage_all": 0.964,
+    "claims": 0.345,
+    "tfidf_text": 0.73,
+    "tfidf_conclusion": 0.433
+   },
+   "r2-r3": {
+    "retrieved_episodic": 0.186,
+    "retrieved_semantic": 0.222,
+    "cited_episodic": 0.164,
+    "retrieved_images": 0.029,
+    "cited_images": 0.043,
+    "coverage_fine": 0.264,
+    "coverage_all": 0.69,
+    "claims": 0.337,
+    "tfidf_text": 0.707,
+    "tfidf_conclusion": 0.255
+   }
+  },
+  "coverage": {
+   "runs_0": 0.162,
+   "runs_1": 0.485,
+   "runs_2": 0.235,
+   "runs_3": 0.118,
+   "per_run_fine": [
+    0.305,
+    0.562,
+    0.441
+   ],
+   "per_run_all": [
+    0.926,
+    0.728,
+    0.893
+   ],
+   "windows_3min": {
+    "total": 16,
+    "per_run": [
+     8,
+     11,
+     12
+    ],
+    "covered_by_runs": {
+     "0": 1,
+     "1": 7,
+     "2": 0,
+     "3": 8
+    },
+    "per_window": {
+     "00:00:00": [
+      1,
+      2,
+      3
+     ],
+     "00:03:00": [
+      1,
+      2,
+      3
+     ],
+     "00:06:00": [
+      2
+     ],
+     "00:09:00": [
+      3
+     ],
+     "00:12:00": [
+      3
+     ],
+     "00:15:00": [
+      3
+     ],
+     "00:18:00": [
+      1,
+      2,
+      3
+     ],
+     "00:21:00": [
+      1,
+      2,
+      3
+     ],
+     "00:24:00": [
+      2
+     ],
+     "00:27:00": [
+      1,
+      2,
+      3
+     ],
+     "00:30:00": [
+      1,
+      2,
+      3
+     ],
+     "00:33:00": [
+      3
+     ],
+     "00:36:00": [
+      1,
+      2,
+      3
+     ],
+     "00:39:00": [
+      1,
+      2,
+      3
+     ],
+     "00:42:00": [
+      2
+     ],
+     "00:45:00": []
+    }
+   }
+  },
+  "claims": {
+   "time": {
+    "in_1_runs": {
+     "claims": 23,
+     "supported": null
+    },
+    "in_2_runs": {
+     "claims": 8,
+     "supported": null
+    },
+    "in_3_runs": {
+     "claims": 0,
+     "supported": null
+    }
+   },
+   "quote": {
+    "in_1_runs": {
+     "claims": 22,
+     "supported": 22
+    },
+    "in_2_runs": {
+     "claims": 4,
+     "supported": 4
+    },
+    "in_3_runs": {
+     "claims": 5,
+     "supported": 5
+    }
+   },
+   "name": {
+    "in_1_runs": {
+     "claims": 72,
+     "supported": 71
+    },
+    "in_2_runs": {
+     "claims": 36,
+     "supported": 35
+    },
+    "in_3_runs": {
+     "claims": 38,
+     "supported": 38
+    }
+   },
+   "number": {
+    "in_1_runs": {
+     "claims": 7,
+     "supported": 7
+    },
+    "in_2_runs": {
+     "claims": 10,
+     "supported": 10
+    },
+    "in_3_runs": {
+     "claims": 5,
+     "supported": 5
+    }
+   }
+  },
+  "unsupported_unique_claims": {
+   "r1": [],
+   "r2": [
+    "name:Black Olympic"
+   ],
+   "r3": []
+  },
+  "conclusions": {
+   "r1": "The video presents a layered narrative that intertwines public health crises, institutional failures, and athletic triumph, ultimately concluding with themes of community recovery and athletic legacy. Public health concerns are prominently featured, including a measles outbreak in the United States with 41 confirmed cases and a third patient death in a Montreal hospital, underscoring systemic vulnerabilities in emergency response and disease containment . These crises are juxtaposed with institutional failures, such as the misidentification tragedy at Montfort Hospital, where a grieving family mourned the loss of a son only to later discover he was a stranger — a case that highlights profound systemic breakdowns in healthcare . The video also documents the devastating fire that destroyed the only school on Eabametoong First Nation, leaving behind charred ruins and triggering a community-wide crisis, with inadequate infrastructure and delayed government support compounding the trauma . Yet, the narrative pivots toward recovery, showing the eventual construction of new schools in Pikangikum and Wapekeka First Nations, symbolizing resilience and the fulfillment of long-delayed promises . In parallel, the video celebrates athletic triumph through the story of Joshua Liendo, Canada’s first Black swimmer to win international gold in the 100-meter butterfly at the Doha World Championships. His journey — from Trinidad to Toronto, from childhood in a Caribbean community to global podiums — is framed as both personal achievement and a broader cultural milestone . Liendo’s reflections on role models, systemic underrepresentation, and the sacrifices of his family underscore his legacy not only as an athlete but as a symbol of progress and representation in elite swimming . His victory, captured in dynamic race footage and celebrated by a roaring Canadian crowd, marks a historic moment that contrasts sharply with the tragedies and institutional failures depicted earlier . The video concludes by returning to the themes of recovery and legacy: the rebuilding of schools and the enduring hope of First Nation communities, alongside Liendo’s enduring presence as a trailblazer, affirming that resilience and triumph can emerge even in the face of profound loss .",
+   "r2": "The video presents a fragmented yet interconnected narrative spanning public health emergencies, political disruption, and athletic achievement, with recurring themes of systemic failure and community resilience. Public health concerns center on a measles resurgence in Canada and the U.S., with officials warning of potential community transmission and declining vaccination rates falling short of the 95% herd immunity threshold . The outbreak’s origin remains mysterious, and its high contagiousness poses a grave risk to vulnerable populations, particularly children and immunocompromised individuals . Systemic failures in emergency response are starkly illustrated by the third patient death in a Montreal hospital waiting room, following a 45-minute ambulance delay, with medical professionals warning that without increased vehicle deployment, similar tragedies are certain to recur . This crisis is juxtaposed with international coverage of U.S. Vice President Kamala Harris’s Gaza ceasefire appeal, underscoring global tensions and humanitarian strain . Political disruption is evident in large nighttime protests outside the Art Gallery of Ontario, which led to the cancellation of a Prime Minister’s event and triggered an official police investigation, with some politicians reconsidering candidacy amid rising security costs . The video also documents a tragic misidentification at Montfort Hospital, confirmed in February 2024, and a devastating fire that destroyed the Rev. Eleazar Winter Memorial School in Eabametoong First Nation — a community already grappling with a long-standing boil water advisory since 2002 . These events highlight systemic vulnerabilities and the resilience of affected communities, who continue to recover despite inadequate infrastructure and services. Athletic achievement is represented by Canadian swimmer Joshua Liendo’s gold medal win in the Men’s 100m Butterfly at the Commonwealth Games, where he reflects on his trailblazing role for Black swimmers amid the backdrop of national turmoil . His triumph is presented as a moment of national pride, juxtaposed with the urgency of public health and political crises . The video concludes with a studio anchor in a gray suit and patterned purple tie delivering a wrap-up report, followed by a black screen . The final moments shift to lighter, more unusual topics — including pet psychics and goats on the road — providing a tonal contrast to the earlier segments and serving as an official closure .",
+   "r3": "The video presents a fragmented yet thematically interconnected narrative that juxtaposes institutional failures, personal triumphs, and community resilience across public health, political protest, and athletic achievement. Public health crises, including a measles resurgence in the U.S. and Canada and a fatal misidentification at Montfort Hospital, underscore systemic vulnerabilities and human error . These institutional failures are contrasted with personal victories, most notably Joshua Liendo’s historic gold medal win in the Men’s 100m Butterfly at the Doha World Championships, which he achieved through disciplined training and cultural perseverance . Liendo’s journey—from Trinidad to elite competition—symbolizes overcoming systemic underrepresentation in swimming, while his reflective interviews highlight the emotional and cultural weight of his success . Similarly, the aftermath of the Eabametoong First Nation school fire, which destroyed the community’s only educational facility, is met with federal aid and eventual recovery, including the unveiling of new schools in Pikangikum and Wapekeka First Nations, demonstrating resilience amid institutional neglect . The video concludes with Liendo’s gold medal and the community’s recovery stories as the final anchors of triumph and renewal, affirming the power of individual and collective perseverance in the face of systemic and environmental adversity ."
+  }
+ },
+ "_cross_video": {
+  "tfidf_text": {
+   "min": 0.074,
+   "max": 0.203,
+   "mean": 0.133
+  },
+  "tfidf_conclusion": {
+   "min": 0.024,
+   "max": 0.092,
+   "mean": 0.052
+  }
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "video_id": "-QuCz7kxBr8",
+ "embedding": "VLM2Vec-V2.0 CPU bf16 sdpa",
+ "rows": [
+  {
+   "segment": "00004000",
+   "nframes": 10,
+   "cosine_to_stored": 0.9987
+  },
+  {
+   "segment": "00004000",
+   "nframes": 16,
+   "cosine_to_stored": 0.91058
+  },
+  {
+   "segment": "00344000",
+   "nframes": 10,
+   "cosine_to_stored": 0.99829
+  },
+  {
+   "segment": "00344000",
+   "nframes": 16,
+   "cosine_to_stored": 0.8867
+  },
+  {
+   "segment": "00285000",
+   "nframes": 10,
+   "cosine_to_stored": 0.99868
+  },
+  {
+   "segment": "00285000",
+   "nframes": 16,
+   "cosine_to_stored": 0.94282
+  },
+  {
+   "segment": "00182000",
+   "nframes": 10,
+   "cosine_to_stored": 0.99654
+  },
+  {
+   "segment": "00182000",
+   "nframes": 16,
+   "cosine_to_stored": 0.95321
+  }
+ ]
+}
