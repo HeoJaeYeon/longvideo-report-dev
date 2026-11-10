@@ -27,7 +27,7 @@ ENDPOINTS=()
 i=0
 for g in ${LLM_GPUS//,/ }; do
   port=$((BASE_PORT + i))
-  CUDA_VISIBLE_DEVICES="$g" PYTHONDONTWRITEBYTECODE=1 "$PY" -B "$HERE/tests/run_llm_server_capped.py" "$port" \
+  CUDA_VISIBLE_DEVICES="$g" PYTHONDONTWRITEBYTECODE=1 "$PY" -B "$HERE/scripts/launch/run_llm_server_capped.py" "$port" \
       > "$LOG_DIR/prebuild_llm_${STAMP}_gpu${g}.log" 2>&1 &
   PIDS+=($!)
   ENDPOINTS+=("http://127.0.0.1:${port}/v1")

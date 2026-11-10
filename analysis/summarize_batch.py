@@ -1,5 +1,5 @@
 """
-Summarize a tests/gpu_report_batch.py output folder (read-only): per job exit, generation time, LLM calls and
+Summarize an experiments/gpu_report_batch.py output folder (read-only): per job exit, generation time, LLM calls and
 max_tokens hits in the job's time window (server log), repeated-sentence removal and mid-sentence ends (P9),
 start/end claim findings (P19), rule-check counts, and the conclusion section's last sentence.
 Usage: python analysis/summarize_batch.py <batch_out_dir> [--json out.json]

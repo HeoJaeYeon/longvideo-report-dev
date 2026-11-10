@@ -12,7 +12,7 @@ Sources
   - grounding_postprocessor.ground_report re-run on report.json (checked to reproduce report.md exactly)
 Hand-written observations are not generated here; the output keeps `<!-- OBS:<key> -->` markers for them.
 Usage: python analysis/build_running_example.py --video=<vid> [--run outputs/p9p19_check_20261025_141401] [--repeat 1]
-Output: running_example/RUNNING_EXAMPLE_<vid>.md
+Output: internal/running_example/RUNNING_EXAMPLE_<vid>.md
 """
 import argparse, collections, glob, json, os, pickle, re, shutil, sys, tempfile
 
@@ -143,7 +143,7 @@ def main():
     w("- 이 문서는 한 영상의 보고서 1건이 만들어지는 과정을 **모든 단계의 실제 입력과 출력**으로 따라간다. 사실 부분은 `analysis/build_running_example.py`가 기록 파일에서 직접 생성했다(LLM 재호출 없음). `> 관찰` 블록은 사람이 근거와 대조해 쓴 해석이다.")
     w(f"- 실행: `{rel(rdir)}` (2026-10-25, 커밋 `baf08d8` 시점 코드). 2026-10-26 변경(영상 끝 근거 txt0, 경고 기준, 결말 검사 오탐 수정)은 이 실행에 없다.")
     w("- 표기: [확인] 코드·데이터로 확인 / [부분 확인] 존재는 확인했으나 영향 정도는 미측정 / [가설] 근거 부족·실험 없음.")
-    w("- 전체 프롬프트·근거 원문: `inspect/" + os.path.basename(run) + f"/{job}/` (`analysis/export_stages.py`로 생성).")
+    w("- 전체 프롬프트·근거 원문: `internal/inspect/" + os.path.basename(run) + f"/{job}/` (`analysis/export_stages.py`로 생성).")
     w("")
     w("## 목차")
     w("0. 한눈에 · 1. 입력 · 2. 오프라인 메모리 · 3. 실행 준비 · 4. planner · 5. 섹션별 처리(query → 검색 → writer → 후처리) · 6. 최종 산출물·검증 · 7. 단계별 문제점·한계 요약")
@@ -316,7 +316,7 @@ def main():
     w(f"| 규칙·출력 형식 | {len(pin) - i_task:,} | 섹션 3–{cfg['report']['max_sections']}개, 영상 근거만, 시간순, 설명 2–4문장·대략의 시간 범위, checklist 3–5개, 마지막은 `Conclusion:` |")
     w(f"| **합계** | **{len(pin):,}** | 서버 로그 프롬프트 {llm[0].group(2)}토큰 |")
     w("- 메시지는 user 1개(system 없음). 영상 프레임·세밀한 캡션·semantic은 들어가지 않는다. [확인]")
-    w(f"- 전문: `inspect/{os.path.basename(run)}/{job}/01_planner_prompt.md`")
+    w(f"- 전문: `internal/inspect/{os.path.basename(run)}/{job}/01_planner_prompt.md`")
     w("")
     w("### 4.2 출력")
     w("")
@@ -386,7 +386,7 @@ def main():
         win = wc["input_messages"][0]["content"]
         w(f"**(c) writer** — 프롬프트 {wl.group(2)}토큰({len(win):,}자), 출력 {wl.group(3)}토큰, `{wl.group(4)}`, {wl.group(5)}초" + (" — **서버 상한 3,072토큰에서 끊김**" if wl.group(4) == "length" else ""))
         w("")
-        w(f"- 입력: 섹션 위치 `Section {i}/{n}`, 설명·checklist, 앞 섹션 요약(위와 같은 C0) + 직전 섹션 끝 3조각, 근거 text {len(texts)}개(`content` 전문) + image {len(imgs)}개(캡션 문자열만), 규칙(Grounding 1–7, Citation 1–4, 위치별, 결론, 형식). 전문: `inspect/{os.path.basename(run)}/{job}/s{i:02d}/4_writer_prompt.md`")
+        w(f"- 입력: 섹션 위치 `Section {i}/{n}`, 설명·checklist, 앞 섹션 요약(위와 같은 C0) + 직전 섹션 끝 3조각, 근거 text {len(texts)}개(`content` 전문) + image {len(imgs)}개(캡션 문자열만), 규칙(Grounding 1–7, Citation 1–4, 위치별, 결론, 형식). 전문: `internal/inspect/{os.path.basename(run)}/{job}/s{i:02d}/4_writer_prompt.md`")
         w("")
         w(details(f"writer 출력 원문 ({len(wc['output_content'].split())}단어, 후처리 전)", fence(wc["output_content"])))
         w("")
@@ -450,7 +450,7 @@ def main():
     w("")
     w("<!-- OBS:summary -->")
     w("")
-    out = os.path.join(RF, "running_example", f"RUNNING_EXAMPLE_{vid}.md")
+    out = os.path.join(RF, "internal", "running_example", f"RUNNING_EXAMPLE_{vid}.md")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, "w", encoding="utf-8").write("\n".join(L) + "\n")
     print("wrote", out, len("\n".join(L)), "chars")

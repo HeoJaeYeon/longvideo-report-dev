@@ -4,7 +4,7 @@ The preprocessing log does not record --num-frames; process_one_video.sh (edited
 Re-embed a few segments with VLM2Vec-V2.0 on CPU (bfloat16, sdpa; reproduce_retrieval_cpu.cpu_vlm2vec) with 10 and
 with 16 frames (WorldMM default) and compare each with the stored vector (cosine).
 Usage: python analysis/verify_visual_nframes.py [--video=-QuCz7kxBr8] [--segments 00004000,00344000]
-Output: analysis/visual_nframes_check_<vid>.json
+Output: results/visual_nframes_check_<vid>.json
 """
 import argparse, json, os, pickle, sys
 
@@ -36,7 +36,7 @@ def main():
             cos = float(np.dot(e, ref) / np.linalg.norm(e) / np.linalg.norm(ref))
             rows.append({"segment": key, "nframes": nf, "cosine_to_stored": round(cos, 5)})
             print(rows[-1], flush=True)
-    out = os.path.join(RF, "analysis", f"visual_nframes_check_{a.video}.json")
+    out = os.path.join(RF, "results", f"visual_nframes_check_{a.video}.json")
     json.dump({"video_id": a.video, "embedding": "VLM2Vec-V2.0 CPU bf16 sdpa", "rows": rows}, open(out, "w"), indent=1)
     print("wrote", out)
 

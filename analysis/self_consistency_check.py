@@ -12,7 +12,7 @@ For each video, pairwise over the 3 runs:
               any semantic evidence retrieved for that video ("supported"). Times are only counted, not checked.
               Note: "supported" is video-wide and turned out non-discriminative (almost every token occurs somewhere).
 Report bodies are taken from report.json (repeated sentences already removed by run_report).
-Usage: python analysis/self_consistency_check.py [--out analysis/self_consistency_20261026.json]
+Usage: python analysis/self_consistency_check.py [--out results/self_consistency_20261026.json]
 """
 import argparse, itertools, json, os, re, statistics, sys
 
@@ -211,7 +211,7 @@ def analyze_video(vid, tfidf_all):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=os.path.join(RF, "analysis", "self_consistency_20261026.json"))
+    ap.add_argument("--out", default=os.path.join(RF, "results", "self_consistency_20261026.json"))
     a = ap.parse_args()
     tfidf_all = []
     result = {v: analyze_video(v, tfidf_all) for v in VIDEOS}

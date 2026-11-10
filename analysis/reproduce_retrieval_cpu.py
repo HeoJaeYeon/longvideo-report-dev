@@ -20,7 +20,7 @@ A section whose check fails must not be presented as the run's internal state (o
 Graph search keeps 2 ranks beyond k per list (within_k=False) so near-ties at the cut are visible.
 The L1 filter's LLM response is not logged and is not reproduced.
 Usage: python analysis/reproduce_retrieval_cpu.py --video=<vid> --work-dir <scratch dir> [--repeat 1]
-Output: analysis/retrieval_repro_<vid>_r<repeat>.json
+Output: results/retrieval_repro_<vid>_r<repeat>.json
 """
 import argparse, ast, copy, glob, hashlib, json, os, shutil, sys
 
@@ -286,7 +286,7 @@ Return ONLY a JSON array of caption IDs in order of relevance (most relevant fir
     ret.release()
     assert tree_md5(real_cache) == md5_before, "real episodic cache changed"
     out["real_cache_md5_unchanged"] = md5_before
-    p = os.path.join(RF, "analysis", f"retrieval_repro_{vid}_r{a.repeat}.json")
+    p = os.path.join(RF, "results", f"retrieval_repro_{vid}_r{a.repeat}.json")
     json.dump(out, open(p, "w"), ensure_ascii=False, indent=1)
     print("wrote", p)
 

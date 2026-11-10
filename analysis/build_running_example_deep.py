@@ -1,5 +1,5 @@
 """
-§10 of running_example/RUNNING_EXAMPLE.md: presentation-grade deep dive into ONE report (-QuCz7kxBr8 r1, basketball)
+§10 of internal/running_example/RUNNING_EXAMPLE.md: presentation-grade deep dive into ONE report (-QuCz7kxBr8 r1, basketball)
 (2026-11-02, CPU only, no LLM call). Called by analysis/build_running_example_combined.py (render()); running this file
 alone only (re)writes the image assets.
 
@@ -15,10 +15,10 @@ What it adds beyond §2-§7, all read from the recorded files or recomputed with
   - visual memory: embedding store, the 10 frames VLM2Vec embedded per segment (frame ranges from the preprocessing
     log, linspace as in qwen_vl_utils), resize size, as image files
   - per section: query prompt/output, graph search per query x granularity with HippoRAG scores, RRF list, exact L1
-    filter prompt, semantic and visual rankings (from analysis/retrieval_repro_<vid>_r1.json, made by
+    filter prompt, semantic and visual rankings (from results/retrieval_repro_<vid>_r1.json, made by
     analysis/reproduce_retrieval_cpu.py, whose checks against the run must have passed), writer prompt/output,
     citation mapping and final body
-Assets: running_example/assets/-QuCz7kxBr8/ (referenced by relative path from the document).
+Assets: internal/running_example/assets/-QuCz7kxBr8/ (referenced by relative path from the document).
 """
 import collections, glob, hashlib, importlib.util, json, math, os, pickle, re, shutil, sys, tempfile
 
@@ -35,8 +35,8 @@ VID = "-QuCz7kxBr8"
 REPEAT = 1
 RUN = os.path.join(RF, "outputs", "p9p19_check_20261025_141401")
 JOB = f"{VID}__c0_written__r{REPEAT}"
-ASSET_REL = f"assets/{VID}"                                  # relative to running_example/
-ASSET_DIR = os.path.join(RF, "running_example", ASSET_REL)
+ASSET_REL = f"assets/{VID}"                                  # relative to internal/running_example/
+ASSET_DIR = os.path.join(RF, "internal", "running_example", ASSET_REL)
 WMF = os.path.dirname(CAP)   # WorldMM memory folder (parent of caption/): transcript/, logs/
 PRE_LOG = f"{WMF}/logs/{VID}.log"
 VIDEO = f"{WM}/data/Video-MME/data/{VID}.mp4"
@@ -178,7 +178,7 @@ def load_ctx():
     assert c["grounded"]["markdown"] == body
     c["uid2ref"] = {r["uid"]: r["n"] for r in c["grounded"]["references"]}
     c["uid2fig"] = {f["uid"]: f["k"] for f in c["grounded"]["figures"]}
-    rp = os.path.join(RF, "analysis", f"retrieval_repro_{VID}_r{REPEAT}.json")
+    rp = os.path.join(RF, "results", f"retrieval_repro_{VID}_r{REPEAT}.json")
     c["repro"] = json.load(open(rp))
     c["repro_path"] = rp
     assert c["repro"]["job"] == JOB and len(c["repro"]["sections"]) == n
@@ -268,7 +268,7 @@ def render():
     w("  - 재사용한 WorldMM 코드는 전처리 당시 코드와 같다고 본다. 전처리 로그의 경로는 이름 변경 전 `VAU_RAG/WorldMM`인데, 같은 디렉터리가 `VideoRAG`로 이름만 바뀌었다(`DESIGN_AND_STATUS.md` §10). 재사용한 파일들의 마지막 수정 시각은 모두 2026-09-20 이전으로, 메모리 생성(2026-09-21–22)보다 앞선다. [확인: 파일 수정 시각]")
     w("  - 보고서 실행 기록: `report.json`·`validation.json`·`report.md`, Deep-Reporter 세션 로그, LLM 서버·검색 서비스 로그")
     w(f"  - 검색 내부 과정: `{rel(c['repro_path'])}` (`analysis/reproduce_retrieval_cpu.py`가 검색 서비스의 클래스를 CPU에서 다시 돌린 결과, §10.9.0)")
-    w(f"- **그림 파일**: `running_example/{ASSET_REL}/` ({len(made)}개 묶음 이미지 + 검색 중앙 프레임 + `frames/` 낱장). PPT에는 이 파일을 그대로 쓰면 된다. 목록은 §10.10.")
+    w(f"- **그림 파일**: `internal/running_example/{ASSET_REL}/` ({len(made)}개 묶음 이미지 + 검색 중앙 프레임 + `frames/` 낱장). PPT에는 이 파일을 그대로 쓰면 된다. 목록은 §10.10.")
     w("- **생성 중 자동 확인(assert)한 것**")
     w("  - WorldMM 분할 코드로 만든 10초 구간 226개의 시작·끝이 `10sec.json`과 모두 같다.")
     w("  - 캡션 계층(10sec→30sec→3min→10min) 묶음 규칙으로 다시 묶은 창의 수·시작·끝이 세 단계 모두 파일과 같다.")
@@ -635,7 +635,7 @@ def render():
     w("### 10.6 visual memory: 10sec 구간마다 VLM2Vec 비디오 임베딩 1개")
     w("")
     w(f"- 파일 `visual_embeddings.pkl`: dict, 키 = 10sec `start_time`({len(vis)}개), 값 = numpy {v0.dtype} 벡터 {v0.shape}. [확인]")
-    nf = json.load(open(os.path.join(RF, "analysis", f"visual_nframes_check_{VID}.json")))["rows"]
+    nf = json.load(open(os.path.join(RF, "results", f"visual_nframes_check_{VID}.json")))["rows"]
     by = collections.defaultdict(dict)
     for r_ in nf:
         by[r_["segment"]][r_["nframes"]] = r_["cosine_to_stored"]
@@ -721,7 +721,7 @@ def render():
     w(f"- 맞은 섹션: text {fmt(lambda x: x['text_match'])} / semantic {fmt(lambda x: x['semantic_match'])} / image {fmt(lambda x: x['visual_match'])}.")
     w(f"- text가 어긋난 섹션: 기록된 근거의 RRF 점수가 다른 섹션({fmt(lambda x: not x['checks']['episodic_rrf']['ok'])})은 그 근거가 목록 하나에 더 들어가거나 빠지거나 순위가 한 칸 바뀐 값이다(각 섹션 ③의 근거). 점수는 모두 같은데 L1 프롬프트 토큰 수만 다른 섹션({fmt(lambda x: x['checks']['episodic_rrf']['ok'] and not x['checks']['l1_prompt_tokens']['ok'])})은 L1이 고르지 않은 후보 일부가 다르다. 모두 목록 **끝자리 근처의 순위 차이**다. [확인]")
     w("- 원인: 섹션 1·2를 CPU에서 float32와 bfloat16으로 따로 돌려 본 진단에서 text 후보는 두 정밀도가 서로 같았고, 둘 다 기록과 같은 지점에서 달랐다. 그래서 CPU와 GPU(flash_attention_2) 사이 질의 임베딩의 미세한 차이로 보인다. GPU로 다시 돌려 확인하지는 않았다. [부분 확인]")
-    w("- 재현의 실행 간 차이: 이 표는 2026-11-02 CPU 재현 결과다. 2026-11-10에 같은 코드·같은 데이터(캐시 md5 동일)로 다시 돌린 두 번의 결과는 서로도, 이 표와도 달랐다(예: S1 text — 11-02 불일치, 11-10 한 번은 일치·한 번은 불일치). CPU 재현 자체가 실행마다 점수가 조금씩 달라(그래프 검색 점수 최대 차이 약 0.008) 점수가 비슷한 후보의 순위가 바뀐다. 그래서 \"맞은 섹션\" 목록은 고정된 값이 아니다. [확인: 대조 실험, `internal/REORG_LOG_20261110.md` 9절] 실행마다 달라지는 구체적 기제는 확인하지 않았다. [가설]")
+    w("- 재현의 실행 간 차이: 이 표는 2026-11-02 CPU 재현 결과다. 2026-11-10에 같은 코드·같은 데이터(캐시 md5 동일)로 다시 돌린 두 번의 결과는 서로도, 이 표와도 달랐다(예: S1 text — 11-02 불일치, 11-10 한 번은 일치·한 번은 불일치). CPU 재현 자체가 실행마다 점수가 조금씩 달라(그래프 검색 점수 최대 차이 약 0.008) 점수가 비슷한 후보의 순위가 바뀐다. 그래서 \"맞은 섹션\" 목록은 고정된 값이 아니다. [확인: 대조 실험, `internal/status/REORG_LOG_20261110.md` 9절] 실행마다 달라지는 구체적 기제는 확인하지 않았다. [가설]")
     w("")
     for i, (s, rs) in enumerate(zip(outline, repro["sections"]), 1):
         content = s["content"] or ""
@@ -875,7 +875,7 @@ def render():
     # ============================================================== 10.10 assets
     w("### 10.10 그림 파일 목록 (PPT용)")
     w("")
-    w(f"위치: `report_framework/running_example/{ASSET_REL}/`")
+    w(f"위치: `report_framework/internal/running_example/{ASSET_REL}/`")
     w("")
     w("| 파일 | 내용 |")
     w("|---|---|")

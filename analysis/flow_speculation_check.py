@@ -11,7 +11,7 @@ Checks (candidates; precision must be checked by hand):
   S  wording: hedge / interpretive / evaluative cue words per sentence; whether the same cue appears in the
      sentence's cited text evidence ("carried"), not ("added"), or the sentence cites nothing ("uncited")
 Speaker attribution is not covered (needs semantic comparison).
-Usage: python analysis/flow_speculation_check.py [--out analysis/flow_speculation_20261026.json]
+Usage: python analysis/flow_speculation_check.py [--out results/flow_speculation_20261026.json]
 """
 import argparse, glob, json, os, re, statistics, sys
 from collections import Counter
@@ -118,7 +118,7 @@ def analyze(path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=os.path.join(RF, "analysis", "flow_speculation_20261026.json"))
+    ap.add_argument("--out", default=os.path.join(RF, "results", "flow_speculation_20261026.json"))
     a = ap.parse_args()
     result = {}
     for name, pattern in SETS.items():

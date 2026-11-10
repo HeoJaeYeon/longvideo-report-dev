@@ -6,7 +6,7 @@ Read-only, CPU only (2026-10-26). Input: outputs/p9p19_check_20261025_141401 (re
             stage: plan (description + checklist, TF-IDF cosine), text queries (TF-IDF cosine), retrieved / cited
             episodic evidence (Jaccard), written body (TF-IDF cosine, citations removed)
   concl   : conclusion checklist and queries, to see which earlier content they follow
-Usage: python analysis/divergence_trace.py [--out analysis/divergence_trace_20261026.json]
+Usage: python analysis/divergence_trace.py [--out results/divergence_trace_20261026.json]
 """
 import argparse, glob, hashlib, itertools, json, os, re, sys
 
@@ -42,7 +42,7 @@ def episodic_uids(section, cited_only):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=os.path.join(RF, "analysis", "divergence_trace_20261026.json"))
+    ap.add_argument("--out", default=os.path.join(RF, "results", "divergence_trace_20261026.json"))
     a = ap.parse_args()
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity

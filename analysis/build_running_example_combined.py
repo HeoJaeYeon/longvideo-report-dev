@@ -6,10 +6,10 @@ numbering of this document (every rewrite is asserted to occur exactly once).
 Checks done while building: ground_report re-run reproduces report.md exactly; LLM calls = 1 + 3 x sections;
 search requests = 2 x sections; the three runs used the same values for every setting shown in §2.2.
 §10 (deep dive into -QuCz7kxBr8 r1: memories, frames, every module input/output) comes from
-analysis/build_running_example_deep.py, which needs analysis/retrieval_repro_-QuCz7kxBr8_r1.json
-(analysis/reproduce_retrieval_cpu.py) and writes the images under running_example/assets/-QuCz7kxBr8/.
+analysis/build_running_example_deep.py, which needs results/retrieval_repro_-QuCz7kxBr8_r1.json
+(analysis/reproduce_retrieval_cpu.py) and writes the images under internal/running_example/assets/-QuCz7kxBr8/.
 Usage: python analysis/build_running_example_combined.py
-Output: running_example/RUNNING_EXAMPLE.md
+Output: internal/running_example/RUNNING_EXAMPLE.md
 """
 import collections, glob, json, os, pickle, re, shutil, sys, tempfile
 
@@ -165,7 +165,7 @@ def main():
     w("    - 세 실행의 설정값(§2.2 표)이 같다.")
     w("  - `> 관찰` 블록과 §8: `analysis/running_example_observations.py`에 있다. 근거·캡션·로그·코드와 대조해 사람이 썼다.")
     w("- **표시**: [확인] 코드·데이터로 확인 / [대조] 근거·캡션과 직접 비교 / [측정] 계산값 / [부분 확인] 존재는 확인했으나 영향 정도는 미측정 / [가설] 근거 부족·실험 없음.")
-    w(f"- **원문 위치**: 전체 프롬프트·근거 원문은 `inspect/{os.path.basename(RUN)}/<보고서>/`(`analysis/export_stages.py`)에 있다. 영상별 분리본(이 문서 이전 판)은 `backups/running_example_split_20261102/`에 보관했고 `analysis/build_running_example.py`로 다시 만들 수 있다.")
+    w(f"- **원문 위치**: 전체 프롬프트·근거 원문은 `internal/inspect/{os.path.basename(RUN)}/<보고서>/`(`analysis/export_stages.py`)에 있다. 영상별 분리본(이 문서 이전 판)은 `backups/running_example_split_20261102/`에 보관했고 `analysis/build_running_example.py`로 다시 만들 수 있다.")
     w("- **주의**")
     w("  - 세 보고서는 각 영상의 r1 한 건이다. 생성이 샘플링(temperature 0.7, seed 없음)이라 같은 조건의 r2·r3은 outline부터 다르다(`SELF_CONSISTENCY_ANALYSIS.md`, `REPORT_TEXT_REVIEW.md`).")
     w("  - \"실제 장면\"은 WorldMM 캡션 기준이다. 영상을 직접 보고 확인하지는 않았다.")
@@ -214,7 +214,7 @@ def main():
     row("결과", "생성 시간", [f"{C[v]['vj']['timings']['generation_sec']}초" for v in VIDEOS])
     row("", "References / 그림", [f"{len(C[v]['grounded']['references'])} / {len(C[v]['grounded']['figures'])}" for v in VIDEOS])
     row("", "규칙 검사 unsupported / miscited / uncited", [f"{C[v]['vj']['grounding_stats']['unsupported']} / {C[v]['vj']['grounding_stats']['miscited']} / {C[v]['vj']['grounding_stats']['uncited_claims']}" for v in VIDEOS])
-    sc = json.load(open(os.path.join(RF, "analysis", "self_consistency_20261026.json")))
+    sc = json.load(open(os.path.join(RF, "results", "self_consistency_20261026.json")))
     row("", "다룬 3분 구간 (`self_consistency_20261026.json`)", [f"{sc[v]['coverage']['windows_3min']['per_run'][0]}/{sc[v]['coverage']['windows_3min']['total']}" for v in VIDEOS])
     row("", "결말 서술 (캡션 대조, §8)", ["맞음", "맞음(인용 없음)", "틀림"])
     row("", "검증 상태", [C[v]["vj"]["status"] for v in VIDEOS])
@@ -395,7 +395,7 @@ def main():
         w(f"| `{v}` | {i_ov:,}자 | {i_task - i_ov:,}자 ({len(C[v]['caps']['10min'])}개) | {len(pin) - i_task:,}자 | {len(pin):,}자 | {int(C[v]['llm'][0].group(2)):,} |")
     w(f"- 규칙: 섹션 3–{C[VIDEOS[0]]['cfg']['report']['max_sections']}개, 영상 근거만, 시간순, 설명 2–4문장·대략의 시간 범위, checklist 3–5개, 마지막은 `Conclusion:`.")
     w("- 메시지는 user 1개다(system 없음). 영상 프레임·세밀한 캡션·semantic은 들어가지 않는다. [확인]")
-    w("- 프롬프트 전문은 `inspect/…/<보고서>/01_planner_prompt.md`에 있다.")
+    w("- 프롬프트 전문은 `internal/inspect/…/<보고서>/01_planner_prompt.md`에 있다.")
     w("")
     w("### 5.2 출력 (outline 전문)")
     w("")
@@ -483,7 +483,7 @@ def main():
             win = wc["input_messages"][0]["content"]
             w(f"**(c) writer** — 프롬프트 {wl.group(2)}토큰({len(win):,}자), 출력 {wl.group(3)}토큰, `{wl.group(4)}`, {wl.group(5)}초" + (" — **서버 상한 3,072토큰에서 끊김**" if wl.group(4) == "length" else ""))
             w("")
-            w(f"- 입력: `Section {i}/{c['n']}`, 위 C0 요약 + 직전 섹션 끝, 근거 text {len(texts)}개 + image {len(imgs)}개(캡션). 전문: `inspect/{os.path.basename(RUN)}/{c['job']}/s{i:02d}/4_writer_prompt.md`")
+            w(f"- 입력: `Section {i}/{c['n']}`, 위 C0 요약 + 직전 섹션 끝, 근거 text {len(texts)}개 + image {len(imgs)}개(캡션). 전문: `internal/inspect/{os.path.basename(RUN)}/{c['job']}/s{i:02d}/4_writer_prompt.md`")
             w("")
             w(details(f"writer 출력 원문 ({len(wc['output_content'].split())}단어, 후처리 전)", fence(wc["output_content"])))
             w("")
@@ -586,10 +586,10 @@ def main():
     w("")
     w("```bash")
     w("cd report_framework")
-    w("python -B analysis/build_running_example_combined.py          # 이 문서 (running_example/RUNNING_EXAMPLE.md)")
+    w("python -B analysis/build_running_example_combined.py          # 이 문서 (internal/running_example/RUNNING_EXAMPLE.md)")
     w("# (선택) 영상별 분리본: build_running_example.py --video=<vid> 후 running_example_observations.py")
-    w("python -B analysis/export_stages.py                         # inspect/: 프롬프트·근거 원문 전체")
-    w("# §10의 검색 내부 과정 (CPU 8코어, 약 10분): 결과 analysis/retrieval_repro_-QuCz7kxBr8_r1.json")
+    w("python -B analysis/export_stages.py                         # internal/inspect/: 프롬프트·근거 원문 전체")
+    w("# §10의 검색 내부 과정 (CPU 8코어, 약 10분): 결과 results/retrieval_repro_-QuCz7kxBr8_r1.json")
     w("CUDA_VISIBLE_DEVICES= python -B analysis/reproduce_retrieval_cpu.py --video=-QuCz7kxBr8 --work-dir <임시 폴더>")
     w("```")
     w("")
@@ -614,7 +614,7 @@ def main():
     from build_running_example_deep import render as render_deep
     L += render_deep()
     L = add_toc(L)
-    out = os.path.join(RF, "running_example", "RUNNING_EXAMPLE.md")
+    out = os.path.join(RF, "internal", "running_example", "RUNNING_EXAMPLE.md")
     open(out, "w", encoding="utf-8").write("\n".join(L) + "\n")
     print("wrote", out, len("\n".join(L)), "chars")
 
@@ -674,7 +674,7 @@ TOC_DESC = {
     "10.9": ("섹션 1–6마다 모든 모듈의 입력·출력", []),
     "10.9.0": ("검색 재현 방법, 섹션별 일치 판정표(text·semantic·image), 어긋남의 성격과 원인, 일치 판정의 한계", ["| 섹션 | RRF 후보 수", "**일치 판정의 한계**"]),
     "10.9.k": ("", []),
-    "10.10": ("PPT용 그림 파일 목록(`running_example/assets/-QuCz7kxBr8/`)", ["| 파일 | 내용 |"]),
+    "10.10": ("PPT용 그림 파일 목록(`internal/running_example/assets/-QuCz7kxBr8/`)", ["| 파일 | 내용 |"]),
 }
 
 

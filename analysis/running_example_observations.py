@@ -180,7 +180,7 @@ OBS = {
 
 def main():
     for vid, obs in OBS.items():
-        p = os.path.join(RF, "running_example", f"RUNNING_EXAMPLE_{vid}.md")
+        p = os.path.join(RF, "internal", "running_example", f"RUNNING_EXAMPLE_{vid}.md")
         s = open(p, encoding="utf-8").read()
         for key, text in obs.items():
             marker = f"<!-- OBS:{key} -->"

@@ -5,7 +5,7 @@ C-2: compare HippoRAG OpenIE caches before/after the long-passage split + output
   - per chunk present in both files: triples before/after and Jaccard of the normalized triple sets
 Default set: video 1 10min (split target, baseline = backup before the split), video 2 10sec/30sec/3min
 (not split targets: re-computation vs. backup = sampling variance), and the new-only caches (video 2 10min, video 3).
-Usage: python analysis/compare_openie_cache.py [--out analysis/c2_openie_compare.json]
+Usage: python analysis/compare_openie_cache.py [--out results/c2_openie_compare.json]
 """
 import argparse, json, os, statistics, sys
 from collections import Counter
@@ -64,7 +64,7 @@ def compare(before, after):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=os.path.join(RF, "analysis", "c2_openie_compare.json"))
+    ap.add_argument("--out", default=os.path.join(RF, "results", "c2_openie_compare.json"))
     args = ap.parse_args()
     cur = lambda v, g: os.path.join(CACHE, v, "episodic_memory", g, NAME)
     result = {"pairs": {}, "new_only": {}}
