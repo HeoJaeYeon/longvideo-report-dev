@@ -154,6 +154,8 @@ def part_b():
     cfg["service"]["frames_dir"] = os.path.join(SCRATCH, "test_cache", "frames")
     cfg["worldmm"]["episodic_cache_label"] = T.LABEL
     cfg["retrieval"]["episodic_filter"] = "L0"
+    if not os.path.isdir(os.path.join(cfg["paths"]["episodic_cache_root"], VID)):   # fresh checkout: no cache from test_retriever yet
+        T.build_test_cache(cfg)
     retr = S.WorldMMRetriever(cfg, T.FakeEmbedding(), S.NoLLM())
     threading.Thread(target=lambda: S.create_app(retr).run(host="127.0.0.1", port=18220), daemon=True).start()
     threading.Thread(target=lambda: L.create_app(FakeReportLLM(), "qwen3vl-8b", 8192).run(host="127.0.0.1", port=18210), daemon=True).start()
