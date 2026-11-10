@@ -9,7 +9,8 @@ import copy, json, os, re, sys, threading, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RF = os.path.dirname(os.path.dirname(HERE))
-ART = os.path.join(os.path.dirname(HERE), "_artifacts")   # tests/_artifacts
+ART = os.path.join(os.path.dirname(HERE), "_artifacts")   # tests/_artifacts (outputs)
+FIX = os.path.join(os.path.dirname(HERE), "fixtures")     # tests/fixtures (recorded real-model inputs, tracked)
 sys.path.insert(0, RF); sys.path.insert(0, HERE)
 from rf_config import load_config  # noqa: E402
 VID = "-QuCz7kxBr8"
@@ -25,10 +26,10 @@ check.failed = 0
 def part1():
     import grounding_postprocessor as G
     print("[1] post-processor on the real smoke report")
-    outline = json.load(open(os.path.join(ART, "gpu_report", "outline.json")))
+    outline = json.load(open(os.path.join(FIX, "smoke_report_A", "outline.json")))
     for s in outline:
         for m in s["retrieved_images"]:
-            m["img_path"] = os.path.join(ART, "gpu_test", "frames", m["video_id"], os.path.basename(m["img_path"]))
+            m["img_path"] = os.path.join(FIX, "smoke_report_A", "frames", m["video_id"], os.path.basename(m["img_path"]))
     out = os.path.join(ART, "pipeline_test", "smoke_grounded")
     r = G.ground_report({"outline": outline}, enable_filter=False, out_dir=out)
     open(os.path.join(out, "report.md"), "w").write(r["markdown"])
@@ -55,7 +56,7 @@ def part1():
              {"uid": "v:semantic:b", "type": "text", "source": "worldmm-semantic", "time_grounded": False,
               "content": "[video-level knowledge | semantic] (host, likes, cones)", "triple": ["host", "likes", "cones"],
               "start_time": None, "end_time": None, "start_sec": None, "end_sec": None}]
-    frame = os.path.join(ART, "gpu_test", "frames", VID, sorted(os.listdir(os.path.join(ART, "gpu_test", "frames", VID)))[0])
+    frame = os.path.join(FIX, "smoke_report_A", "frames", VID, sorted(os.listdir(os.path.join(FIX, "smoke_report_A", "frames", VID)))[0])
     imgs = [{"uid": "v:visual:c", "type": "image", "video_id": "v", "img_path": frame, "frame_sec": 15.0,
              "caption": "[00:00:10-00:00:20 | video frame at 15.0s] Host with cones", "start_time": "00001000", "end_time": "00002000",
              "start_sec": 10.0, "end_sec": 20.0}]
@@ -245,10 +246,10 @@ def part3():
     import grounding_postprocessor as G
     import report_translator as RT
     print("[3] translator on the real smoke report (fake translation LLMs)")
-    outline = json.load(open(os.path.join(ART, "gpu_report", "outline.json")))
+    outline = json.load(open(os.path.join(FIX, "smoke_report_A", "outline.json")))
     for s in outline:
         for m in s["retrieved_images"]:
-            m["img_path"] = os.path.join(ART, "gpu_test", "frames", m["video_id"], os.path.basename(m["img_path"]))
+            m["img_path"] = os.path.join(FIX, "smoke_report_A", "frames", m["video_id"], os.path.basename(m["img_path"]))
     g = G.ground_report({"outline": outline}, enable_filter=False, out_dir=os.path.join(ART, "pipeline_test", "translate_unit"))
 
     class Echo:
@@ -296,7 +297,7 @@ def part4():
     import analyze_report as AR
     print("[4] absence clauses / image time alignment / Han detection / proper nouns")
     # real report B (first run_report execution)
-    b_path = os.path.join(ART, "gpu_e2e", "outputs", "report_run1", "report.json")
+    b_path = os.path.join(FIX, "e2e_report_B", "report.json")
     b = json.load(open(b_path))["outline"]
     find = [(i, f) for i, s in enumerate(b, 1)
             for f in G.check_section_grounding(s["content"], s["retrieved_texts"], s["retrieved_images"])["findings"]]
@@ -308,7 +309,7 @@ def part4():
     check({"SKLZ Dribble Stick", "Straight Shooter Strap", "Flick Glove", "Shot Coach"} <= s6,
           "report B: conclusion-section findings unchanged")
     # report A: all 9 earlier unsupported/miscited findings kept
-    a = json.load(open(os.path.join(ART, "gpu_report", "outline.json")))
+    a = json.load(open(os.path.join(FIX, "smoke_report_A", "outline.json")))
     fa = [f for s in a for f in G.check_section_grounding(s["content"], s["retrieved_texts"], s["retrieved_images"])["findings"]]
     fl = sorted(f["token"] for f in fa if f["status"] in ("unsupported", "miscited"))
     check(fl == sorted(["SCORE 10", "0/1", "3/16", "WOO", "1-0", "00:02:30", "00:08:20", "SCORE 6", "SCORE 6"]),
@@ -359,7 +360,7 @@ def part4():
     r = RT.translate_section(body, llm, proper_nouns=names)
     check(r["status"] == "translated" and "Chris" in r["text"] and "Zach" in r["text"] and r["protected_names"] == 2,
           "names are masked before translation and restored verbatim")
-    bb = [p for p in re.split(r"(?m)^(?=# )", open(os.path.join(ART, "gpu_e2e", "outputs", "report_run1", "report.md")).read().split("# References")[0]) if p.startswith("# ")]
+    bb = [p for p in re.split(r"(?m)^(?=# )", open(os.path.join(FIX, "e2e_report_B", "report.md")).read().split("# References")[0]) if p.startswith("# ")]
     nb = RT.collect_proper_nouns(bb)
     check({"Chris", "Zach", "Cass", "James", "Mitchell"} <= set(nb), f"report B: participant names collected ({nb})")
 

@@ -1,0 +1,2635 @@
+2026-10-22 12:05:05,106 prebuild INFO GPU memory cap 26000 MiB of 48539 MiB
+/opt/venv/lib/python3.13/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.13) or chardet (7.3.0)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+2026-10-22 12:05:13,113 prebuild INFO Loading models (llm=qwen3vl-8b via http://127.0.0.1:18710/v1,http://127.0.0.1:18711/v1,http://127.0.0.1:18712/v1,http://127.0.0.1:18713/v1,http://127.0.0.1:18714/v1,http://127.0.0.1:18715/v1,http://127.0.0.1:18716/v1, embedding=Qwen/Qwen3-Embedding-4B)
+2026-10-22 12:05:13,240 datasets INFO PyTorch version 2.8.0+cu128 available.
+2026-10-22 12:05:13,241 datasets INFO Polars version 1.39.3 available.
+2026-10-22 12:05:14,054 sentence_transformers.SentenceTransformer INFO Use pytorch device_name: cuda:0
+2026-10-22 12:05:14,054 sentence_transformers.SentenceTransformer INFO Load pretrained SentenceTransformer: Qwen/Qwen3-Embedding-4B
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.41s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.07s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.12s/it]
+2026-10-22 12:05:21,187 sentence_transformers.SentenceTransformer INFO 1 prompt is loaded, with the key: query
+2026-10-22 12:05:21,188 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:05:21,194 prebuild INFO [1/3] -QuCz7kxBr8: indexing, expected OpenIE LLM calls=186
+2026-10-22 12:05:21,195 worldmm.memory.episodic.memory INFO Loaded 226 captions for granularity 10sec
+2026-10-22 12:05:21,195 worldmm.memory.episodic.memory INFO Loaded 76 captions for granularity 30sec
+2026-10-22 12:05:21,195 worldmm.memory.episodic.memory INFO Loaded 13 captions for granularity 3min
+2026-10-22 12:05:21,195 worldmm.memory.episodic.memory INFO Loaded 4 captions for granularity 10min
+2026-10-22 12:05:21,196 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:05:21,202 hipporag.HippoRAG INFO Loaded graph from /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/graph.pickle with 1277 nodes, 10596 edges
+2026-10-22 12:05:21,237 hipporag.embedding_store INFO Loaded 226 records from /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings/vdb_chunk.parquet
+2026-10-22 12:05:21,285 hipporag.embedding_store INFO Loaded 1051 records from /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings/vdb_entity.parquet
+2026-10-22 12:05:21,402 hipporag.embedding_store INFO Loaded 2194 records from /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings/vdb_fact.parquet
+2026-10-22 12:05:21,403 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:05:21,403 hipporag.HippoRAG INFO Indexing Documents
+2026-10-22 12:05:21,403 hipporag.HippoRAG INFO Performing OpenIE
+2026-10-22 12:05:21,403 hipporag.embedding_store INFO Inserting 0 new records, 226 records already exist.
+2026-10-22 12:05:21,443 hipporag.HippoRAG INFO OpenIE results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10sec/openie_results_ner_qwen3vl-8b.json
+2026-10-22 12:05:21,459 hipporag.HippoRAG INFO Encoding Entities
+2026-10-22 12:05:21,460 hipporag.embedding_store INFO Inserting 0 new records, 1051 records already exist.
+2026-10-22 12:05:21,460 hipporag.HippoRAG INFO Encoding Facts
+2026-10-22 12:05:21,462 hipporag.embedding_store INFO Inserting 0 new records, 2194 records already exist.
+2026-10-22 12:05:21,462 hipporag.HippoRAG INFO Constructing Graph
+2026-10-22 12:05:21,463 hipporag.HippoRAG INFO Adding OpenIE triples to graph.
+0it [00:00, ?it/s]226it [00:00, 36959.98it/s]
+2026-10-22 12:05:21,470 hipporag.HippoRAG INFO Connecting passage nodes to phrase nodes.
+0it [00:00, ?it/s]226it [00:00, 4601517.98it/s]
+2026-10-22 12:05:21,470 worldmm.memory.episodic.memory INFO Indexed 226 captions for granularity 10sec
+2026-10-22 12:05:21,471 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:05:21,478 hipporag.embedding_store INFO Loaded 76 records from /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings/vdb_chunk.parquet
+2026-10-22 12:05:21,478 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:05:21,478 hipporag.HippoRAG INFO Indexing Documents
+2026-10-22 12:05:21,478 hipporag.HippoRAG INFO Performing OpenIE
+2026-10-22 12:05:21,478 hipporag.embedding_store INFO Inserting 0 new records, 76 records already exist.
+NER:   0%|          | 0/76 [00:00<?, ?it/s]NER:   1%|▏         | 1/76 [00:03<04:02,  3.24s/it]NER:   3%|▎         | 2/76 [00:05<02:55,  2.37s/it]NER:   4%|▍         | 3/76 [00:05<01:59,  1.63s/it]NER:   5%|▌         | 4/76 [00:05<01:15,  1.05s/it]NER:   7%|▋         | 5/76 [00:07<01:18,  1.10s/it]NER:   8%|▊         | 6/76 [00:07<00:55,  1.27it/s]NER:   9%|▉         | 7/76 [00:07<00:39,  1.76it/s]NER:  11%|█         | 8/76 [00:07<00:33,  2.01it/s]NER:  12%|█▏        | 9/76 [00:08<00:30,  2.17it/s]NER:  13%|█▎        | 10/76 [00:09<00:52,  1.25it/s]NER:  16%|█▌        | 12/76 [00:10<00:34,  1.87it/s]NER:  17%|█▋        | 13/76 [00:11<00:51,  1.22it/s]NER:  18%|█▊        | 14/76 [00:11<00:39,  1.56it/s]NER:  20%|█▉        | 15/76 [00:12<00:44,  1.38it/s]NER:  21%|██        | 16/76 [00:14<01:04,  1.07s/it]NER:  22%|██▏       | 17/76 [00:15<00:55,  1.05it/s]NER:  24%|██▎       | 18/76 [00:16<00:51,  1.12it/s]NER:  25%|██▌       | 19/76 [00:17<00:56,  1.02it/s]NER:  26%|██▋       | 20/76 [00:20<01:27,  1.56s/it]NER:  28%|██▊       | 21/76 [00:20<01:09,  1.27s/it]NER:  32%|███▏      | 24/76 [00:22<00:44,  1.17it/s]NER:  33%|███▎      | 25/76 [00:23<00:43,  1.17it/s]NER:  34%|███▍      | 26/76 [00:24<00:41,  1.20it/s]NER:  36%|███▌      | 27/76 [00:24<00:33,  1.46it/s]NER:  39%|███▉      | 30/76 [00:28<00:44,  1.03it/s]NER:  41%|████      | 31/76 [00:28<00:40,  1.11it/s]NER:  42%|████▏     | 32/76 [00:29<00:39,  1.13it/s]NER:  43%|████▎     | 33/76 [00:30<00:34,  1.26it/s]NER:  45%|████▍     | 34/76 [00:32<00:51,  1.22s/it]NER:  46%|████▌     | 35/76 [00:32<00:38,  1.05it/s]NER:  47%|████▋     | 36/76 [00:32<00:29,  1.36it/s]NER:  49%|████▊     | 37/76 [00:33<00:26,  1.48it/s]NER:  50%|█████     | 38/76 [00:34<00:27,  1.39it/s]NER:  51%|█████▏    | 39/76 [00:34<00:21,  1.75it/s]NER:  53%|█████▎    | 40/76 [00:35<00:22,  1.57it/s]NER:  54%|█████▍    | 41/76 [00:37<00:37,  1.07s/it]NER:  55%|█████▌    | 42/76 [00:38<00:38,  1.13s/it]NER:  57%|█████▋    | 43/76 [00:38<00:27,  1.22it/s]NER:  58%|█████▊    | 44/76 [00:39<00:27,  1.15it/s]NER:  59%|█████▉    | 45/76 [00:40<00:25,  1.21it/s]NER:  61%|██████    | 46/76 [00:42<00:33,  1.11s/it]NER:  62%|██████▏   | 47/76 [00:42<00:28,  1.03it/s]NER:  64%|██████▍   | 49/76 [00:43<00:15,  1.71it/s]NER:  66%|██████▌   | 50/76 [00:43<00:12,  2.08it/s]NER:  67%|██████▋   | 51/76 [00:43<00:09,  2.60it/s]NER:  70%|██████▉   | 53/76 [00:45<00:17,  1.31it/s]NER:  71%|███████   | 54/76 [00:49<00:31,  1.42s/it]NER:  72%|███████▏  | 55/76 [00:49<00:23,  1.11s/it]NER:  74%|███████▎  | 56/76 [00:49<00:17,  1.15it/s]NER:  75%|███████▌  | 57/76 [00:50<00:15,  1.23it/s]NER:  78%|███████▊  | 59/76 [00:51<00:12,  1.37it/s]NER:  79%|███████▉  | 60/76 [00:54<00:20,  1.26s/it]NER:  80%|████████  | 61/76 [00:56<00:20,  1.38s/it]NER:  82%|████████▏ | 62/76 [00:56<00:16,  1.14s/it]NER:  83%|████████▎ | 63/76 [00:57<00:11,  1.11it/s]NER:  84%|████████▍ | 64/76 [00:59<00:17,  1.42s/it]NER:  86%|████████▌ | 65/76 [01:00<00:13,  1.20s/it]NER:  87%|████████▋ | 66/76 [01:02<00:15,  1.53s/it]NER:  88%|████████▊ | 67/76 [01:03<00:10,  1.15s/it]NER:  89%|████████▉ | 68/76 [01:03<00:07,  1.01it/s]NER:  91%|█████████ | 69/76 [01:03<00:05,  1.35it/s]NER:  92%|█████████▏| 70/76 [01:05<00:06,  1.05s/it]NER:  93%|█████████▎| 71/76 [01:06<00:05,  1.10s/it]NER:  95%|█████████▍| 72/76 [01:07<00:03,  1.03it/s]NER:  96%|█████████▌| 73/76 [01:08<00:03,  1.05s/it]NER:  97%|█████████▋| 74/76 [01:09<00:01,  1.07it/s]NER:  99%|█████████▊| 75/76 [01:10<00:01,  1.01s/it]NER: 100%|██████████| 76/76 [01:11<00:00,  1.04it/s]NER: 100%|██████████| 76/76 [01:11<00:00,  1.06it/s]
+Extracting triples:   0%|          | 0/76 [00:00<?, ?it/s]Extracting triples:   1%|▏         | 1/76 [00:10<12:49, 10.26s/it]Extracting triples:   3%|▎         | 2/76 [00:21<13:34, 11.01s/it]Extracting triples:   4%|▍         | 3/76 [00:22<07:26,  6.12s/it]Extracting triples:   5%|▌         | 4/76 [00:22<04:38,  3.87s/it]Extracting triples:   7%|▋         | 5/76 [00:29<05:48,  4.91s/it]Extracting triples:   8%|▊         | 6/76 [00:31<04:34,  3.92s/it]Extracting triples:   9%|▉         | 7/76 [00:32<03:21,  2.92s/it]Extracting triples:  11%|█         | 8/76 [00:37<04:09,  3.67s/it]Extracting triples:  12%|█▏        | 9/76 [00:39<03:36,  3.23s/it]Extracting triples:  13%|█▎        | 10/76 [00:43<03:54,  3.56s/it]Extracting triples:  14%|█▍        | 11/76 [00:44<03:00,  2.78s/it]Extracting triples:  16%|█▌        | 12/76 [00:46<02:26,  2.28s/it]Extracting triples:  17%|█▋        | 13/76 [00:51<03:30,  3.35s/it]Extracting triples:  18%|█▊        | 14/76 [00:53<02:47,  2.70s/it]Extracting triples:  20%|█▉        | 15/76 [01:00<04:12,  4.14s/it]Extracting triples:  21%|██        | 16/76 [01:02<03:30,  3.50s/it]Extracting triples:  22%|██▏       | 17/76 [01:03<02:44,  2.79s/it]Extracting triples:  24%|██▎       | 18/76 [01:12<04:30,  4.66s/it]Extracting triples:  25%|██▌       | 19/76 [01:17<04:23,  4.63s/it]Extracting triples:  26%|██▋       | 20/76 [01:19<03:44,  4.00s/it]Extracting triples:  28%|██▊       | 21/76 [01:20<02:50,  3.09s/it]Extracting triples:  29%|██▉       | 22/76 [01:23<02:44,  3.04s/it]Extracting triples:  30%|███       | 23/76 [01:28<03:00,  3.41s/it]Extracting triples:  32%|███▏      | 24/76 [01:37<04:35,  5.30s/it]Extracting triples:  33%|███▎      | 25/76 [01:40<03:57,  4.65s/it]Extracting triples:  34%|███▍      | 26/76 [01:42<03:09,  3.79s/it]Extracting triples:  36%|███▌      | 27/76 [01:43<02:28,  3.03s/it]Extracting triples:  37%|███▋      | 28/76 [01:50<03:19,  4.16s/it]Extracting triples:  38%|███▊      | 29/76 [01:52<02:38,  3.38s/it]Extracting triples:  39%|███▉      | 30/76 [01:56<02:50,  3.70s/it]Extracting triples:  41%|████      | 31/76 [01:58<02:13,  2.97s/it]Extracting triples:  42%|████▏     | 32/76 [02:00<01:58,  2.69s/it]Extracting triples:  43%|████▎     | 33/76 [02:05<02:28,  3.46s/it]Extracting triples:  45%|████▍     | 34/76 [02:06<01:57,  2.80s/it]Extracting triples:  46%|████▌     | 35/76 [02:09<01:55,  2.83s/it]Extracting triples:  47%|████▋     | 36/76 [02:10<01:37,  2.43s/it]Extracting triples:  49%|████▊     | 37/76 [02:21<03:12,  4.95s/it]Extracting triples:  50%|█████     | 38/76 [02:24<02:46,  4.38s/it]Extracting triples:  51%|█████▏    | 39/76 [02:25<02:05,  3.40s/it]Extracting triples:  53%|█████▎    | 40/76 [02:28<01:55,  3.21s/it]Extracting triples:  54%|█████▍    | 41/76 [02:29<01:28,  2.52s/it]Extracting triples:  55%|█████▌    | 42/76 [02:35<02:02,  3.62s/it]Extracting triples:  57%|█████▋    | 43/76 [02:39<01:55,  3.50s/it]Extracting triples:  58%|█████▊    | 44/76 [02:46<02:27,  4.62s/it]Extracting triples:  59%|█████▉    | 45/76 [02:47<01:56,  3.75s/it]Extracting triples:  61%|██████    | 46/76 [02:48<01:22,  2.73s/it]Extracting triples:  62%|██████▏   | 47/76 [02:48<00:56,  1.95s/it]Extracting triples:  63%|██████▎   | 48/76 [02:54<01:28,  3.15s/it]Extracting triples:  64%|██████▍   | 49/76 [02:59<01:41,  3.74s/it]Extracting triples:  66%|██████▌   | 50/76 [03:03<01:40,  3.88s/it]Extracting triples:  67%|██████▋   | 51/76 [03:05<01:17,  3.11s/it]Extracting triples:  68%|██████▊   | 52/76 [03:06<01:04,  2.69s/it]Extracting triples:  70%|██████▉   | 53/76 [03:11<01:15,  3.28s/it]Extracting triples:  71%|███████   | 54/76 [03:13<01:04,  2.91s/it]Extracting triples:  72%|███████▏  | 55/76 [03:18<01:13,  3.48s/it]Extracting triples:  74%|███████▎  | 56/76 [03:27<01:43,  5.16s/it]Extracting triples:  75%|███████▌  | 57/76 [03:30<01:25,  4.52s/it]2026-10-22 12:10:07,720 worldmm.llm.qwen3vl ERROR Failed to parse structured response: 10 validation errors for TripleRawOutput
+triples.1.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+triples.6.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+triples.11.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+triples.13.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+triples.14.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+triples.21.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+triples.24.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+triples.25.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+triples.26.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+triples.27.2
+  Input should be a valid string [type=string_type, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Extracting triples:  76%|███████▋  | 58/76 [03:37<01:37,  5.43s/it]Extracting triples:  78%|███████▊  | 59/76 [03:39<01:10,  4.14s/it]Extracting triples:  79%|███████▉  | 60/76 [03:43<01:06,  4.15s/it]Extracting triples:  80%|████████  | 61/76 [03:50<01:16,  5.11s/it]Extracting triples:  82%|████████▏ | 62/76 [03:52<00:59,  4.22s/it]Extracting triples:  83%|████████▎ | 63/76 [04:03<01:19,  6.13s/it]Extracting triples:  84%|████████▍ | 64/76 [04:04<00:56,  4.72s/it]Extracting triples:  86%|████████▌ | 65/76 [04:06<00:42,  3.82s/it]Extracting triples:  87%|████████▋ | 66/76 [04:08<00:31,  3.16s/it]Extracting triples:  88%|████████▊ | 67/76 [04:18<00:49,  5.46s/it]Extracting triples:  89%|████████▉ | 68/76 [04:22<00:39,  4.88s/it]Extracting triples:  91%|█████████ | 69/76 [04:30<00:41,  5.86s/it]Extracting triples:  92%|█████████▏| 70/76 [04:32<00:28,  4.75s/it]Extracting triples:  93%|█████████▎| 71/76 [04:34<00:19,  3.94s/it]Extracting triples:  95%|█████████▍| 72/76 [04:35<00:11,  2.94s/it]Extracting triples:  97%|█████████▋| 74/76 [04:36<00:03,  1.81s/it]Extracting triples:  99%|█████████▊| 75/76 [05:03<00:08,  8.15s/it]Extracting triples: 100%|██████████| 76/76 [05:04<00:00,  6.33s/it]Extracting triples: 100%|██████████| 76/76 [05:04<00:00,  4.01s/it]
+2026-10-22 12:11:38,122 worldmm.memory.episodic.openie INFO Results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/30sec/openie_results_qwen3vl-8b.json
+2026-10-22 12:11:38,131 hipporag.HippoRAG INFO OpenIE results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/30sec/openie_results_ner_qwen3vl-8b.json
+2026-10-22 12:11:38,148 hipporag.HippoRAG INFO Encoding Entities
+2026-10-22 12:11:38,150 hipporag.embedding_store INFO Inserting 1033 new records, 0 records already exist.
+Batches:   0%|          | 0/9 [00:00<?, ?it/s]Batches:  11%|█         | 1/9 [00:00<00:05,  1.54it/s]Batches:  22%|██▏       | 2/9 [00:00<00:02,  2.64it/s]Batches:  33%|███▎      | 3/9 [00:00<00:01,  3.61it/s]Batches:  44%|████▍     | 4/9 [00:01<00:01,  4.50it/s]Batches:  56%|█████▌    | 5/9 [00:01<00:00,  5.51it/s]Batches:  67%|██████▋   | 6/9 [00:01<00:00,  6.01it/s]Batches:  78%|███████▊  | 7/9 [00:01<00:00,  6.74it/s]Batches: 100%|██████████| 9/9 [00:01<00:00,  8.41it/s]Batches: 100%|██████████| 9/9 [00:01<00:00,  5.41it/s]
+2026-10-22 12:11:39,836 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:11:39,943 hipporag.embedding_store INFO Saved 1033 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings/vdb_entity.parquet
+2026-10-22 12:11:39,943 hipporag.HippoRAG INFO Encoding Facts
+2026-10-22 12:11:39,945 hipporag.embedding_store INFO Inserting 1598 new records, 0 records already exist.
+Batches:   0%|          | 0/13 [00:00<?, ?it/s]Batches:   8%|▊         | 1/13 [00:00<00:04,  2.61it/s]Batches:  15%|█▌        | 2/13 [00:00<00:03,  3.07it/s]Batches:  23%|██▎       | 3/13 [00:00<00:03,  3.20it/s]Batches:  31%|███       | 4/13 [00:01<00:02,  3.24it/s]Batches:  38%|███▊      | 5/13 [00:01<00:02,  3.34it/s]Batches:  46%|████▌     | 6/13 [00:01<00:02,  3.44it/s]Batches:  54%|█████▍    | 7/13 [00:02<00:01,  3.54it/s]Batches:  62%|██████▏   | 8/13 [00:02<00:01,  3.76it/s]Batches:  69%|██████▉   | 9/13 [00:02<00:01,  3.92it/s]Batches:  77%|███████▋  | 10/13 [00:02<00:00,  4.03it/s]Batches:  85%|████████▍ | 11/13 [00:03<00:00,  4.12it/s]Batches:  92%|█████████▏| 12/13 [00:03<00:00,  4.28it/s]Batches: 100%|██████████| 13/13 [00:03<00:00,  5.13it/s]Batches: 100%|██████████| 13/13 [00:03<00:00,  3.90it/s]
+2026-10-22 12:11:43,304 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:11:43,476 hipporag.embedding_store INFO Saved 1598 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings/vdb_fact.parquet
+2026-10-22 12:11:43,476 hipporag.HippoRAG INFO Constructing Graph
+2026-10-22 12:11:43,476 hipporag.HippoRAG INFO Adding OpenIE triples to graph.
+0it [00:00, ?it/s]76it [00:00, 19161.28it/s]
+2026-10-22 12:11:43,480 hipporag.HippoRAG INFO Connecting passage nodes to phrase nodes.
+0it [00:00, ?it/s]76it [00:00, 56529.01it/s]
+2026-10-22 12:11:43,482 hipporag.HippoRAG INFO Found 76 new chunks to save into graph.
+2026-10-22 12:11:43,482 hipporag.HippoRAG INFO Expanding graph with synonymy edges
+2026-10-22 12:11:43,484 hipporag.HippoRAG INFO Performing KNN retrieval for each phrase nodes (1033).
+KNN for Queries:   0%|          | 0/2 [00:00<?, ?it/s]KNN for Queries:  50%|█████     | 1/2 [00:00<00:00,  3.32it/s]KNN for Queries: 100%|██████████| 2/2 [00:00<00:00,  6.42it/s]
+  0%|          | 0/1033 [00:00<?, ?it/s]100%|██████████| 1033/1033 [00:00<00:00, 158411.61it/s]
+2026-10-22 12:11:44,070 hipporag.HippoRAG INFO Graph construction completed!
+{'num_phrase_nodes': 1033, 'num_passage_nodes': 76, 'num_total_nodes': 1109, 'num_extracted_triples': 1598, 'num_triples_with_passage_node': 1980, 'num_synonymy_triples': 4311, 'num_total_triples': 7889}
+2026-10-22 12:11:44,071 hipporag.HippoRAG INFO Writing graph with 1109 nodes, 7888 edges
+2026-10-22 12:11:44,077 hipporag.HippoRAG INFO Saving graph completed!
+2026-10-22 12:11:44,078 worldmm.memory.episodic.memory INFO Indexed 76 captions for granularity 30sec
+2026-10-22 12:11:44,078 hipporag.HippoRAG INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B
+2026-10-22 12:11:44,078 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:11:44,078 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings
+2026-10-22 12:11:44,078 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings
+2026-10-22 12:11:44,079 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings
+2026-10-22 12:11:44,079 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:11:44,079 hipporag.HippoRAG INFO Indexing Documents
+2026-10-22 12:11:44,079 hipporag.HippoRAG INFO Performing OpenIE
+2026-10-22 12:11:44,079 hipporag.embedding_store INFO Inserting 13 new records, 0 records already exist.
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.45it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.45it/s]
+2026-10-22 12:11:44,773 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:11:44,782 hipporag.embedding_store INFO Saved 13 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings/vdb_chunk.parquet
+NER:   0%|          | 0/13 [00:00<?, ?it/s]NER:   8%|▊         | 1/13 [00:06<01:15,  6.31s/it]NER:  15%|█▌        | 2/13 [00:09<00:47,  4.32s/it]NER:  31%|███       | 4/13 [00:10<00:17,  1.98s/it]NER:  46%|████▌     | 6/13 [00:11<00:08,  1.28s/it]NER:  54%|█████▍    | 7/13 [00:12<00:07,  1.24s/it]NER:  62%|██████▏   | 8/13 [00:13<00:05,  1.15s/it]NER:  69%|██████▉   | 9/13 [00:13<00:03,  1.06it/s]NER:  77%|███████▋  | 10/13 [00:15<00:03,  1.25s/it]NER:  85%|████████▍ | 11/13 [00:17<00:02,  1.47s/it]NER:  92%|█████████▏| 12/13 [00:19<00:01,  1.43s/it]NER: 100%|██████████| 13/13 [00:21<00:00,  1.68s/it]NER: 100%|██████████| 13/13 [00:21<00:00,  1.65s/it]
+Extracting triples:   0%|          | 0/13 [00:00<?, ?it/s]Extracting triples:   8%|▊         | 1/13 [00:22<04:34, 22.85s/it]Extracting triples:  15%|█▌        | 2/13 [00:34<02:57, 16.17s/it]Extracting triples:  23%|██▎       | 3/13 [00:39<01:50, 11.07s/it]Extracting triples:  31%|███       | 4/13 [00:48<01:34, 10.45s/it]Extracting triples:  38%|███▊      | 5/13 [00:49<00:55,  6.91s/it]Extracting triples:  46%|████▌     | 6/13 [00:49<00:32,  4.65s/it]Extracting triples:  54%|█████▍    | 7/13 [00:51<00:22,  3.70s/it]Extracting triples:  62%|██████▏   | 8/13 [01:01<00:28,  5.72s/it]Extracting triples:  69%|██████▉   | 9/13 [01:04<00:19,  5.00s/it]Extracting triples:  77%|███████▋  | 10/13 [01:24<00:28,  9.48s/it]Extracting triples:  85%|████████▍ | 11/13 [01:24<00:13,  6.61s/it]Extracting triples:  92%|█████████▏| 12/13 [01:25<00:04,  4.87s/it]Extracting triples: 100%|██████████| 13/13 [01:33<00:00,  5.85s/it]Extracting triples: 100%|██████████| 13/13 [01:33<00:00,  7.20s/it]
+2026-10-22 12:13:39,871 worldmm.memory.episodic.openie INFO Results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/3min/openie_results_qwen3vl-8b.json
+2026-10-22 12:13:39,873 hipporag.HippoRAG INFO OpenIE results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/3min/openie_results_ner_qwen3vl-8b.json
+2026-10-22 12:13:39,877 hipporag.HippoRAG INFO Encoding Entities
+2026-10-22 12:13:39,877 hipporag.embedding_store INFO Inserting 468 new records, 0 records already exist.
+Batches:   0%|          | 0/4 [00:00<?, ?it/s]Batches:  25%|██▌       | 1/4 [00:00<00:00,  3.93it/s]Batches:  50%|█████     | 2/4 [00:00<00:00,  5.75it/s]Batches:  75%|███████▌  | 3/4 [00:00<00:00,  6.36it/s]Batches: 100%|██████████| 4/4 [00:00<00:00,  6.79it/s]
+2026-10-22 12:13:40,477 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:13:40,527 hipporag.embedding_store INFO Saved 468 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings/vdb_entity.parquet
+2026-10-22 12:13:40,527 hipporag.HippoRAG INFO Encoding Facts
+2026-10-22 12:13:40,528 hipporag.embedding_store INFO Inserting 448 new records, 0 records already exist.
+Batches:   0%|          | 0/4 [00:00<?, ?it/s]Batches:  25%|██▌       | 1/4 [00:00<00:01,  2.54it/s]Batches:  50%|█████     | 2/4 [00:00<00:00,  3.09it/s]Batches:  75%|███████▌  | 3/4 [00:00<00:00,  3.45it/s]Batches: 100%|██████████| 4/4 [00:01<00:00,  4.53it/s]Batches: 100%|██████████| 4/4 [00:01<00:00,  3.87it/s]
+2026-10-22 12:13:41,569 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:13:41,623 hipporag.embedding_store INFO Saved 448 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings/vdb_fact.parquet
+2026-10-22 12:13:41,624 hipporag.HippoRAG INFO Constructing Graph
+2026-10-22 12:13:41,624 hipporag.HippoRAG INFO Adding OpenIE triples to graph.
+0it [00:00, ?it/s]13it [00:00, 12338.98it/s]
+2026-10-22 12:13:41,625 hipporag.HippoRAG INFO Connecting passage nodes to phrase nodes.
+0it [00:00, ?it/s]13it [00:00, 35778.18it/s]
+2026-10-22 12:13:41,626 hipporag.HippoRAG INFO Found 13 new chunks to save into graph.
+2026-10-22 12:13:41,626 hipporag.HippoRAG INFO Expanding graph with synonymy edges
+2026-10-22 12:13:41,627 hipporag.HippoRAG INFO Performing KNN retrieval for each phrase nodes (468).
+KNN for Queries:   0%|          | 0/1 [00:00<?, ?it/s]KNN for Queries: 100%|██████████| 1/1 [00:00<00:00,  7.76it/s]KNN for Queries: 100%|██████████| 1/1 [00:00<00:00,  7.75it/s]
+  0%|          | 0/468 [00:00<?, ?it/s]100%|██████████| 468/468 [00:00<00:00, 152555.71it/s]
+2026-10-22 12:13:41,822 hipporag.HippoRAG INFO Graph construction completed!
+{'num_phrase_nodes': 468, 'num_passage_nodes': 13, 'num_total_nodes': 481, 'num_extracted_triples': 448, 'num_triples_with_passage_node': 561, 'num_synonymy_triples': 1051, 'num_total_triples': 2060}
+2026-10-22 12:13:41,823 hipporag.HippoRAG INFO Writing graph with 481 nodes, 2060 edges
+2026-10-22 12:13:41,825 hipporag.HippoRAG INFO Saving graph completed!
+2026-10-22 12:13:41,825 worldmm.memory.episodic.memory INFO Indexed 13 captions for granularity 3min
+2026-10-22 12:13:41,825 hipporag.HippoRAG INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B
+2026-10-22 12:13:41,826 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:13:41,826 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings
+2026-10-22 12:13:41,826 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings
+2026-10-22 12:13:41,826 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings
+2026-10-22 12:13:41,826 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:13:41,826 hipporag.HippoRAG INFO Indexing Documents
+2026-10-22 12:13:41,826 hipporag.HippoRAG INFO Performing OpenIE
+2026-10-22 12:13:41,826 hipporag.embedding_store INFO Inserting 4 new records, 0 records already exist.
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.47it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.47it/s]
+2026-10-22 12:13:42,513 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:13:42,516 hipporag.embedding_store INFO Saved 4 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings/vdb_chunk.parquet
+NER:   0%|          | 0/4 [00:00<?, ?it/s]NER:  25%|██▌       | 1/4 [00:06<00:20,  6.97s/it]NER:  50%|█████     | 2/4 [00:09<00:08,  4.47s/it]NER:  75%|███████▌  | 3/4 [00:10<00:02,  2.73s/it]NER: 100%|██████████| 4/4 [00:17<00:00,  4.63s/it]NER: 100%|██████████| 4/4 [00:17<00:00,  4.47s/it]
+Extracting triples:   0%|          | 0/4 [00:00<?, ?it/s]Extracting triples:  25%|██▌       | 1/4 [01:01<03:03, 61.31s/it]Extracting triples:  50%|█████     | 2/4 [01:09<00:59, 29.92s/it]Extracting triples:  75%|███████▌  | 3/4 [01:12<00:17, 17.81s/it]2026-10-22 12:15:28,100 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Chris", "participates in", "SPORTS DRIBBLE SPECS test"],
+    ["Zach", "participates in", "SPORTS DRIBBLE SPECS test"],
+    ["Cass", "participates in", "SPORTS DRIBBLE SPECS test"],
+    ["James", "participates in", "SPORTS DRIBBLE SPECS test"],
+    ["Mitchell", "participates in", "SPORTS DRIBBLE SPECS test"],
+    ["Six men", "split into", "two teams of three"],
+    ["Six men", "gather on", "outdoor basketball court"],
+    ["Six men", "test", "12 viral sports gadgets"],
+    ["Man in white hoodie", "addresses camera", "setting tone"],
+    ["Man in white hoodie", "comments on", "basketball handling"],
+    ["Man in white hoodie", "expresses discomfort with", "traditional basketballs"],
+    ["Man in white hoodie", "rates", "SKLZ Dribble Stick", "7/10"],
+    ["Man in blue jersey", "rates", "SKLZ Dribble Stick", "8/10"],
+    ["Man in black shirt", "rates", "SKLZ Dribble Stick", "8/10"],
+    ["Man in black hoodie", "rates", "SKLZ Dribble Stick", "7/10"],
+    ["Man in white hoodie", "demonstrates", "Straight Shooter Strap"],
+    ["Man in white hoodie", "explains", "Straight Shooter Strap"],
+    ["Man in white hoodie", "praises", "Straight Shooter Strap", "as great"],
+    ["Man in white hoodie", "declares", "#NOT SPONSORED"],
+    ["Man in white hoodie", "shoots basketballs", "with Straight Shooter Strap"],
+    ["Man in white hoodie", "scores", "3/16 shots"],
+    ["Man in white hoodie", "comments", "on shooting performance"],
+    ["Man in white hoodie", "calls product", "suitable for kids"],
+    ["Man in white hoodie", "rates", "Straight Shooter Strap", "1"],
+    ["Man in white hoodie", "jokes", "anything helping him fail is 'pretty good'"],
+    ["Man in white hoodie", "suggests", "testing jump shot without strap"],
+    ["Man in white hoodie", "does jumping jacks", "as forfeit"],
+    ["Man in white hoodie", "jokes", "about 'bouncing titties'"],
+    ["Man in white hoodie", "jokes", "about chest size"],
+    ["Man in white hoodie", "jokes", "about wearing big shirt"],
+    ["Man in white hoodie", "rates", "Flick Glove", "as '1'"],
+    ["Man in white hoodie", "suggests", "better gadget for beginners"],
+    ["Man in white hoodie", "jokes", "about next invention"],
+    ["Man in black hoodie", "explains", "Flick Glove rules"],
+    ["Man in black hoodie", "demonstrates", "Flick Glove"],
+    ["Man in red hoodie", "misunderstands", "Flick Glove orientation"],
+    ["Man in red hoodie", "makes shot", "with Flick Glove", "2/5"],
+    ["Man in red hoodie", "celebrates", "successful shot"],
+    ["Man in red hoodie", "loses", "Flick Glove challenge"],
+    ["Man in white hoodie", "proposes", "testing jump shot without strap"],
+    ["Man in white hoodie", "misses jump shot", "with strap"],
+    ["Man in white hoodie", "does jumping jacks", "as forfeit"],
+    ["Man in red hoodie", "makes shot", "with Flick Glove"],
+    ["Man in red hoodie", "jokes", "about ball slipping off pinky"],
+    ["Man in red hoodie", "removes wristband", "after shot"],
+    ["Man in red hoodie", "critiques", "flick motion"],
+    ["Man in blue jersey", "makes", "3 consecutive shots"],
+    ["Man in blue jersey", "scores", "4 made baskets"],
+    ["Man in blue jersey", "celebrates", "successful shots"],
+    ["Man in blue jersey", "comments on", "conditioning and sit-ups"],
+    ["Man in black hoodie", "does sit-ups", "as punishment"],
+    ["Man in black hoodie", "has", "CASH LOST", "on-screen text"],
+    ["Man in black hoodie", "celebrates", "with teammates"],
+    ["Man in black hoodie", "scores", "7 points"],
+    ["Man in black hoodie", "watches", "game"],
+    ["Man in black hoodie", "comments", "on shot"],
+    ["Man in black hoodie", "encourages", "teammate", "You look like you're hot right now, bro"],
+    ["Man in black hoodie", "praises", "teammate", "in blue jersey"],
+    ["Man in black hoodie", "demonstrates", "basketball drill"],
+    ["Man in black hoodie", "shoots basketball", "successfully"],
+    ["Man in black hoodie", "uses", "animated graphics"],
+    ["Man in black hoodie", "explains", "technique"],
+    ["Man in red hoodie", "makes shot", "with Flick Glove"],
+    ["Man in red hoodie", "jokes", "about ball slipping off pinky"],
+    ["Man in red hoodie", "removes wristband", "after shot"],
+    ["Man in red hoodie", "critiques", "flick motion"],
+    ["Man in red hoodie", "prepares for", "another attempt"],
+    ["Man in blue jersey", "makes", "3 consecutive shots"],
+    ["Man in blue jersey", "scores", "4 made baskets"],
+    ["Man in blue jersey", "celebrates", "successful shots"],
+    ["Man in blue jersey", "comments on", "conditioning and sit-ups"],
+    ["Man in black hoodie", "does sit-ups", "as punishment"],
+    ["Man in black hoodie", "has", "CASH LOST", "on-screen text"],
+    ["Man in black hoodie", "celebrates", "with teammates"],
+    ["Man in black hoodie", "scores", "7 points"],
+    ["Man in black hoodie", "watches", "game"],
+    ["Man in black hoodie", "comments", "on shot"],
+    ["Man in black hoodie", "encourages", "teammate", "You look like you're hot right now, bro"],
+    ["Man in black hoodie", "praises", "teammate", "in blue jersey"],
+    ["Man in black hoodie", "demonstrates", "basketball drill"],
+    ["Man in black hoodie", "shoots basketball", "successfully"],
+    ["Man in black hoodie", "uses", "animated graphics"],
+    ["Man in black hoodie", "explains", "technique"],
+    ["Man in black hoodie", "scores", "7 points"],
+    ["Man in black hoodie", "watches", "game"],
+    ["Man in black hoodie", "comments", "on shot"],
+    ["Man in black hoodie", "encourages", "teammate", "You look like you're hot right now, bro"],
+    ["Man in black hoodie", "praises", "teammate", "in blue jersey"],
+    ["Man in black hoodie", "demonstrates", "basketball drill"],
+    ["Man in black hoodie", "shoots basketball", "successfully"],
+    ["Man in black hoodie", "uses", "animated graphics"],
+    ["Man in black hoodie", "explains", "technique"],
+    ["Man in black hoodie", "scores", "7 points"],
+    ["Man in black hoodie", "watches", "game"],
+    ["Man in black hoodie", "comments", "on shot"],
+    ["Man in black hoodie", "encourages", "teammate", "You look like you're hot right now, bro"],
+    ["Man in black hoodie", "praises", "teammate", "in blue jersey"],
+    ["Man in black hoodie", "demonstrates", "basketball drill"],
+    ["Man in black hoodie", "shoots basketball", "successfully"],
+    ["Man in black hoodie", "uses", "animated graphics"],
+    ["Man in black hoodie", "explains", "technique"],
+    ["Man in black hoodie", "scores", "7 points"],
+    ["Man in black hoodie", "watches", "game"],
+    ["Man in black hoodie", "comments", "on shot"],
+    ["Man in black hoodie", "encourages", "teammate", "You look like you're hot right now, bro"],
+    ["Man in black hoodie", "praises", "teammate", "in blue jersey"],
+    ["Man in black hoodie", "demonstrates", "basketball drill"],
+    ["Man in black hoodie", "shoots basketball", "successfully"],
+    ["Man in black hoodie", "uses", "animated graphics"],
+    ["Man in black hoodie", "explains", "technique"],
+    ["Man in black hoodie", "scores", "7 points"],
+    ["Man in black hoodie", "watches", "game"],
+    ["Man in black hoodie", "comments", "on shot"],
+    ["Man in black hoodie", "encourages", "teammate", "You look like you're hot right now, bro"],
+    ["Man in black hoodie", "praises", "teammate", "in blue jersey"],
+    ["Man in black hoodie", "
+Extracting triples: 100%|██████████| 4/4 [02:27<00:00, 40.16s/it]Extracting triples: 100%|██████████| 4/4 [02:27<00:00, 36.77s/it]
+2026-10-22 12:16:27,492 worldmm.memory.episodic.openie INFO Results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10min/openie_results_qwen3vl-8b.json
+2026-10-22 12:16:27,493 hipporag.HippoRAG INFO OpenIE results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10min/openie_results_ner_qwen3vl-8b.json
+2026-10-22 12:16:27,495 hipporag.HippoRAG INFO Encoding Entities
+2026-10-22 12:16:27,495 hipporag.embedding_store INFO Inserting 338 new records, 0 records already exist.
+Batches:   0%|          | 0/3 [00:00<?, ?it/s]Batches:  33%|███▎      | 1/3 [00:00<00:00,  3.44it/s]Batches:  67%|██████▋   | 2/3 [00:00<00:00,  4.88it/s]Batches: 100%|██████████| 3/3 [00:00<00:00,  5.76it/s]
+2026-10-22 12:16:28,024 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:16:28,063 hipporag.embedding_store INFO Saved 338 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings/vdb_entity.parquet
+2026-10-22 12:16:28,063 hipporag.HippoRAG INFO Encoding Facts
+2026-10-22 12:16:28,064 hipporag.embedding_store INFO Inserting 281 new records, 0 records already exist.
+Batches:   0%|          | 0/3 [00:00<?, ?it/s]Batches:  33%|███▎      | 1/3 [00:00<00:00,  2.53it/s]Batches:  67%|██████▋   | 2/3 [00:00<00:00,  3.04it/s]Batches: 100%|██████████| 3/3 [00:00<00:00,  3.95it/s]
+2026-10-22 12:16:28,831 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:16:28,855 hipporag.embedding_store INFO Saved 281 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/-QuCz7kxBr8/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings/vdb_fact.parquet
+2026-10-22 12:16:28,855 hipporag.HippoRAG INFO Constructing Graph
+2026-10-22 12:16:28,855 hipporag.HippoRAG INFO Adding OpenIE triples to graph.
+0it [00:00, ?it/s]4it [00:00, 5983.32it/s]
+2026-10-22 12:16:28,856 hipporag.HippoRAG INFO Connecting passage nodes to phrase nodes.
+0it [00:00, ?it/s]4it [00:00, 15679.64it/s]
+2026-10-22 12:16:28,857 hipporag.HippoRAG INFO Found 4 new chunks to save into graph.
+2026-10-22 12:16:28,857 hipporag.HippoRAG INFO Expanding graph with synonymy edges
+2026-10-22 12:16:28,857 hipporag.HippoRAG INFO Performing KNN retrieval for each phrase nodes (338).
+KNN for Queries:   0%|          | 0/1 [00:00<?, ?it/s]KNN for Queries: 100%|██████████| 1/1 [00:00<00:00,  6.60it/s]KNN for Queries: 100%|██████████| 1/1 [00:00<00:00,  6.60it/s]
+  0%|          | 0/338 [00:00<?, ?it/s]100%|██████████| 338/338 [00:00<00:00, 82198.34it/s]
+2026-10-22 12:16:29,021 hipporag.HippoRAG INFO Graph construction completed!
+{'num_phrase_nodes': 338, 'num_passage_nodes': 4, 'num_total_nodes': 342, 'num_extracted_triples': 281, 'num_triples_with_passage_node': 357, 'num_synonymy_triples': 680, 'num_total_triples': 1318}
+2026-10-22 12:16:29,022 hipporag.HippoRAG INFO Writing graph with 342 nodes, 1318 edges
+2026-10-22 12:16:29,024 hipporag.HippoRAG INFO Saving graph completed!
+2026-10-22 12:16:29,024 worldmm.memory.episodic.memory INFO Indexed 4 captions for granularity 10min
+2026-10-22 12:16:29,033 prebuild INFO [1/3] -QuCz7kxBr8: done in 668s
+2026-10-22 12:16:29,051 prebuild INFO 0RxMZBLeqRI/10sec: seeded 180 OpenIE docs
+2026-10-22 12:16:29,051 prebuild INFO [2/3] 0RxMZBLeqRI: indexing, expected OpenIE LLM calls=162
+2026-10-22 12:16:29,052 worldmm.memory.episodic.memory INFO Loaded 184 captions for granularity 10sec
+2026-10-22 12:16:29,053 worldmm.memory.episodic.memory INFO Loaded 62 captions for granularity 30sec
+2026-10-22 12:16:29,053 worldmm.memory.episodic.memory INFO Loaded 11 captions for granularity 3min
+2026-10-22 12:16:29,053 worldmm.memory.episodic.memory INFO Loaded 4 captions for granularity 10min
+2026-10-22 12:16:29,053 hipporag.HippoRAG INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B
+2026-10-22 12:16:29,053 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:16:29,053 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings
+2026-10-22 12:16:29,054 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings
+2026-10-22 12:16:29,054 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings
+2026-10-22 12:16:29,054 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:16:29,054 hipporag.HippoRAG INFO Indexing Documents
+2026-10-22 12:16:29,054 hipporag.HippoRAG INFO Performing OpenIE
+2026-10-22 12:16:29,054 hipporag.embedding_store INFO Inserting 184 new records, 0 records already exist.
+Batches:   0%|          | 0/2 [00:00<?, ?it/s]Batches:  50%|█████     | 1/2 [00:02<00:02,  2.77s/it]Batches: 100%|██████████| 2/2 [00:03<00:00,  1.48s/it]Batches: 100%|██████████| 2/2 [00:03<00:00,  1.68s/it]
+2026-10-22 12:16:32,414 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:16:32,440 hipporag.embedding_store INFO Saved 184 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings/vdb_chunk.parquet
+NER:   0%|          | 0/4 [00:00<?, ?it/s]NER:  25%|██▌       | 1/4 [00:00<00:00,  5.99it/s]NER:  50%|█████     | 2/4 [00:00<00:00,  7.80it/s]NER: 100%|██████████| 4/4 [00:01<00:00,  2.05it/s]NER: 100%|██████████| 4/4 [00:01<00:00,  2.39it/s]
+Extracting triples:   0%|          | 0/4 [00:00<?, ?it/s]Extracting triples:  25%|██▌       | 1/4 [00:00<00:01,  2.02it/s]Extracting triples:  50%|█████     | 2/4 [00:00<00:00,  2.53it/s]Extracting triples: 100%|██████████| 4/4 [00:04<00:00,  1.25s/it]Extracting triples: 100%|██████████| 4/4 [00:04<00:00,  1.08s/it]
+2026-10-22 12:16:38,460 worldmm.memory.episodic.openie INFO Results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10sec/openie_results_qwen3vl-8b.json
+2026-10-22 12:16:38,468 hipporag.HippoRAG INFO OpenIE results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10sec/openie_results_ner_qwen3vl-8b.json
+2026-10-22 12:16:38,488 hipporag.HippoRAG INFO Encoding Entities
+2026-10-22 12:16:38,490 hipporag.embedding_store INFO Inserting 2087 new records, 0 records already exist.
+Batches:   0%|          | 0/17 [00:00<?, ?it/s]Batches:   6%|▌         | 1/17 [00:00<00:09,  1.62it/s]Batches:  12%|█▏        | 2/17 [00:00<00:05,  2.72it/s]Batches:  18%|█▊        | 3/17 [00:01<00:04,  3.47it/s]Batches:  24%|██▎       | 4/17 [00:01<00:03,  4.09it/s]Batches:  29%|██▉       | 5/17 [00:01<00:02,  5.03it/s]Batches:  35%|███▌      | 6/17 [00:01<00:02,  4.67it/s]Batches:  41%|████      | 7/17 [00:01<00:01,  5.49it/s]Batches:  47%|████▋     | 8/17 [00:01<00:01,  5.59it/s]Batches:  53%|█████▎    | 9/17 [00:01<00:01,  6.35it/s]Batches:  59%|█████▉    | 10/17 [00:02<00:01,  6.38it/s]Batches:  65%|██████▍   | 11/17 [00:02<00:00,  6.40it/s]Batches:  71%|███████   | 12/17 [00:02<00:00,  6.63it/s]Batches:  76%|███████▋  | 13/17 [00:02<00:00,  6.74it/s]Batches:  82%|████████▏ | 14/17 [00:02<00:00,  6.89it/s]Batches:  94%|█████████▍| 16/17 [00:02<00:00,  8.10it/s]Batches: 100%|██████████| 17/17 [00:02<00:00,  5.81it/s]
+2026-10-22 12:16:41,547 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:16:41,784 hipporag.embedding_store INFO Saved 2087 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings/vdb_entity.parquet
+2026-10-22 12:16:41,784 hipporag.HippoRAG INFO Encoding Facts
+2026-10-22 12:16:41,787 hipporag.embedding_store INFO Inserting 2215 new records, 0 records already exist.
+Batches:   0%|          | 0/18 [00:00<?, ?it/s]Batches:   6%|▌         | 1/18 [00:00<00:12,  1.35it/s]Batches:  11%|█         | 2/18 [00:01<00:08,  1.84it/s]Batches:  17%|█▋        | 3/18 [00:01<00:06,  2.27it/s]Batches:  22%|██▏       | 4/18 [00:01<00:05,  2.61it/s]Batches:  28%|██▊       | 5/18 [00:02<00:04,  2.63it/s]Batches:  33%|███▎      | 6/18 [00:02<00:04,  2.90it/s]Batches:  39%|███▉      | 7/18 [00:02<00:03,  3.08it/s]Batches:  44%|████▍     | 8/18 [00:02<00:03,  3.26it/s]Batches:  50%|█████     | 9/18 [00:03<00:02,  3.11it/s]Batches:  56%|█████▌    | 10/18 [00:03<00:02,  3.19it/s]Batches:  61%|██████    | 11/18 [00:03<00:02,  3.28it/s]Batches:  67%|██████▋   | 12/18 [00:04<00:01,  3.41it/s]Batches:  72%|███████▏  | 13/18 [00:04<00:01,  3.64it/s]Batches:  78%|███████▊  | 14/18 [00:04<00:01,  3.74it/s]Batches:  83%|████████▎ | 15/18 [00:04<00:00,  3.81it/s]Batches:  89%|████████▉ | 16/18 [00:05<00:00,  3.90it/s]Batches:  94%|█████████▍| 17/18 [00:05<00:00,  3.96it/s]Batches: 100%|██████████| 18/18 [00:05<00:00,  3.29it/s]
+2026-10-22 12:16:47,750 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:16:48,047 hipporag.embedding_store INFO Saved 2215 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings/vdb_fact.parquet
+2026-10-22 12:16:48,048 hipporag.HippoRAG INFO Constructing Graph
+2026-10-22 12:16:48,048 hipporag.HippoRAG INFO Adding OpenIE triples to graph.
+0it [00:00, ?it/s]184it [00:00, 33276.64it/s]
+2026-10-22 12:16:48,054 hipporag.HippoRAG INFO Connecting passage nodes to phrase nodes.
+0it [00:00, ?it/s]184it [00:00, 101027.87it/s]
+2026-10-22 12:16:48,056 hipporag.HippoRAG INFO Found 184 new chunks to save into graph.
+2026-10-22 12:16:48,056 hipporag.HippoRAG INFO Expanding graph with synonymy edges
+2026-10-22 12:16:48,059 hipporag.HippoRAG INFO Performing KNN retrieval for each phrase nodes (2087).
+KNN for Queries:   0%|          | 0/3 [00:00<?, ?it/s]KNN for Queries:  33%|███▎      | 1/3 [00:00<00:01,  1.73it/s]KNN for Queries:  67%|██████▋   | 2/3 [00:00<00:00,  2.35it/s]KNN for Queries: 100%|██████████| 3/3 [00:00<00:00,  3.22it/s]
+  0%|          | 0/2087 [00:00<?, ?it/s]100%|██████████| 2087/2087 [00:00<00:00, 128934.80it/s]
+2026-10-22 12:16:49,359 hipporag.HippoRAG INFO Graph construction completed!
+{'num_phrase_nodes': 2087, 'num_passage_nodes': 184, 'num_total_nodes': 2271, 'num_extracted_triples': 2215, 'num_triples_with_passage_node': 2838, 'num_synonymy_triples': 6284, 'num_total_triples': 11337}
+2026-10-22 12:16:49,361 hipporag.HippoRAG INFO Writing graph with 2271 nodes, 11336 edges
+2026-10-22 12:16:49,372 hipporag.HippoRAG INFO Saving graph completed!
+2026-10-22 12:16:49,373 worldmm.memory.episodic.memory INFO Indexed 184 captions for granularity 10sec
+2026-10-22 12:16:49,374 hipporag.HippoRAG INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B
+2026-10-22 12:16:49,374 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:16:49,374 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings
+2026-10-22 12:16:49,374 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings
+2026-10-22 12:16:49,374 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings
+2026-10-22 12:16:49,375 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:16:49,375 hipporag.HippoRAG INFO Indexing Documents
+2026-10-22 12:16:49,375 hipporag.HippoRAG INFO Performing OpenIE
+2026-10-22 12:16:49,375 hipporag.embedding_store INFO Inserting 62 new records, 0 records already exist.
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:03<00:00,  3.96s/it]Batches: 100%|██████████| 1/1 [00:03<00:00,  3.96s/it]
+2026-10-22 12:16:53,351 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:16:53,359 hipporag.embedding_store INFO Saved 62 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings/vdb_chunk.parquet
+NER:   0%|          | 0/62 [00:00<?, ?it/s]NER:   2%|▏         | 1/62 [00:03<03:36,  3.55s/it]NER:   3%|▎         | 2/62 [00:04<02:02,  2.04s/it]NER:   5%|▍         | 3/62 [00:05<01:19,  1.35s/it]NER:   6%|▋         | 4/62 [00:05<00:51,  1.13it/s]NER:   8%|▊         | 5/62 [00:07<01:15,  1.33s/it]NER:  10%|▉         | 6/62 [00:07<00:52,  1.07it/s]NER:  11%|█▏        | 7/62 [00:09<01:10,  1.28s/it]NER:  13%|█▎        | 8/62 [00:09<00:54,  1.00s/it]NER:  15%|█▍        | 9/62 [00:10<00:43,  1.22it/s]NER:  16%|█▌        | 10/62 [00:11<00:40,  1.29it/s]NER:  18%|█▊        | 11/62 [00:11<00:32,  1.58it/s]NER:  19%|█▉        | 12/62 [00:13<00:55,  1.11s/it]NER:  21%|██        | 13/62 [00:16<01:15,  1.53s/it]NER:  23%|██▎       | 14/62 [00:16<00:59,  1.25s/it]NER:  24%|██▍       | 15/62 [00:17<00:51,  1.10s/it]NER:  26%|██▌       | 16/62 [00:18<00:55,  1.22s/it]NER:  27%|██▋       | 17/62 [00:19<00:52,  1.17s/it]NER:  29%|██▉       | 18/62 [00:21<00:56,  1.29s/it]NER:  31%|███       | 19/62 [00:22<00:48,  1.13s/it]NER:  32%|███▏      | 20/62 [00:24<00:59,  1.42s/it]NER:  34%|███▍      | 21/62 [00:25<00:53,  1.32s/it]NER:  35%|███▌      | 22/62 [00:25<00:39,  1.00it/s]NER:  37%|███▋      | 23/62 [00:26<00:38,  1.01it/s]NER:  39%|███▊      | 24/62 [00:28<00:52,  1.39s/it]NER:  40%|████      | 25/62 [00:30<00:56,  1.54s/it]NER:  44%|████▎     | 27/62 [00:31<00:37,  1.07s/it]NER:  45%|████▌     | 28/62 [00:32<00:36,  1.07s/it]NER:  47%|████▋     | 29/62 [00:35<00:44,  1.34s/it]NER:  48%|████▊     | 30/62 [00:36<00:39,  1.24s/it]NER:  50%|█████     | 31/62 [00:36<00:29,  1.04it/s]NER:  52%|█████▏    | 32/62 [00:36<00:21,  1.39it/s]NER:  53%|█████▎    | 33/62 [00:38<00:33,  1.14s/it]NER:  55%|█████▍    | 34/62 [00:43<01:00,  2.16s/it]NER:  56%|█████▋    | 35/62 [00:43<00:43,  1.60s/it]NER:  58%|█████▊    | 36/62 [00:44<00:33,  1.31s/it]NER:  61%|██████▏   | 38/62 [00:46<00:29,  1.22s/it]NER:  63%|██████▎   | 39/62 [00:47<00:25,  1.12s/it]NER:  65%|██████▍   | 40/62 [00:49<00:33,  1.54s/it]NER:  66%|██████▌   | 41/62 [00:51<00:33,  1.58s/it]NER:  68%|██████▊   | 42/62 [00:51<00:25,  1.26s/it]NER:  69%|██████▉   | 43/62 [00:52<00:18,  1.05it/s]NER:  71%|███████   | 44/62 [00:52<00:13,  1.33it/s]NER:  73%|███████▎  | 45/62 [00:52<00:10,  1.65it/s]NER:  74%|███████▍  | 46/62 [00:53<00:10,  1.47it/s]NER:  76%|███████▌  | 47/62 [00:57<00:23,  1.58s/it]NER:  77%|███████▋  | 48/62 [00:57<00:17,  1.21s/it]NER:  79%|███████▉  | 49/62 [01:00<00:20,  1.61s/it]NER:  81%|████████  | 50/62 [01:01<00:17,  1.44s/it]NER:  82%|████████▏ | 51/62 [01:03<00:17,  1.59s/it]NER:  84%|████████▍ | 52/62 [01:03<00:12,  1.28s/it]NER:  85%|████████▌ | 53/62 [01:04<00:11,  1.26s/it]NER:  87%|████████▋ | 54/62 [01:09<00:18,  2.31s/it]NER:  89%|████████▊ | 55/62 [01:10<00:13,  1.86s/it]NER:  90%|█████████ | 56/62 [01:12<00:11,  1.85s/it]NER:  92%|█████████▏| 57/62 [01:15<00:12,  2.40s/it]NER:  94%|█████████▎| 58/62 [01:18<00:09,  2.34s/it]NER:  95%|█████████▌| 59/62 [01:27<00:13,  4.55s/it]NER:  97%|█████████▋| 60/62 [01:34<00:10,  5.16s/it]NER:  98%|█████████▊| 61/62 [01:37<00:04,  4.57s/it]NER: 100%|██████████| 62/62 [01:39<00:00,  3.81s/it]NER: 100%|██████████| 62/62 [01:39<00:00,  1.61s/it]
+Extracting triples:   0%|          | 0/62 [00:00<?, ?it/s]Extracting triples:   2%|▏         | 1/62 [00:15<16:07, 15.86s/it]Extracting triples:   3%|▎         | 2/62 [00:21<10:08, 10.14s/it]Extracting triples:   5%|▍         | 3/62 [00:22<05:50,  5.94s/it]Extracting triples:   6%|▋         | 4/62 [00:23<03:51,  3.99s/it]Extracting triples:   8%|▊         | 5/62 [00:31<05:02,  5.31s/it]Extracting triples:  10%|▉         | 6/62 [00:35<04:39,  4.99s/it]Extracting triples:  11%|█▏        | 7/62 [00:37<03:29,  3.81s/it]Extracting triples:  13%|█▎        | 8/62 [00:42<03:54,  4.35s/it]Extracting triples:  15%|█▍        | 9/62 [00:49<04:35,  5.20s/it]Extracting triples:  16%|█▌        | 10/62 [00:54<04:26,  5.12s/it]Extracting triples:  18%|█▊        | 11/62 [00:56<03:29,  4.11s/it]Extracting triples:  19%|█▉        | 12/62 [00:58<02:56,  3.53s/it]Extracting triples:  21%|██        | 13/62 [01:02<02:47,  3.42s/it]Extracting triples:  23%|██▎       | 14/62 [01:02<02:00,  2.51s/it]Extracting triples:  24%|██▍       | 15/62 [01:13<04:01,  5.14s/it]Extracting triples:  26%|██▌       | 16/62 [01:17<03:35,  4.68s/it]Extracting triples:  27%|██▋       | 17/62 [01:18<02:40,  3.56s/it]Extracting triples:  29%|██▉       | 18/62 [01:18<01:51,  2.54s/it]Extracting triples:  31%|███       | 19/62 [01:21<01:54,  2.65s/it]Extracting triples:  32%|███▏      | 20/62 [01:27<02:31,  3.62s/it]Extracting triples:  34%|███▍      | 21/62 [01:34<03:08,  4.61s/it]Extracting triples:  35%|███▌      | 22/62 [01:40<03:22,  5.05s/it]Extracting triples:  37%|███▋      | 23/62 [01:40<02:23,  3.68s/it]Extracting triples:  39%|███▊      | 24/62 [01:46<02:47,  4.41s/it]Extracting triples:  40%|████      | 25/62 [01:49<02:27,  3.98s/it]Extracting triples:  42%|████▏     | 26/62 [01:51<02:03,  3.43s/it]Extracting triples:  44%|████▎     | 27/62 [02:01<02:59,  5.12s/it]Extracting triples:  45%|████▌     | 28/62 [02:02<02:13,  3.94s/it]Extracting triples:  47%|████▋     | 29/62 [02:04<01:52,  3.41s/it]Extracting triples:  48%|████▊     | 30/62 [02:08<01:53,  3.53s/it]Extracting triples:  50%|█████     | 31/62 [02:08<01:21,  2.61s/it]Extracting triples:  52%|█████▏    | 32/62 [02:16<02:04,  4.14s/it]Extracting triples:  53%|█████▎    | 33/62 [02:18<01:45,  3.62s/it]Extracting triples:  55%|█████▍    | 34/62 [02:23<01:50,  3.96s/it]Extracting triples:  56%|█████▋    | 35/62 [02:31<02:18,  5.13s/it]Extracting triples:  58%|█████▊    | 36/62 [02:33<01:48,  4.17s/it]Extracting triples:  60%|█████▉    | 37/62 [02:37<01:45,  4.20s/it]Extracting triples:  61%|██████▏   | 38/62 [02:45<02:07,  5.33s/it]Extracting triples:  63%|██████▎   | 39/62 [02:46<01:33,  4.06s/it]Extracting triples:  65%|██████▍   | 40/62 [02:53<01:46,  4.83s/it]Extracting triples:  66%|██████▌   | 41/62 [02:58<01:43,  4.94s/it]Extracting triples:  68%|██████▊   | 42/62 [03:02<01:34,  4.70s/it]Extracting triples:  69%|██████▉   | 43/62 [03:08<01:37,  5.14s/it]Extracting triples:  71%|███████   | 44/62 [03:10<01:12,  4.03s/it]Extracting triples:  73%|███████▎  | 45/62 [03:11<00:53,  3.13s/it]Extracting triples:  74%|███████▍  | 46/62 [03:17<01:03,  3.99s/it]Extracting triples:  76%|███████▌  | 47/62 [03:32<01:50,  7.33s/it]Extracting triples:  77%|███████▋  | 48/62 [03:34<01:22,  5.87s/it]Extracting triples:  79%|███████▉  | 49/62 [03:36<00:59,  4.59s/it]Extracting triples:  81%|████████  | 50/62 [03:50<01:27,  7.32s/it]Extracting triples:  82%|████████▏ | 51/62 [03:52<01:04,  5.86s/it]Extracting triples:  84%|████████▍ | 52/62 [03:55<00:48,  4.84s/it]Extracting triples:  85%|████████▌ | 53/62 [03:55<00:31,  3.45s/it]Extracting triples:  87%|████████▋ | 54/62 [04:07<00:47,  5.96s/it]Extracting triples:  89%|████████▊ | 55/62 [04:09<00:35,  5.04s/it]Extracting triples:  90%|█████████ | 56/62 [04:14<00:30,  5.04s/it]Extracting triples:  92%|█████████▏| 57/62 [04:37<00:51, 10.26s/it]Extracting triples:  94%|█████████▎| 58/62 [04:39<00:30,  7.73s/it]Extracting triples:  95%|█████████▌| 59/62 [04:41<00:18,  6.02s/it]Extracting triples:  97%|█████████▋| 60/62 [04:43<00:09,  4.95s/it]Extracting triples:  98%|█████████▊| 61/62 [04:50<00:05,  5.46s/it]Extracting triples: 100%|██████████| 62/62 [05:01<00:00,  7.17s/it]Extracting triples: 100%|██████████| 62/62 [05:01<00:00,  4.86s/it]
+2026-10-22 12:23:34,656 worldmm.memory.episodic.openie INFO Results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/30sec/openie_results_qwen3vl-8b.json
+2026-10-22 12:23:34,661 hipporag.HippoRAG INFO OpenIE results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/30sec/openie_results_ner_qwen3vl-8b.json
+2026-10-22 12:23:34,673 hipporag.HippoRAG INFO Encoding Entities
+2026-10-22 12:23:34,675 hipporag.embedding_store INFO Inserting 1764 new records, 0 records already exist.
+Batches:   0%|          | 0/14 [00:00<?, ?it/s]Batches:   7%|▋         | 1/14 [00:00<00:05,  2.54it/s]Batches:  14%|█▍        | 2/14 [00:00<00:03,  3.78it/s]Batches:  21%|██▏       | 3/14 [00:00<00:02,  4.43it/s]Batches:  29%|██▊       | 4/14 [00:00<00:01,  5.16it/s]Batches:  36%|███▌      | 5/14 [00:01<00:01,  5.68it/s]Batches:  43%|████▎     | 6/14 [00:01<00:01,  6.13it/s]Batches:  50%|█████     | 7/14 [00:01<00:01,  6.38it/s]Batches:  57%|█████▋    | 8/14 [00:01<00:00,  6.19it/s]Batches:  64%|██████▍   | 9/14 [00:01<00:00,  6.48it/s]Batches:  71%|███████▏  | 10/14 [00:01<00:00,  6.61it/s]Batches:  79%|███████▊  | 11/14 [00:01<00:00,  6.71it/s]Batches:  86%|████████▌ | 12/14 [00:02<00:00,  6.88it/s]Batches:  93%|█████████▎| 13/14 [00:02<00:00,  7.34it/s]Batches: 100%|██████████| 14/14 [00:02<00:00,  6.24it/s]
+2026-10-22 12:23:36,949 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:23:37,147 hipporag.embedding_store INFO Saved 1764 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings/vdb_entity.parquet
+2026-10-22 12:23:37,147 hipporag.HippoRAG INFO Encoding Facts
+2026-10-22 12:23:37,150 hipporag.embedding_store INFO Inserting 1637 new records, 0 records already exist.
+Batches:   0%|          | 0/13 [00:00<?, ?it/s]Batches:   8%|▊         | 1/13 [00:00<00:08,  1.41it/s]Batches:  15%|█▌        | 2/13 [00:01<00:05,  2.03it/s]Batches:  23%|██▎       | 3/13 [00:01<00:04,  2.37it/s]Batches:  31%|███       | 4/13 [00:01<00:03,  2.54it/s]Batches:  38%|███▊      | 5/13 [00:02<00:02,  2.79it/s]Batches:  46%|████▌     | 6/13 [00:02<00:02,  3.00it/s]Batches:  54%|█████▍    | 7/13 [00:02<00:01,  3.16it/s]Batches:  62%|██████▏   | 8/13 [00:02<00:01,  3.10it/s]Batches:  69%|██████▉   | 9/13 [00:03<00:01,  3.19it/s]Batches:  77%|███████▋  | 10/13 [00:03<00:00,  3.25it/s]Batches:  85%|████████▍ | 11/13 [00:03<00:00,  3.36it/s]Batches:  92%|█████████▏| 12/13 [00:04<00:00,  3.53it/s]Batches: 100%|██████████| 13/13 [00:04<00:00,  3.90it/s]Batches: 100%|██████████| 13/13 [00:04<00:00,  3.06it/s]
+2026-10-22 12:23:41,450 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:23:41,620 hipporag.embedding_store INFO Saved 1637 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/30sec/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings/vdb_fact.parquet
+2026-10-22 12:23:41,621 hipporag.HippoRAG INFO Constructing Graph
+2026-10-22 12:23:41,621 hipporag.HippoRAG INFO Adding OpenIE triples to graph.
+0it [00:00, ?it/s]62it [00:00, 15816.97it/s]
+2026-10-22 12:23:41,625 hipporag.HippoRAG INFO Connecting passage nodes to phrase nodes.
+0it [00:00, ?it/s]62it [00:00, 44016.05it/s]
+2026-10-22 12:23:41,627 hipporag.HippoRAG INFO Found 62 new chunks to save into graph.
+2026-10-22 12:23:41,627 hipporag.HippoRAG INFO Expanding graph with synonymy edges
+2026-10-22 12:23:41,630 hipporag.HippoRAG INFO Performing KNN retrieval for each phrase nodes (1764).
+KNN for Queries:   0%|          | 0/2 [00:00<?, ?it/s]KNN for Queries:  50%|█████     | 1/2 [00:00<00:00,  1.33it/s]KNN for Queries: 100%|██████████| 2/2 [00:00<00:00,  2.25it/s]KNN for Queries: 100%|██████████| 2/2 [00:00<00:00,  2.04it/s]
+  0%|          | 0/1764 [00:00<?, ?it/s] 89%|████████▊ | 1564/1764 [00:00<00:00, 4631.88it/s]100%|██████████| 1764/1764 [00:00<00:00, 5210.49it/s]
+2026-10-22 12:23:43,114 hipporag.HippoRAG INFO Graph construction completed!
+{'num_phrase_nodes': 1764, 'num_passage_nodes': 62, 'num_total_nodes': 1826, 'num_extracted_triples': 1637, 'num_triples_with_passage_node': 2059, 'num_synonymy_triples': 4194, 'num_total_triples': 7890}
+2026-10-22 12:23:43,116 hipporag.HippoRAG INFO Writing graph with 1826 nodes, 7889 edges
+2026-10-22 12:23:43,125 hipporag.HippoRAG INFO Saving graph completed!
+2026-10-22 12:23:43,126 worldmm.memory.episodic.memory INFO Indexed 62 captions for granularity 30sec
+2026-10-22 12:23:43,126 hipporag.HippoRAG INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B
+2026-10-22 12:23:43,126 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:23:43,126 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings
+2026-10-22 12:23:43,126 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings
+2026-10-22 12:23:43,126 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings
+2026-10-22 12:23:43,126 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:23:43,126 hipporag.HippoRAG INFO Indexing Documents
+2026-10-22 12:23:43,127 hipporag.HippoRAG INFO Performing OpenIE
+2026-10-22 12:23:43,127 hipporag.embedding_store INFO Inserting 11 new records, 0 records already exist.
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:01<00:00,  1.08s/it]Batches: 100%|██████████| 1/1 [00:01<00:00,  1.08s/it]
+2026-10-22 12:23:44,211 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:23:44,214 hipporag.embedding_store INFO Saved 11 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings/vdb_chunk.parquet
+NER:   0%|          | 0/11 [00:00<?, ?it/s]NER:   9%|▉         | 1/11 [00:04<00:48,  4.85s/it]NER:  18%|█▊        | 2/11 [00:08<00:37,  4.21s/it]NER:  27%|██▋       | 3/11 [00:10<00:23,  2.94s/it]NER:  36%|███▋      | 4/11 [00:10<00:13,  1.94s/it]NER:  45%|████▌     | 5/11 [00:10<00:07,  1.32s/it]NER:  55%|█████▍    | 6/11 [00:11<00:05,  1.13s/it]NER:  64%|██████▎   | 7/11 [00:17<00:10,  2.71s/it]NER:  73%|███████▎  | 8/11 [00:18<00:06,  2.17s/it]NER:  91%|█████████ | 10/11 [00:20<00:01,  1.62s/it]NER: 100%|██████████| 11/11 [00:27<00:00,  3.12s/it]NER: 100%|██████████| 11/11 [00:27<00:00,  2.54s/it]
+Extracting triples:   0%|          | 0/11 [00:00<?, ?it/s]Extracting triples:   9%|▉         | 1/11 [00:10<01:45, 10.56s/it]Extracting triples:  18%|█▊        | 2/11 [00:26<02:01, 13.49s/it]Extracting triples:  27%|██▋       | 3/11 [00:28<01:06,  8.36s/it]Extracting triples:  36%|███▋      | 4/11 [00:43<01:17, 11.14s/it]Extracting triples:  45%|████▌     | 5/11 [00:46<00:48,  8.16s/it]Extracting triples:  55%|█████▍    | 6/11 [00:53<00:38,  7.71s/it]Extracting triples:  64%|██████▎   | 7/11 [01:00<00:29,  7.43s/it]Extracting triples:  73%|███████▎  | 8/11 [01:06<00:20,  6.99s/it]Extracting triples:  82%|████████▏ | 9/11 [01:16<00:15,  7.99s/it]Extracting triples:  91%|█████████ | 10/11 [01:28<00:09,  9.25s/it]Extracting triples: 100%|██████████| 11/11 [01:38<00:00,  9.57s/it]Extracting triples: 100%|██████████| 11/11 [01:38<00:00,  8.99s/it]
+2026-10-22 12:25:51,116 worldmm.memory.episodic.openie INFO Results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/3min/openie_results_qwen3vl-8b.json
+2026-10-22 12:25:51,118 hipporag.HippoRAG INFO OpenIE results saved to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/3min/openie_results_ner_qwen3vl-8b.json
+2026-10-22 12:25:51,121 hipporag.HippoRAG INFO Encoding Entities
+2026-10-22 12:25:51,122 hipporag.embedding_store INFO Inserting 450 new records, 0 records already exist.
+Batches:   0%|          | 0/4 [00:00<?, ?it/s]Batches:  25%|██▌       | 1/4 [00:00<00:00,  3.89it/s]Batches:  50%|█████     | 2/4 [00:00<00:00,  5.35it/s]Batches:  75%|███████▌  | 3/4 [00:00<00:00,  5.83it/s]Batches: 100%|██████████| 4/4 [00:00<00:00,  6.38it/s]
+2026-10-22 12:25:51,761 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:25:51,815 hipporag.embedding_store INFO Saved 450 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings/vdb_entity.parquet
+2026-10-22 12:25:51,815 hipporag.HippoRAG INFO Encoding Facts
+2026-10-22 12:25:51,815 hipporag.embedding_store INFO Inserting 351 new records, 0 records already exist.
+Batches:   0%|          | 0/3 [00:00<?, ?it/s]Batches:  33%|███▎      | 1/3 [00:00<00:00,  2.85it/s]Batches:  67%|██████▋   | 2/3 [00:00<00:00,  3.15it/s]Batches: 100%|██████████| 3/3 [00:00<00:00,  3.73it/s]Batches: 100%|██████████| 3/3 [00:00<00:00,  3.51it/s]
+2026-10-22 12:25:52,679 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:25:52,720 hipporag.embedding_store INFO Saved 351 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/3min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings/vdb_fact.parquet
+2026-10-22 12:25:52,720 hipporag.HippoRAG INFO Constructing Graph
+2026-10-22 12:25:52,720 hipporag.HippoRAG INFO Adding OpenIE triples to graph.
+0it [00:00, ?it/s]11it [00:00, 12109.54it/s]
+2026-10-22 12:25:52,721 hipporag.HippoRAG INFO Connecting passage nodes to phrase nodes.
+0it [00:00, ?it/s]11it [00:00, 36733.55it/s]
+2026-10-22 12:25:52,722 hipporag.HippoRAG INFO Found 11 new chunks to save into graph.
+2026-10-22 12:25:52,722 hipporag.HippoRAG INFO Expanding graph with synonymy edges
+2026-10-22 12:25:52,723 hipporag.HippoRAG INFO Performing KNN retrieval for each phrase nodes (450).
+KNN for Queries:   0%|          | 0/1 [00:00<?, ?it/s]KNN for Queries: 100%|██████████| 1/1 [00:00<00:00,  5.83it/s]KNN for Queries: 100%|██████████| 1/1 [00:00<00:00,  5.82it/s]
+  0%|          | 0/450 [00:00<?, ?it/s]100%|██████████| 450/450 [00:00<00:00, 441196.07it/s]
+2026-10-22 12:25:52,908 hipporag.HippoRAG INFO Graph construction completed!
+{'num_phrase_nodes': 450, 'num_passage_nodes': 11, 'num_total_nodes': 461, 'num_extracted_triples': 351, 'num_triples_with_passage_node': 468, 'num_synonymy_triples': 639, 'num_total_triples': 1458}
+2026-10-22 12:25:52,908 hipporag.HippoRAG INFO Writing graph with 461 nodes, 1458 edges
+2026-10-22 12:25:52,910 hipporag.HippoRAG INFO Saving graph completed!
+2026-10-22 12:25:52,910 worldmm.memory.episodic.memory INFO Indexed 11 captions for granularity 3min
+2026-10-22 12:25:52,911 hipporag.HippoRAG INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B
+2026-10-22 12:25:52,911 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:25:52,911 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings
+2026-10-22 12:25:52,911 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/entity_embeddings
+2026-10-22 12:25:52,911 hipporag.embedding_store INFO Creating working directory: /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/fact_embeddings
+2026-10-22 12:25:52,911 worldmm.llm.prompt_template_manager INFO Loading templates from directory: /data1/jyheo/workspace/VideoRAG/WorldMM/src/worldmm/llm/templates
+2026-10-22 12:25:52,912 hipporag.HippoRAG INFO Indexing Documents
+2026-10-22 12:25:52,912 hipporag.HippoRAG INFO Performing OpenIE
+2026-10-22 12:25:52,912 hipporag.embedding_store INFO Inserting 4 new records, 0 records already exist.
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.22it/s]Batches: 100%|██████████| 1/1 [00:00<00:00,  1.21it/s]
+2026-10-22 12:25:53,740 hipporag.embedding_store INFO Saving new records.
+2026-10-22 12:25:53,744 hipporag.embedding_store INFO Saved 4 records to /data1/jyheo/workspace/VideoRAG/report_framework/cache/episodic/0RxMZBLeqRI/episodic_memory/10min/qwen3vl-8b_Qwen_Qwen3-Embedding-4B/chunk_embeddings/vdb_chunk.parquet
+NER:   0%|          | 0/4 [00:00<?, ?it/s]NER:  25%|██▌       | 1/4 [00:02<00:08,  2.76s/it]NER:  50%|█████     | 2/4 [01:02<01:12, 36.30s/it]2026-10-22 12:27:24,925 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: [
+  "Gypsy",
+  "Roma",
+  "Romani",
+  "Balkans",
+  "TITO",
+  "MACEDONIANS",
+  "Obama",
+  "POREKLOM SAM CIGANIN",
+  "Roma presence",
+  "ethnic hatred",
+  "systemic marginalization",
+  "identity erasure",
+  "societal stigma",
+  "cultural continuity",
+  "scientific experimentation",
+  "historical stigmatization",
+  "fantasy conflict",
+  "societal stereotypes",
+  "migration",
+  "Middle East",
+  "South Asia",
+  "Europe",
+  "13th century",
+  "Seljuk Turks",
+  "Byzantine Empire",
+  "Christian-Muslim conflict",
+  "ATSINGANI",
+  "UNWANTED",
+  "Google Translate",
+  "Chiral",
+  "Hannoversches Tageblatt",
+  "1760",
+  "North Macedonia",
+  "Spain",
+  "Greece",
+  "Carthage",
+  "Germany",
+  "SpongeBob",
+  "Mario",
+  "Dutch canals",
+  "European bridges",
+  "pixelated Mario",
+  "anime girl",
+  "cathedral",
+  "medieval battle",
+  "SARACEN",
+  "HEATHENS",
+  "CIGANI",
+  "CIGÁNYOK",
+  "TIGANI",
+  "ZIGEUNER",
+  "GJUPCI",
+  "GITANO",
+  "Γύφτος",
+  "Pharaoh’s Curse",
+  "watermelon",
+  "chemistry lecture",
+  "tanker truck",
+  "Christian manga",
+  "quill-writing hand",
+  "topographical map",
+  "pixel art",
+  "Simpsons character",
+  "animal sacrifice",
+  "desert",
+  "religious imagery",
+  "historical commentary",
+  "absurdist aesthetic",
+  "cultural juxtaposition",
+  "historical layering",
+  "satirical visual interlude",
+  "semantic ambiguity",
+  "geographic ambiguity",
+  "historical misreading",
+  "scholarly analysis",
+  "linguistic diversity",
+  "Adriatic origins",
+  "national flags",
+  "symbolic exchange",
+  "mythic danger",
+  "cultural identity",
+  "existential question",
+  "migration arrows",
+  "historical geopolitics",
+  "academic frameworks",
+  "systemic exclusion",
+  "visual montage",
+  "narrated commentary",
+  "historical photos",
+  "modern parade",
+  "EU flags",
+  "cultural representation",
+  "identity weaponization",
+  "modern political symbolism",
+  "lived reality",
+  "historical invisibility",
+  "scholarly attention",
+  "cultural contributions",
+  "archetypes of danger",
+  "criminality",
+  "historical narratives",
+  "misinterpretation",
+  "human cost",
+  "semantic redefinition",
+  "geographic redefinition",
+  "historical erasure",
+  "political manipulation",
+  "ethnic erasure",
+  "systemic marginalization",
+  "identity erasure",
+  "societal stigma",
+  "cultural continuity",
+  "historical roots",
+  "fragmentation",
+  "unifying narrative",
+  "academic imagery",
+  "historical record",
+  "mythical connection",
+  "national identity",
+  "cultural ties",
+  "Balkans and Mediterranean",
+  "satirical commentary",
+  "absurdity",
+  "censorship",
+  "self-referential nod",
+  "tonal pivot",
+  "comedy relief",
+  "thematic device",
+  "distorted history",
+  "pop culture",
+  "historical imagery",
+  "reality and fantasy",
+  "blurred lines",
+  "modernity and ancient themes",
+  "spiritual desolation",
+  "grounded human moment",
+  "reverent shot",
+  "historical desolation",
+  "political critique",
+  "language and ideology",
+  "modern targeting",
+  "historical misclassification",
+  "geopolitical tensions",
+  "historical misreading",
+  "identity as product of misreading",
+  "empires and new identities",
+  "collapse of empires",
+  "identity as other",
+  "academic dismissal",
+  "scholarly neglect",
+  "historical invisibility",
+  "cultural erasure",
+  "visual contrast",
+  "modern exclusion",
+  "historical exclusion",
+  "identity as weaponized",
+  "cultural marginalization",
+  "historical categorization",
+  "identity as erased",
+  "cultural appropriation",
+  "identity as redefined",
+  "semantic redefinition",
+  "geographic redefinition",
+  "historical misrepresentation",
+  "cultural misrepresentation",
+  "identity as misunderstood",
+  "historical mistranslation",
+  "cultural mistranslation",
+  "identity as misrepresented",
+  "historical distortion",
+  "cultural distortion",
+  "identity as distorted",
+  "historical censorship",
+  "cultural censorship",
+  "identity as censored",
+  "historical erasure",
+  "cultural erasure",
+  "identity as erased",
+  "historical exclusion",
+  "cultural exclusion",
+  "identity as excluded",
+  "historical misclassification",
+  "cultural misclassification",
+  "identity as misclassified",
+  "historical misreading",
+  "cultural misreading",
+  "identity as misread",
+  "historical misinterpretation",
+  "cultural misinterpretation",
+  "identity as misinterpreted",
+  "historical misrepresentation",
+  "cultural misrepresentation",
+  "identity as misrepresented",
+  "historical mistranslation",
+  "cultural mistranslation",
+  "identity as mistranslated",
+  "historical distortion",
+  "cultural distortion",
+  "identity as distorted",
+  "historical censorship",
+  "cultural censorship",
+  "identity as censored",
+  "historical erasure",
+  "cultural erasure",
+  "identity as erased",
+  "historical exclusion",
+  "cultural exclusion",
+  "identity as excluded",
+  "historical misclassification",
+  "cultural misclassification",
+  "identity as misclassified",
+  "historical misreading",
+  "cultural misreading",
+  "identity as misread",
+  "historical misinterpretation",
+  "cultural misinterpretation",
+  "identity as misinterpreted",
+  "historical misrepresentation",
+  "cultural misrepresentation",
+  "identity as misrepresented",
+  "historical mistranslation",
+  "cultural mistranslation",
+  "identity as mistranslated",
+  "historical distortion",
+  "cultural distortion",
+  "identity as distorted",
+  "historical censorship",
+  "cultural censorship",
+  "identity as censored",
+  "historical erasure",
+  "cultural erasure",
+  "identity as erased",
+  "historical exclusion",
+  "cultural exclusion",
+  "identity as excluded",
+  "historical misclassification",
+  "cultural misclassification",
+  "identity as misclassified",
+  "historical misreading",
+  "cultural misreading",
+  "identity as misread",
+  "historical misinterpretation",
+  "cultural misinterpretation",
+  "identity as misinterpreted",
+  "historical misrepresentation",
+  "cultural misrepresentation",
+  "identity as misrepresented",
+  "historical mistranslation",
+  "cultural mistranslation",
+  "identity as mistranslated",
+  "historical distortion",
+  "cultural distortion",
+  "identity as distorted",
+  "historical censorship",
+  "cultural censorship",
+  "identity as censored",
+  "historical erasure",
+  "cultural erasure",
+  "identity as erased",
+  "historical exclusion",
+  "cultural exclusion",
+  "identity as excluded",
+  "historical misclassification",
+  "cultural misclassification",
+  "identity as misclassified",
+  "historical misreading",
+  "cultural misreading",
+  "identity as misread",
+  "historical misinterpretation",
+  "cultural misinterpretation",
+  "identity as misinterpreted",
+  "historical misrepresentation",
+  "cultural misrepresentation",
+  "identity as misrepresented",
+  "historical mistranslation",
+  "cultural mistranslation",
+  "identity as mistranslated",
+  "historical distortion",
+  "cultural distortion",
+  "identity as distorted",
+  "historical censorship",
+  "cultural censorship",
+  "identity as censored",
+  "historical erasure",
+  "cultural erasure",
+  "identity as erased",
+  "historical exclusion",
+  "cultural exclusion",
+  "identity as excluded",
+  "historical misclassification",
+  "cultural misclassification",
+  "identity as misclassified",
+  "historical misreading",
+  "cultural misreading",
+  "identity as misread",
+  "historical misinterpretation",
+  "cultural misinterpretation",
+  "identity as misinterpreted",
+  "historical misrepresentation",
+  "cultural misrepresentation",
+  "identity as misrepresented",
+  "historical mistranslation",
+  "cultural mistranslation",
+  "identity as mistranslated",
+  "historical distortion",
+  "cultural distortion",
+  "identity as distorted",
+  "historical censorship",
+  "cultural censorship",
+  "identity as censored",
+  "historical erasure",
+  "cultural erasure",
+  "identity as erased",
+  "historical exclusion",
+  "cultural exclusion",
+  "identity as excluded",
+  "histor
+2026-10-22 12:27:46,257 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: [
+  "Romani people",
+  "German-speaking territories",
+  "Nazi rule",
+  "Otto von Bismarck",
+  "Central Office for Gypsy Affairs",
+  "Alfred Dillmann",
+  "Zigeunergeschmeiss",
+  "Nuremberg Laws",
+  "Gestapo",
+  "Ludwig Horvath",
+  "Helene Baranks Huber",
+  "Maria Bihari",
+  "Auschwitz-Birkenau",
+  "Communism",
+  "Bulgaria",
+  "Process of Revival",
+  "Nicolae Ceaușescu",
+  "Romania",
+  "EUROPA",
+  "France 24",
+  "Smurfs",
+  "Hungary",
+  "Sinti and Roma",
+  "Jews",
+  "British Pathé",
+  "PATHE",
+  "HISTORY",
+  "PlanetRadiocity.com",
+  "Radio City",
+  "India",
+  "3 July 2001",
+  "Hindi",
+  "English",
+  "May 2008",
+  "Zyklon B",
+  "striped uniforms",
+  "barbed wire",
+  "Mengele",
+  "concentration camps",
+  "displaced victims",
+  "Simpsons",
+  "IT giant",
+  "Roma woman",
+  "cultural resilience",
+  "systemic marginalization",
+  "state repression",
+  "economic collapse",
+  "cultural erasure",
+  "human dignity",
+  "resistance",
+  "identity assertion",
+  "media distortion",
+  "power structures",
+  "far-right rally",
+  "urban decay",
+  "meme overlay",
+  "source",
+  "I made it up",
+  "forced repatriation",
+  "asylum laws",
+  "illegal work",
+  "state confiscation",
+  "economic success",
+  "systemic injustice",
+  "visual and political juxtaposition",
+  "documentary tone",
+  "ideological narrative",
+  "historical memory",
+  "historical reckoning",
+  "trauma",
+  "enduring suffering",
+  "loss",
+  "collective protest",
+  "emotional catharsis",
+  "melancholy",
+  "resilience",
+  "rural decay",
+  "care amid loss",
+  "quiet resilience",
+  "institutional exclusion",
+  "state-sanctioned punishment",
+  "cultural resistance",
+  "modern urban frameworks",
+  "bureaucratic racialization",
+  "racial categorization",
+  "surveillance",
+  "dehumanizing signage",
+  "state-sanctioned discrimination",
+  "systemic persecution",
+  "forced displacement",
+  "institutionalized segregation",
+  "mass mobilization",
+  "deportation",
+  "mass suffering",
+  "systemic repression",
+  "authoritarian regimes",
+  "ideological confrontation",
+  "historical reckoning",
+  "symbolic transition",
+  "ideological reflection",
+  "cultural endurance",
+  "state-imposed erasure",
+  "family separation",
+  "assimilation",
+  "Muslim Gypsies",
+  "400,000",
+  "1984–1985",
+  "1935",
+  "1899",
+  "1942",
+  "1945",
+  "500,000–1,500,000",
+  "1985",
+  "2007",
+  "Zigeuner-Buch",
+  "Gypsy Book",
+  "striped uniforms",
+  "Zyklon B containers",
+  "stripped belongings",
+  "wooden trailers",
+  "fire pits",
+  "horses",
+  "wagons",
+  "hooded figures",
+  "Mengele’s image",
+  "concentration camp aerials",
+  "displaced victims in a barren field",
+  "cuffed individual in a vibrant setting",
+  "muscular superhero",
+  "bald man in a suit",
+  "bleeding and restrained",
+  "young girl facing a chaotic crowd",
+  "looming cartoon figure",
+  "animated *Simpsons* crowd marching with torches",
+  "determined faces",
+  "Homer Simpson",
+  "crime scene tape",
+  "man at a piano",
+  "I’m gonna pretend I didn’t see that",
+  "man holding a child in a dilapidated rural setting",
+  "dancing boy in front of a satellite-dish-covered building",
+  "woman finding a job with an IT giant",
+  "Roma woman asserting identity at a rally",
+  "animated character symbolizing cultural endurance",
+  "animated sequence introducing a stylized female figure",
+  "clock and the word 'COMMUNISM'",
+  "animated bald man clasping hands before a red-haired figure",
+  "sepia street",
+  "stylized animation",
+  "documentary tone",
+  "ideological interpretation",
+  "ideological narrative",
+  "historical documentation",
+  "historical context",
+  "state control",
+  "systemic hardship",
+  "media distortion",
+  "power structures",
+  "far-right rally",
+  "cluttered urban decay",
+  "cultural resistance",
+  "modern urban frameworks",
+  "state-sanctioned discrimination",
+  "systemic persecution",
+  "forced displacement",
+  "institutionalized segregation",
+  "mass mobilization",
+  "deportation",
+  "mass suffering",
+  "systemic repression",
+  "authoritarian regimes",
+  "ideological confrontation",
+  "historical reckoning",
+  "symbolic transition",
+  "ideological reflection",
+  "cultural endurance",
+  "state-imposed erasure",
+  "family separation",
+  "assimilation",
+  "Muslim Gypsies",
+  "400,000",
+  "1984–1985",
+  "1935",
+  "1899",
+  "1942",
+  "1945",
+  "500,000–1,500,000",
+  "1985",
+  "2007",
+  "Zigeuner-Buch",
+  "Gypsy Book",
+  "striped uniforms",
+  "Zyklon B containers",
+  "stripped belongings",
+  "wooden trailers",
+  "fire pits",
+  "horses",
+  "wagons",
+  "hooded figures",
+  "Mengele’s image",
+  "concentration camp aerials",
+  "displaced victims in a barren field",
+  "cuffed individual in a vibrant setting",
+  "muscular superhero",
+  "bald man in a suit",
+  "bleeding and restrained",
+  "young girl facing a chaotic crowd",
+  "looming cartoon figure",
+  "animated *Simpsons* crowd marching with torches",
+  "determined faces",
+  "Homer Simpson",
+  "crime scene tape",
+  "man at a piano",
+  "I’m gonna pretend I didn’t see that",
+  "man holding a child in a dilapidated rural setting",
+  "dancing boy in front of a satellite-dish-covered building",
+  "woman finding a job with an IT giant",
+  "Roma woman asserting identity at a rally",
+  "animated character symbolizing cultural endurance",
+  "animated sequence introducing a stylized female figure",
+  "clock and the word 'COMMUNISM'",
+  "animated bald man clasping hands before a red-haired figure",
+  "sepia street",
+  "stylized animation",
+  "documentary tone",
+  "ideological interpretation",
+  "ideological narrative",
+  "historical documentation",
+  "historical context",
+  "state control",
+  "systemic hardship",
+  "media distortion",
+  "power structures",
+  "far-right rally",
+  "cluttered urban decay",
+  "cultural resistance",
+  "modern urban frameworks",
+  "state-sanctioned discrimination",
+  "systemic persecution",
+  "forced displacement",
+  "institutionalized segregation",
+  "mass mobilization",
+  "deportation",
+  "mass suffering",
+  "systemic repression",
+  "authoritarian regimes",
+  "ideological confrontation",
+  "historical reckoning",
+  "symbolic transition",
+  "ideological reflection",
+  "cultural endurance",
+  "state-imposed erasure",
+  "family separation",
+  "assimilation",
+  "Muslim Gypsies",
+  "400,000",
+  "1984–1985",
+  "1935",
+  "1899",
+  "1942",
+  "1945",
+  "500,000–1,500,000",
+  "1985",
+  "2007",
+  "Zigeuner-Buch",
+  "Gypsy Book",
+  "striped uniforms",
+  "Zyklon B containers",
+  "stripped belongings",
+  "wooden trailers",
+  "fire pits",
+  "horses",
+  "wagons",
+  "hooded figures",
+  "Mengele’s image",
+  "concentration camp aerials",
+  "displaced victims in a barren field",
+  "cuffed individual in a vibrant setting",
+  "muscular superhero",
+  "bald man in a suit",
+  "bleeding and restrained",
+  "young girl facing a chaotic crowd",
+  "looming cartoon figure",
+  "animated *Simpsons* crowd marching with torches",
+  "determined faces",
+NER:  75%|███████▌  | 3/4 [02:47<01:07, 67.61s/it]2026-10-22 12:29:19,626 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: [
+  "Romani people",
+  "German-speaking territories",
+  "Nazi rule",
+  "Otto von Bismarck",
+  "Alfred Dillmann",
+  "Central Office for Gypsy Affairs",
+  "Zigeuner-Buch",
+  "Nuremberg Laws",
+  "Gestapo",
+  "Ludwig Horvath",
+  "Helene Baranks Huber",
+  "Maria Bihari",
+  "Auschwitz-Birkenau",
+  "British Pathé",
+  "Communism",
+  "Bulgaria",
+  "Process of Revival",
+  "Nicolae Ceaușescu",
+  "Romania",
+  "EUROPA",
+  "France 24",
+  "Smurfs",
+  "Hungary",
+  "Sinti and Roma",
+  "Jews",
+  "Zyklon B",
+  "Mengele",
+  "Simpsons",
+  "IT giant",
+  "Roma woman",
+  "Romanians",
+  "forced repatriation",
+  "state-sanctioned discrimination",
+  "systemic persecution",
+  "cultural erasure",
+  "institutional repression",
+  "forced assimilation",
+  "state confiscation",
+  "economic exclusion",
+  "historical memory",
+  "resilience",
+  "collective protest",
+  "marginalized communities",
+  "systemic hardship",
+  "state control",
+  "displacement",
+  "ideological confrontation",
+  "historical reckoning",
+  "trauma",
+  "loss",
+  "care",
+  "denial",
+  "media distortion",
+  "power structures",
+  "cultural resistance",
+  "urban decay",
+  "far-right rally",
+  "archival footage",
+  "documentary tone",
+  "symbolic transition",
+  "ideological narrative",
+  "visual juxtaposition",
+  "human dignity",
+  "quiet resilience",
+  "historical context",
+  "state power",
+  "bureaucratic racialization",
+  "public stigma",
+  "state surveillance",
+  "forced displacement",
+  "institutionalized segregation",
+  "mass mobilization",
+  "deportation",
+  "mass suffering",
+  "systemic repression",
+  "authoritarian regimes",
+  "state control",
+  "judicial mechanisms",
+  "ideological reflection",
+  "cultural continuity",
+  "personal testimony",
+  "political legacy",
+  "tension",
+  "symbolism",
+  "emotional catharsis",
+  "melancholy",
+  "rural decay",
+  "marginalized lives",
+  "systemic struggle",
+  "forced labor",
+  "economic collapse",
+  "cultural endurance",
+  "identity assertion",
+  "media mockery",
+  "historical injustice",
+  "institutional accountability",
+  "state-sanctioned punishment",
+  "economic success",
+  "systemic injustice",
+  "state-imposed erasure",
+  "cultural rupture",
+  "urban frameworks",
+  "modern urban settings",
+  "historical distortion",
+  "media manipulation",
+  "historical narrative",
+  "documentary interpretation",
+  "visual storytelling",
+  "archival documentation",
+  "historical documentation",
+  "visual critique",
+  "symbolic representation",
+  "narrative construction",
+  "historical memory",
+  "collective trauma",
+  "historical reckoning",
+  "cultural preservation",
+  "resistance",
+  "human agency",
+  "historical context",
+  "historical continuity",
+  "historical distortion",
+  "historical documentation",
+  "historical interpretation",
+  "historical memory",
+  "historical narrative",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory",
+  "historical trauma",
+  "historical justice",
+  "historical responsibility",
+  "historical accountability",
+  "historical erasure",
+  "historical resilience",
+  "historical resistance",
+  "historical continuity",
+  "historical rupture",
+  "historical symbolism",
+  "historical representation",
+  "historical critique",
+  "historical interpretation",
+  "historical documentation",
+  "historical memory
+NER: 100%|██████████| 4/4 [03:41<00:00, 62.25s/it]NER: 100%|██████████| 4/4 [03:41<00:00, 55.36s/it]
+Extracting triples:   0%|          | 0/4 [00:00<?, ?it/s]Extracting triples:  25%|██▌       | 1/4 [00:19<00:58, 19.35s/it]2026-10-22 12:31:06,288 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Romani people", "marginalized in", "German-speaking territories"],
+    ["Romani people", "persecuted under", "Nazi rule"],
+    ["Otto von Bismarck", "associated with", "state-building and militarization"],
+    ["Alfred Dillmann", "established", "Central Office for Gypsy Affairs"],
+    ["Central Office for Gypsy Affairs", "created in", "1899"],
+    ["Central Office for Gypsy Affairs", "located in", "Bavaria"],
+    ["Zigeunergeschmeiss", "type of", "dehumanizing signage"],
+    ["Zigeuner-Buch", "type of", "bureaucratic racial classification document"],
+    ["Nuremberg Laws", "enacted in", "1935"],
+    ["Nuremberg Laws", "targeted", "Sinti and Roma"],
+    ["Nuremberg Laws", "targeted", "Jews"],
+    ["Gestapo", "documented", "Ludwig Horvath"],
+    ["Gestapo", "documented", "Helene Baranks Huber"],
+    ["Gestapo", "documented", "Maria Bihari"],
+    ["Gestapo", "operated under", "Nazi rule"],
+    ["Romani people", "deported to", "Auschwitz-Birkenau"],
+    ["Auschwitz-Birkenau", "deportation occurred in", "1942"],
+    ["Communism", "associated with", "ideological narrative"],
+    ["Bulgaria", "implemented", "Process of Revival"],
+    ["Process of Revival", "occurred in", "1984\u20131985"],
+    ["Process of Revival", "resulted in", "assimilation of 400,000 Muslim Gypsies"],
+    ["Nicolae Ceau\u0219escu", "associated with", "Romania"],
+    ["Romania", "acknowledged responsibility for", "anti-Romani pogroms"],
+    ["Romania", "acknowledged in", "2007"],
+    ["EUROPA", "associated with", "expulsion of Romanians and Roma"],
+    ["France 24", "covered", "cultural resilience of Roma"],
+    ["Smurfs", "used in", "visual critique of power structures"],
+    ["Hungary", "associated with", "far-right rally"],
+    ["British Path\u00e9", "produced", "archival footage"],
+    ["PATHE", "produced", "archival footage"],
+    ["HISTORY", "produced", "archival footage"],
+    ["Romani people", "subject to", "forced repatriation"],
+    ["Romani people", "subject to", "institutional repression"],
+    ["Romani people", "subject to", "economic exclusion"],
+    ["Romani people", "subject to", "state confiscation of savings"],
+    ["Romani people", "subject to", "systemic marginalization"],
+    ["Romani people", "subject to", "cultural erasure"],
+    ["Romani people", "asserted identity at", "rally"],
+    ["Romani people", "resisted assimilation in", "Bulgaria"],
+    ["Romani people", "demonstrated resilience through", "cultural continuity"],
+    ["Romani people", "demonstrated resilience through", "personal testimony"],
+    ["Romani people", "demonstrated resilience through", "organized protest"],
+    ["Romani people", "demonstrated resilience through", "cultural endurance"],
+    ["Romani people", "demonstrated resilience through", "identity assertion"],
+    ["Romani people", "demonstrated resilience through", "human dignity"],
+    ["Romani people", "demonstrated resilience through", "quiet resistance"],
+    ["Romani people", "demonstrated resilience through", "community gathering"],
+    ["Romani people", "demonstrated resilience through", "cultural expression"],
+    ["Romani people", "demonstrated resilience through", "symbolic representation"],
+    ["Romani people", "demonstrated resilience through", "visual storytelling"],
+    ["Romani people", "demonstrated resilience through", "documentary framing"],
+    ["Romani people", "demonstrated resilience through", "archival preservation"],
+    ["Romani people", "demonstrated resilience through", "media critique"],
+    ["Romani people", "demonstrated resilience through", "historical memory"],
+    ["Romani people", "demonstrated resilience through", "collective trauma"],
+    ["Romani people", "demonstrated resilience through", "survivor narratives"],
+    ["Romani people", "demonstrated resilience through", "cultural symbolism"],
+    ["Romani people", "demonstrated resilience through", "political legacy"],
+    ["Romani people", "demonstrated resilience through", "institutional reckoning"],
+    ["Romani people", "demonstrated resilience through", "historical documentation"],
+    ["Romani people", "demonstrated resilience through", "visual juxtaposition"],
+    ["Romani people", "demonstrated resilience through", "surrealism"],
+    ["Romani people", "demonstrated resilience through", "animation"],
+    ["Romani people", "demonstrated resilience through", "documentary tone"],
+    ["Romani people", "demonstrated resilience through", "historical framing"],
+    ["Romani people", "demonstrated resilience through", "narrative rupture"],
+    ["Romani people", "demonstrated resilience through", "symbolic layering"],
+    ["Romani people", "demonstrated resilience through", "emotional catharsis"],
+    ["Romani people", "demonstrated resilience through", "resilience in rural decay"],
+    ["Romani people", "demonstrated resilience through", "care amid loss"],
+    ["Romani people", "demonstrated resilience through", "enduring suffering"],
+    ["Romani people", "demonstrated resilience through", "historical suffering"],
+    ["Romani people", "demonstrated resilience through", "trauma"],
+    ["Romani people", "demonstrated resilience through", "loss"],
+    ["Romani people", "demonstrated resilience through", "survivorship"],
+    ["Romani people", "demonstrated resilience through", "cultural memory"],
+    ["Romani people", "demonstrated resilience through", "collective identity"],
+    ["Romani people", "demonstrated resilience through", "historical continuity"],
+    ["Romani people", "demonstrated resilience through", "resilience amid adversity"],
+    ["Romani people", "demonstrated resilience through", "quiet endurance"],
+    ["Romani people", "demonstrated resilience through", "cultural persistence"],
+    ["Romani people", "demonstrated resilience through", "resistance to erasure"],
+    ["Romani people", "demonstrated resilience through", "cultural assertion"],
+    ["Romani people", "demonstrated resilience through", "community solidarity"],
+    ["Romani people", "demonstrated resilience through", "historical awareness"],
+    ["Romani people", "demonstrated resilience through", "cultural expression"],
+    ["Romani people", "demonstrated resilience through", "visual storytelling"],
+    ["Romani people", "demonstrated resilience through", "documentary framing"],
+    ["Romani people", "demonstrated resilience through", "archival preservation"],
+    ["Romani people", "demonstrated resilience through", "media critique"],
+    ["Romani people", "demonstrated resilience through", "historical memory"],
+    ["Romani people", "demonstrated resilience through", "collective trauma"],
+    ["Romani people", "demonstrated resilience through", "survivor narratives"],
+    ["Romani people", "demonstrated resilience through", "cultural symbolism"],
+    ["Romani people", "demonstrated resilience through", "political legacy"],
+    ["Romani people", "demonstrated resilience through", "institutional reckoning"],
+    ["Romani people", "demonstrated resilience through", "historical documentation"],
+    ["Romani people", "demonstrated resilience through", "visual juxtaposition"],
+    ["Romani people", "demonstrated resilience through", "surrealism"],
+    ["Romani people", "demonstrated resilience through", "animation"],
+    ["Romani people", "demonstrated resilience through", "documentary tone"],
+    ["Romani people", "demonstrated resilience through", "historical framing"],
+    ["Romani people", "demonstrated resilience through", "narrative rupture"],
+    ["Romani people", "demonstrated resilience through", "symbolic layering"],
+    ["Romani people", "demonstrated resilience through", "emotional catharsis"],
+    ["Romani people", "demonstrated resilience through", "resilience in rural decay"],
+    ["Romani people", "demonstrated resilience through", "care amid loss"],
+    ["Romani people", "demonstrated resilience through", "enduring suffering"],
+    ["Romani people", "demonstrated resilience through",
+2026-10-22 12:32:07,243 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Tiganiada", "authored by", "Ion Budai-Deleanu"],
+    ["Tiganiada", "depicts", "Gypsy-led armies"],
+    ["Tiganiada", "features", "Vlad Cepish"],
+    ["Tiganiada", "is", "historical record"],
+    ["Tiganiada", "is", "cultural myth"],
+    ["Gypsy labor", "used by", "Romanian rulers"],
+    ["Gypsy labor", "used by", "Moldavian rulers"],
+    ["Gypsy labor", "used by", "Wallachian rulers"],
+    ["Gypsy warriors", "used by", "Moldavian rulers"],
+    ["Gypsy warriors", "used by", "Wallachian rulers"],
+    ["Gypsy-led armies", "resisted", "Ottoman expansion"],
+    ["Romanian rulers", "used", "Gypsy slave labor"],
+    ["Romanian rulers", "used", "Gypsy warriors"],
+    ["Imperial Watch", "demands payment or forfeiture from", "unseen individual"],
+    ["1830 firman", "issued by", "Sultan Mahmud II"],
+    ["1830 firman", "freed", "white slaves"],
+    ["Russo-Ottoman War", "involved", "Tsar Nicolas I"],
+    ["Russo-Ottoman War", "involved", "Sultan Mahmud II"],
+    ["Alexandru Ghica", "involved in", "Roma emancipation"],
+    ["Article XIII", "abolished", "slavery"],
+    ["Romanian-EU flags", "united", "in symbolism of reconciliation"],
+    ["Romania", "has", "national identity"],
+    ["Romania", "has", "historical critique"],
+    ["Romania", "has", "institutional legacy"],
+    ["Wallachia", "abolished slavery", "1844\u20131856"],
+    ["Moldavia", "abolished slavery", "1844\u20131856"],
+    ["Spinning Mule", "used in", "cotton industry"],
+    ["Cotton Gin", "used in", "cotton industry"],
+    ["Gypsy enslavement", "condemned", "in archival footage"],
+    ["V-2 rocket casing", "symbolizes", "innocence vs. war"],
+    ["THE DEVOURING CHAPTER VI", "opens over", "pointillist park scene"],
+    ["THE DEVOURING CHAPTER VI", "set in", "Late XIX\u2013Mid XX"],
+    ["Christian manga", "censored", "in satirical gag"],
+    ["ENTERTAINMENT", "labeled", "domestic scenes"],
+    ["falling dollar bills", "symbolize", "economic power shifts"],
+    ["ITS OVER", "symbolizes", "geopolitical power shifts"],
+    ["symbolic imagery", "used in", "satirical critique"],
+    ["satirical critique", "framed", "Gypsy role as martial force and cultural symbol"],
+    ["visual montage", "blends", "sepia-toned photographs"],
+    ["visual montage", "blends", "historical paintings"],
+    ["visual montage", "blends", "CGI animations"],
+    ["visual montage", "depicts", "15th-century Eastern European warfare"],
+    ["visual montage", "depicts", "Gypsy labor under Romanian rulers post-1471"],
+    ["visual metaphors", "include", "falling currency"],
+    ["visual metaphors", "include", "Ottoman maps"],
+    ["video game scene", "features", "armored character demanding payment or imprisonment"],
+    ["abstract icon-based equations", "encode", "social or economic value"],
+    ["person", "equals", "pig"],
+    ["male figures", "equals", "bull"],
+    ["couples", "equals", "barrels"],
+    ["historical procession painting", "depicts", "noble leading troops"],
+    ["folk dance painting", "features", "sword-wielding dancer"],
+    ["manual tilling", "set amid", "yellow blooms"],
+    ["19th-century rural village painting", "dated", "1842"],
+    ["19th-century political gatherings", "symbolize", "institutionalization of national sovereignty"],
+    ["constitutional rally", "symbolizes", "consolidation of political power"],
+    ["religious imagery", "interplays with", "rural imagery"],
+    ["diplomatic meetings", "highlight", "interplay between faith, community, and statecraft"],
+    ["cultural heritage", "persists through", "ritual and tradition"],
+    ["nomadism", "framed as", "resilient form of cultural adaptation"],
+    ["migration", "evokes", "persistence of Gypsy heritage"],
+    ["THE DEVOURING", "signals", "narrative pivot toward danger or mystery"],
+    ["title card", "declares", "End of Slavery Chapter V"],
+    ["title card", "transitions to", "mid-19th century factory"],
+    ["transatlantic history", "anchored in", "colonial ship sailing toward Rio Janeiro and Oranje"],
+    ["colonial ship", "sailing toward", "Rio Janeiro and Oranje"],
+    ["historical unrest", "depicted in", "surreal video game setting"],
+    ["fragmented legacy", "symbolized by", "digital abstraction"],
+    ["political mobilization", "led to", "institutionalization of national sovereignty"],
+    ["legal frameworks", "shaped by", "political mobilization"],
+    ["social change", "resulted from", "political mobilization"],
+    ["cultural adaptation", "linked to", "nomadism"],
+    ["survival", "framed as", "nomadic heritage"],
+    ["systemic violence", "framed as", "historical trauma"],
+    ["historical trauma", "linked to", "systemic violence"],
+    ["nomadic heritage", "linked to", "cultural adaptation"],
+    ["candle-lit ceremonies", "represent", "cultural continuity"],
+    ["tambourine-playing figures", "represent", "cultural continuity"],
+    ["desert caravan", "shifts to", "man confronting a bear"],
+    ["card-shuffling", "follows", "man confronting a bear"],
+    ["elderly woman’s portrait", "concludes", "folklore sequence"],
+    ["19th-century rural village", "overlaid with", "text detailing abolition of slavery"],
+    ["historical pivot", "from", "myth to historical record"],
+    ["emancipation", "framed as", "political and cultural turning point"],
+    ["historical record", "contrasted with", "myth"],
+    ["historical record", "framed as", "political and cultural turning point"],
+    ["myth", "contrasted with", "historical record"],
+    ["myth", "framed as", "historical pivot"],
+    ["political power", "shaped by", "legal frameworks"],
+    ["social change", "framed as", "political mobilization"],
+    ["legal frameworks", "framed as", "political mobilization"],
+    ["national identity", "framed as", "contested site of memory and justice"],
+    ["national narratives", "framed as", "contested sites of memory and justice"],
+    ["historical critique", "framed as", "moral and political reckoning"],
+    ["institutional legacy", "framed as", "fragmented and contested"],
+    ["emancipation", "framed as", "ongoing struggle for recognition and rights"],
+    ["Gypsy enslavement", "condemned", "in black-and-white archival footage"],
+    ["Gypsy enslavement", "symbolized by", "chained ankles"],
+    ["Gypsy enslavement", "symbolized by", "kneeling figure struck by stick"],
+    ["Gypsy enslavement", "symbolized by", "subtitled text 'We want to return, lord...'"],
+    ["Gypsy enslavement", "symbolized by", "V-2 rocket casing"],
+    ["Gypsy enslavement", "symbolized by", "cuffed figure in snowy field"],
+    ["Gypsy enslavement", "symbolized by", "priest kneeling beside fearful woman"],
+    ["Gypsy enslavement", "symbolized by", "river city illustration"],
+    ["Gypsy enslavement", "symbolized by", "communal life"],
+    ["Gypsy enslavement", "symbolized by", "political negotiation"],
+    ["Gypsy enslavement", "symbolized by", "massacre"],
+    ["Gypsy enslavement", "symbolized by", "colonial ship"],
+    ["Gypsy enslavement", "symbolized by", "green hills"],
+    ["Gypsy enslavement", "symbolized by", "tranquil aerial view"],
+    ["Gypsy enslavement", "symbolized by", "historical trauma"],
+    ["Gypsy enslavement", "symbolized by", "systemic violence"],
+    ["Gypsy enslavement", "symbolized by", "commodification of history"],
+    ["Gypsy enslavement", "symbolized by", "cultural identity"],
+    ["Gypsy enslavement", "symbolized by", "agency"],
+    ["Gypsy enslavement", "symbolized by", "mythmaking"],
+    ["Gypsy enslavement", "symbolized by", "satirical critique"],
+    ["Gypsy enslavement", "symbolized
+2026-10-22 12:32:07,328 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Gypsy", "is a non-slandrous term for", "Roma/Romani"],
+    ["Roma/Romani", "are located in", "Balkans"],
+    ["Roma/Romani", "are subject to", "ethnic hatred"],
+    ["Roma/Romani", "experience", "systemic marginalization"],
+    ["Roma/Romani", "experience", "identity erasure"],
+    ["Roma/Romani", "face", "societal stigma"],
+    ["Roma/Romani", "have", "cultural continuity"],
+    ["Roma/Romani", "are studied in", "scientific experimentation"],
+    ["Roma/Romani", "are categorized as", "other"],
+    ["Roma/Romani", "are portrayed as", "danger"],
+    ["Roma/Romani", "are portrayed as", "criminality"],
+    ["Roma/Romani", "are misidentified as", "Seljuk Turks"],
+    ["Roma/Romani", "are misidentified as", "Turks"],
+    ["Roma/Romani", "are misidentified as", "foreign"],
+    ["Roma/Romani", "are misidentified as", "Egyptian"],
+    ["Roma/Romani", "are misidentified as", "non-Christian"],
+    ["Roma/Romani", "are misclassified as", "non-ethnic group"],
+    ["Roma/Romani", "have origins since", "13th century"],
+    ["Roma/Romani", "migrated from", "Middle East/South Asia"],
+    ["Roma/Romani", "migrated to", "Europe"],
+    ["Roma/Romani", "were first misidentified by", "Byzantines"],
+    ["Roma/Romani", "were labeled by", "victors"],
+    ["Roma/Romani", "were categorized as", "SARACEN = HEATHENS"],
+    ["Roma/Romani", "were categorized as", "foreign and dangerous"],
+    ["Roma/Romani", "were categorized as", "threat to dominant order"],
+    ["Roma/Romani", "were excluded from", "historical record"],
+    ["Roma/Romani", "were excluded from", "scholarly attention"],
+    ["Roma/Romani", "were excluded from", "academic frameworks"],
+    ["Roma/Romani", "were studied as", "subject of exclusion"],
+    ["Roma/Romani", "were studied as", "scientific subject"],
+    ["Roma/Romani", "were studied as", "cultural other"],
+    ["Roma/Romani", "were studied as", "historical anomaly"],
+    ["Roma/Romani", "were studied as", "geopolitical byproduct"],
+    ["Roma/Romani", "were studied as", "historical misreading"],
+    ["Roma/Romani", "were studied as", "historical misclassification"],
+    ["Roma/Romani", "were studied as", "historical erasure"],
+    ["Roma/Romani", "were studied as", "historical marginalization"],
+    ["Roma/Romani", "were studied as", "historical invisibility"],
+    ["Roma/Romani", "were studied as", "historical non-recognition"],
+    ["Roma/Romani", "were studied as", "historical non-documentation"],
+    ["Roma/Romani", "were studied as", "historical non-preservation"],
+    ["Roma/Romani", "were studied as", "historical non-memory"],
+    ["Roma/Romani", "were studied as", "historical non-justice"],
+    ["Roma/Romani", "were studied as", "historical non-truth"],
+    ["Roma/Romani", "were studied as", "historical non-accuracy"],
+    ["Roma/Romani", "were studied as", "historical non-narrative"],
+    ["Roma/Romani", "were studied as", "historical non-interpretation"],
+    ["Roma/Romani", "were studied as", "historical non-context"],
+    ["Roma/Romani", "were studied as", "historical non-perspective"],
+    ["Roma/Romani", "were studied as", "historical non-analysis"],
+    ["Roma/Romani", "were studied as", "historical non-criticism"],
+    ["Roma/Romani", "were studied as", "historical non-commentary"],
+    ["Roma/Romani", "were studied as", "historical non-reflection"],
+    ["Roma/Romani", "were studied as", "historical non-insight"],
+    ["Roma/Romani", "were studied as", "historical non-understanding"],
+    ["Roma/Romani", "were studied as", "historical non-awareness"],
+    ["Roma/Romani", "were studied as", "historical non-consciousness"],
+    ["Roma/Romani", "were studied as", "historical non-education"],
+    ["Roma/Romani", "were studied as", "historical non-literacy"],
+    ["Roma/Romani", "were studied as", "historical non-learning"],
+    ["Roma/Romani", "were studied as", "historical non-inquiry"],
+    ["Roma/Romani", "were studied as", "historical non-research"],
+    ["Roma/Romani", "were studied as", "historical non-scholarship"],
+    ["Roma/Romani", "were studied as", "historical non-study"],
+    ["Roma/Romani", "were studied as", "historical non-investigation"],
+    ["Roma/Romani", "were studied as", "historical non-discovery"],
+    ["Roma/Romani", "were studied as", "historical non-reconstruction"],
+    ["Roma/Romani", "were studied as", "historical non-interpretation"],
+    ["Roma/Romani", "were studied as", "historical non-reclamation"],
+    ["Roma/Romani", "were studied as", "historical non-redefinition"],
+    ["Roma/Romani", "were studied as", "historical non-reinterpretation"],
+    ["Roma/Romani", "were studied as", "historical non-reimagining"],
+    ["Roma/Romani", "were studied as", "historical non-recontextualization"],
+    ["Roma/Romani", "were studied as", "historical non-revaluation"],
+    ["Roma/Romani", "were studied as", "historical non-assessment"],
+    ["Roma/Romani", "were studied as", "historical non-revision"],
+    ["Roma/Romani", "were studied as", "historical non-reexamination"],
+    ["Roma/Romani", "were studied as", "historical non-rethinking"],
+    ["Roma/Romani", "were studied as", "historical non-reconfiguration"],
+    ["Roma/Romani", "were studied as", "historical non-reorientation"],
+    ["Roma/Romani", "were studied as", "historical non-repositioning"],
+    ["Roma/Romani", "were studied as", "historical non-redefinition"],
+    ["Roma/Romani", "were studied as", "historical non-reimagining"],
+    ["Roma/Romani", "were studied as", "historical non-recontextualization"],
+    ["Roma/Romani", "were studied as", "historical non-revaluation"],
+    ["Roma/Romani", "were studied as", "historical non-assessment"],
+    ["Roma/Romani", "were studied as", "historical non-revision"],
+    ["Roma/Romani", "were studied as", "historical non-reinterpretation"],
+    ["Roma/Romani", "were studied as", "historical non-reexamination"],
+    ["Roma/Romani", "were studied as", "historical non-rethinking"],
+    ["Roma/Romani", "were studied as", "historical non-reconfiguration"],
+    ["Roma/Romani", "were studied as", "historical non-reorientation"],
+    ["Roma/Romani", "were studied as", "historical non-repositioning"],
+    ["Roma/Romani", "have linguistic variations", "CIGANI"],
+    ["Roma/Romani", "have linguistic variations", "CIGÁNYOK"],
+    ["Roma/Romani", "have linguistic variations", "TIGANI"],
+    ["Roma/Romani", "have linguistic variations", "ZIGEUNER"],
+    ["Roma/Romani", "have a shared origin", "one single migration"],
+    ["Roma/Romani", "have a shared origin", "before 650"],
+    ["Roma/Romani", "have a shared origin", "ca. 1700"],
+    ["Roma/Romani", "have a shared origin", "medieval Adriatic"],
+    ["Roma/Romani", "have a shared origin", "coastal zones"],
+    ["Roma/Romani", "have a shared origin", "13th century"],
+    ["Roma/Romani", "have a shared origin", "Middle East/South Asia"],
+    ["Roma/Romani", "have a shared
+2026-10-22 12:32:37,912 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Romani people", "marginalized in", "German-speaking territories"],
+    ["Romani people", "persecuted under", "Nazi rule"],
+    ["Otto von Bismarck", "associated with", "state-building in unified Germany"],
+    ["Otto von Bismarck", "associated with", "militarization of social order"],
+    ["Alfred Dillmann", "established", "Central Office for Gypsy Affairs"],
+    ["Central Office for Gypsy Affairs", "established in", "Bavaria"],
+    ["Central Office for Gypsy Affairs", "established in", "1899"],
+    ["Zigeunergeschmeiss", "type of", "dehumanizing signage"],
+    ["Zigeuner-Buch", "type of", "bureaucratic racial classification document"],
+    ["Nuremberg Laws", "enacted in", "1935"],
+    ["Nuremberg Laws", "targeted", "Sinti and Roma"],
+    ["Nuremberg Laws", "targeted", "Jews"],
+    ["Gestapo", "documented", "Ludwig Horvath"],
+    ["Gestapo", "documented", "Helene Baranks Huber"],
+    ["Gestapo", "documented", "Maria Bihari"],
+    ["Gestapo", "associated with", "Roma camps"],
+    ["Gestapo", "associated with", "forced displacement"],
+    ["Gestapo", "associated with", "institutionalized segregation"],
+    ["1942 deportation", "to", "Auschwitz-Birkenau"],
+    ["1942 deportation", "involved", "striped uniforms"],
+    ["1942 deportation", "involved", "barbed wire"],
+    ["1942 deportation", "involved", "Zyklon B containers"],
+    ["1942 deportation", "involved", "stripped belongings"],
+    ["Communism", "associated with", "Chapter VII"],
+    ["Bulgaria", "associated with", "Process of Revival"],
+    ["Process of Revival", "time period", "1984\u20131985"],
+    ["Process of Revival", "involved", "state policies forcing Gypsy assimilation"],
+    ["Process of Revival", "involved", "relocation of Gypsies"],
+    ["Process of Revival", "involved", "forced adoption of Bulgarian names"],
+    ["Process of Revival", "resulted in", "family separation"],
+    ["Process of Revival", "resulted in", "assimilation of 400,000 Muslim Gypsies"],
+    ["Nicolae Ceau\u0219escu", "associated with", "Romania"],
+    ["2007 Romanian headline", "mentions", "government acknowledgment of anti-Romani pogroms"],
+    ["EUROPA", "associated with", "expulsion of Romanians and Roma from Germany"],
+    ["EUROPA", "associated with", "asylum laws"],
+    ["France 24", "associated with", "journalistic lens"],
+    ["Smurfs", "associated with", "visual juxtaposition"],
+    ["Hungary", "associated with", "far-right rally"],
+    ["British Path\u00e9", "associated with", "documentary tone"],
+    ["PATHE", "associated with", "archival context"],
+    ["HISTORY", "associated with", "archival context"],
+    ["Sinti", "targeted by", "Nuremberg Laws"],
+    ["Jews", "targeted by", "Nuremberg Laws"],
+    ["Romani people", "targeted by", "state-sanctioned discrimination"],
+    ["Romani people", "targeted by", "state surveillance"],
+    ["Romani people", "targeted by", "public stigma"],
+    ["Romani people", "targeted by", "institutionalized persecution"],
+    ["Romani people", "targeted by", "mass mobilization"],
+    ["Romani people", "targeted by", "deportation"],
+    ["Romani people", "targeted by", "genocide"],
+    ["Romani people", "targeted by", "forced assimilation"],
+    ["Romani people", "targeted by", "cultural erasure"],
+    ["Romani people", "targeted by", "economic exclusion"],
+    ["Romani people", "targeted by", "systemic marginalization"],
+    ["Romani people", "targeted by", "institutional repression"],
+    ["Romani people", "targeted by", "state control"],
+    ["Romani people", "targeted by", "systemic hardship"],
+    ["Romani people", "targeted by", "media distortion"],
+    ["Romani people", "targeted by", "political legacy"],
+    ["Romani people", "targeted by", "ideological confrontation"],
+    ["Romani people", "targeted by", "ideological conflict"],
+    ["Romani people", "targeted by", "surrealism in media"],
+    ["Romani people", "targeted by", "visual critique of power structures"],
+    ["Romani people", "targeted by", "urban decay"],
+    ["Romani people", "targeted by", "fear and neglect"],
+    ["Romani people", "targeted by", "cultural resistance"],
+    ["Romani people", "targeted by", "resilience"],
+    ["Romani people", "targeted by", "collective protest"],
+    ["Romani people", "targeted by", "emotional catharsis"],
+    ["Romani people", "targeted by", "melancholy"],
+    ["Romani people", "targeted by", "care amid loss"],
+    ["Romani people", "targeted by", "forgotten places"],
+    ["Romani people", "targeted by", "denial"],
+    ["Romani people", "targeted by", "historical memory"],
+    ["Romani people", "targeted by", "trauma"],
+    ["Romani people", "targeted by", "historical reckoning"],
+    ["Romani people", "targeted by", "enduring suffering"],
+    ["Romani people", "targeted by", "loss"],
+    ["Romani people", "targeted by", "ideological narrative"],
+    ["Romani people", "targeted by", "systemic injustice"],
+    ["Romani people", "targeted by", "state-sanctioned punishment"],
+    ["Romani people", "targeted by", "economic collapse"],
+    ["Romani people", "targeted by", "cultural endurance"],
+    ["Romani people", "targeted by", "human dignity"],
+    ["Romani people", "targeted by", "quiet resilience"],
+    ["Romani people", "targeted by", "identity assertion"],
+    ["Romani people", "targeted by", "resistance"],
+    ["Romani people", "targeted by", "institutional exclusion"],
+    ["Romani people", "targeted by", "survival amid adversity"],
+    ["Romani people", "targeted by", "historical documentation"],
+    ["Romani people", "targeted by", "symbolic representation"],
+    ["Romani people", "targeted by", "narrative rupture"],
+    ["Romani people", "targeted by", "visual storytelling"],
+    ["Romani people", "targeted by", "layered visuals"],
+    ["Romani people", "targeted by", "historical context"],
+    ["Romani people", "targeted by", "displacement"],
+    ["Romani people", "targeted by", "state control"],
+    ["Romani people", "targeted by", "systemic oppression"],
+    ["Romani people", "targeted by", "cultural assimilation"],
+    ["Romani people", "targeted by", "forced labor"],
+    ["Romani people", "targeted by", "institutionalized exclusion"],
+    ["Romani people", "targeted by", "economic hardship"],
+    ["Romani people", "targeted by", "social marginalization"],
+    ["Romani people", "targeted by", "ideological framing"],
+    ["Romani people", "targeted by", "historical distortion"],
+    ["Romani people", "targeted by", "media portrayal"],
+    ["Romani people", "targeted by", "cultural memory"],
+    ["Romani people", "targeted by", "symbolic imagery"],
+    ["Romani people", "targeted by", "archival footage"],
+    ["Romani people", "targeted by", "documentary tone"],
+    ["Romani people", "targeted by", "historical narrative"],
+    ["Romani people", "targeted by", "visual contrast"],
+    ["Romani people", "targeted by", "emotional intensity"],
+    ["Romani people", "targeted by", "organized resistance"],
+    ["Romani people", "targeted by", "cultural continuity"],
+    ["Romani people", "targeted by", "resilience in adversity"],
+    ["Romani people", "targeted by", "human agency"],
+    ["Romani people", "targeted by", "cultural endurance"],
+    ["Romani people", "targeted by", "identity assertion"],
+    ["Romani people", "targeted by", "resistance"],
+    ["Romani people", "targeted by", "institutional exclusion"],
+    ["Romani people",
+2026-10-22 12:34:12,190 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Romani people", "marginalized in", "German-speaking territories"],
+    ["Romani people", "targeted by", "Nazi rule"],
+    ["Otto von Bismarck", "associated with", "state-building"],
+    ["Otto von Bismarck", "associated with", "militarization"],
+    ["Alfred Dillmann", "created", "Central Office for Gypsy Affairs"],
+    ["Central Office for Gypsy Affairs", "established in", "Bavaria"],
+    ["Central Office for Gypsy Affairs", "established in", "1899"],
+    ["Zigeunergeschmeiss", "used by", "state surveillance"],
+    ["Zigeuner-Buch", "used for", "racial classification"],
+    ["Nuremberg Laws", "enacted in", "1935"],
+    ["Nuremberg Laws", "targeted", "Sinti"],
+    ["Nuremberg Laws", "targeted", "Roma"],
+    ["Nuremberg Laws", "targeted", "Jews"],
+    ["Gestapo", "documented", "Ludwig Horvath"],
+    ["Gestapo", "documented", "Helene Baranks Huber"],
+    ["Gestapo", "documented", "Maria Bihari"],
+    ["Gestapo", "operated in", "Roma camps"],
+    ["Gestapo", "associated with", "forced displacement"],
+    ["Gestapo", "associated with", "institutionalized segregation"],
+    ["1942", "marked by", "deportation to Auschwitz-Birkenau"],
+    ["Auschwitz-Birkenau", "associated with", "striped uniforms"],
+    ["Auschwitz-Birkenau", "associated with", "barbed wire"],
+    ["Auschwitz-Birkenau", "associated with", "Zyklon B containers"],
+    ["Auschwitz-Birkenau", "associated with", "stripped belongings"],
+    ["Bulgaria", "associated with", "Process of Revival"],
+    ["Process of Revival", "occurred in", "1984\u20131985"],
+    ["Process of Revival", "forced Gypsies to", "adopt Bulgarian names"],
+    ["Process of Revival", "led to", "family separation"],
+    ["Process of Revival", "resulted in", "assimilation of 400,000 Muslim Gypsies"],
+    ["Nicolae Ceau\u0219escu", "associated with", "Romania"],
+    ["2007", "marked by", "Romanian government acknowledges responsibility for anti-Romani pogroms"],
+    ["EUROPA", "associated with", "expulsion of Romanians and Roma from Germany"],
+    ["EUROPA", "associated with", "asylum laws"],
+    ["France 24", "covered", "Roma resilience"],
+    ["France 24", "covered", "cultural endurance"],
+    ["Smurfs", "used in", "visual and political juxtaposition"],
+    ["Hungary", "associated with", "far-right rally"],
+    ["British Path\u00e9", "produced", "archival footage"],
+    ["PATHE", "produced", "archival footage"],
+    ["HISTORY", "produced", "archival footage"],
+    ["Communism", "associated with", "ideological narrative"],
+    ["Communism", "associated with", "Chapter VII"],
+    ["500,000\u20131,500,000", "associated with", "scale of death"],
+    ["Romani people", "associated with", "systemic repression"],
+    ["Romani people", "associated with", "state control"],
+    ["Romani people", "associated with", "mass suffering"],
+    ["Romani people", "associated with", "forced repatriation"],
+    ["Romani people", "associated with", "institutional repression"],
+    ["Romani people", "associated with", "cultural resilience"],
+    ["Romani people", "associated with", "economic oppression"],
+    ["Romani people", "associated with", "identity assertion"],
+    ["Romani people", "associated with", "resilience amid adversity"],
+    ["Romani people", "associated with", "cultural endurance"],
+    ["Romani people", "associated with", "systemic marginalization"],
+    ["Romani people", "associated with", "state-sanctioned punishment"],
+    ["Romani people", "associated with", "media distortion"],
+    ["Romani people", "associated with", "historical memory"],
+    ["Romani people", "associated with", "collective protest"],
+    ["Romani people", "associated with", "emotional catharsis"],
+    ["Romani people", "associated with", "melancholy"],
+    ["Romani people", "associated with", "resilience in rural decay"],
+    ["Romani people", "associated with", "quiet resilience"],
+    ["Romani people", "associated with", "institutional exclusion"],
+    ["Romani people", "associated with", "economic collapse"],
+    ["Romani people", "associated with", "cultural erasure"],
+    ["Romani people", "associated with", "human dignity"],
+    ["Romani people", "associated with", "moments of resistance"],
+    ["Romani people", "associated with", "media distortion of hardship"],
+    ["Romani people", "associated with", "systemic hardship"],
+    ["Romani people", "associated with", "displacement"],
+    ["Romani people", "associated with", "state control"],
+    ["Romani people", "associated with", "historical context"],
+    ["Romani people", "associated with", "state repression"],
+    ["Romani people", "associated with", "ideological confrontation"],
+    ["Romani people", "associated with", "historical reckoning"],
+    ["Romani people", "associated with", "trauma"],
+    ["Romani people", "associated with", "enduring suffering"],
+    ["Romani people", "associated with", "loss"],
+    ["Romani people", "associated with", "care amid loss"],
+    ["Romani people", "associated with", "forgotten places"],
+    ["Romani people", "associated with", "denial"],
+    ["Romani people", "associated with", "organized resistance"],
+    ["Romani people", "associated with", "unity"],
+    ["Romani people", "associated with", "anger"],
+    ["Romani people", "associated with", "oppression"],
+    ["Romani people", "associated with", "surrealism"],
+    ["Romani people", "associated with", "power structures"],
+    ["Romani people", "associated with", "fear"],
+    ["Romani people", "associated with", "neglect"],
+    ["Romani people", "associated with", "urban decay"],
+    ["Romani people", "associated with", "cultural resistance"],
+    ["Romani people", "associated with", "modern urban frameworks"],
+    ["Romani people", "associated with", "documentary tone"],
+    ["Romani people", "associated with", "archival context"],
+    ["Romani people", "associated with", "ideological narrative"],
+    ["Romani people", "associated with", "historical documentation"],
+    ["Romani people", "associated with", "visual storytelling"],
+    ["Romani people", "associated with", "narrative construction"],
+    ["Romani people", "associated with", "layered visuals"],
+    ["Romani people", "associated with", "historical critique"],
+    ["Romani people", "associated with", "institutional critique"],
+    ["Romani people", "associated with", "cultural critique"],
+    ["Romani people", "associated with", "political legacy"],
+    ["Romani people", "associated with", "personal testimony"],
+    ["Romani people", "associated with", "institutional accountability"],
+    ["Romani people", "associated with", "historical injustice"],
+    ["Romani people", "associated with", "historical reckoning"],
+    ["Romani people", "associated with", "symbolic representation"],
+    ["Romani people", "associated with", "visual juxtaposition"],
+    ["Romani people", "associated with", "documentary realism"],
+    ["Romani people", "associated with", "animated interpretation"],
+    ["Romani people", "associated with", "narrative rupture"],
+    ["Romani people", "associated with", "historical memory"],
+    ["Romani people", "associated with", "trauma evocation"],
+    ["Romani people", "associated with", "historical trauma"],
+    ["Romani people", "associated with", "collective memory"],
+    ["Romani people", "associated with", "historical consciousness"],
+    ["Romani people", "associated with", "cultural continuity"],
+    ["Romani people", "associated with", "resilience amid erasure"],
+    ["Romani people", "associated with", "enduring identity"],
+    ["Romani people", "associated with", "cultural survival"],
+    ["Romani people", "associated with", "historical documentation"],
+    ["Romani people", "associated with", "visual symbolism"],
+    ["Romani people", "associated with", "documentary tone"],
+    ["Romani people", "associated with", "historical framing"],
+    ["Romani people", "associated with", "ideological framing"],
+    ["Romani people",
+2026-10-22 12:34:40,386 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Tiganiada", "authored by", "Ion Budai-Deleanu"],
+    ["Tiganiada", "depicts", "Gypsy-led armies"],
+    ["Tiganiada", "features", "Vlad Cepish"],
+    ["Tiganiada", "is", "historical record"],
+    ["Tiganiada", "is", "cultural myth"],
+    ["Romanian rulers", "used", "Gypsy slave labor"],
+    ["Romanian rulers", "used", "Gypsy warriors"],
+    ["Moldavian rulers", "used", "Gypsy warriors"],
+    ["Wallachian rulers", "used", "Gypsy warriors"],
+    ["Gypsy-led armies", "resisted", "Ottoman expansion"],
+    ["Imperial Watch", "demands payment or forfeiture from", "unseen individual"],
+    ["1830 firman", "issued by", "Sultan Mahmud II"],
+    ["1830 firman", "freed", "white slaves"],
+    ["Russo-Ottoman War", "involved", "Tsar Nicolas I"],
+    ["Russo-Ottoman War", "involved", "Sultan Mahmud II"],
+    ["Alexandru Ghica", "involved in", "Roma emancipation"],
+    ["Article XIII", "abolished", "slavery"],
+    ["Romanian-EU flags", "symbolize", "reconciliation"],
+    ["Romanian-EU flags", "symbolize", "institutional partnership"],
+    ["1844\u20131856", "period of", "abolition"],
+    ["Spinning Mule", "used in", "cotton industry"],
+    ["Cotton Gin", "used in", "cotton industry"],
+    ["Gypsy labor", "was", "under Romanian rulers"],
+    ["Gypsy warriors", "served", "Moldavian and Wallachian rulers"],
+    ["Gypsy enslavement", "depicted in", "historical footage"],
+    ["Gypsy enslavement", "condemned in", "archival footage"],
+    ["Gypsy nomadism", "depicted in", "caravans and rural shelters"],
+    ["Gypsy cultural heritage", "preserved through", "tambourine-playing figures"],
+    ["Gypsy cultural heritage", "preserved through", "candle-lit ceremonies"],
+    ["THE DEVOURING CHAPTER VI", "opens over", "pointillist park scene"],
+    ["pointillist park scene", "set in", "Late XIX\u2013Mid XX"],
+    ["THE DEVOURING", "signals", "theme of danger or mystery"],
+    ["THE DEVOURING", "follows", "title transition"],
+    ["19th-century political gatherings", "symbolize", "institutionalization of sovereignty"],
+    ["constitutional rally", "symbolizes", "consolidation of political power"],
+    ["19th-century rural village painting", "depicts", "gradual abolition of slavery"],
+    ["19th-century rural village painting", "dated", "1842"],
+    ["1837 portrait", "frames", "national identity"],
+    ["1837 portrait", "linked to", "historical critique"],
+    ["1837 portrait", "linked to", "moral and political reckoning"],
+    ["1837 portrait", "linked to", "contested sites of memory and justice"],
+    ["sepia-toned photographs", "used in", "visual montage"],
+    ["historical paintings", "used in", "visual montage"],
+    ["CGI animations", "used in", "visual montage"],
+    ["falling dollar bills", "symbolize", "economic power shifts"],
+    ["ITS OVER", "symbolizes", "geopolitical power shifts"],
+    ["Christian manga", "used in", "satirical commentary"],
+    ["ENTERTAINMENT", "labeled on", "domestic scenes"],
+    ["V-2 rocket casing", "symbolizes", "innocence vs. war"],
+    ["V-2 plaque", "evokes", "memorial or spiritual dread"],
+    ["colonial ship", "sailing toward", "Rio Janeiro"],
+    ["colonial ship", "sailing toward", "Oranje"],
+    ["transatlantic history", "anchored by", "colonial ship"],
+    ["industrialization", "linked to", "end of slavery"],
+    ["underground labor", "depicted in", "dimly lit tunnel"],
+    ["cotton industry", "linked to", "industrial expansion"],
+    ["ritualistic punishment", "depicted in", "snowy scene"],
+    ["ritualistic punishment", "subtitled", "We want to return, lord..."],
+    ["historical procession painting", "depicts", "noble leading troops"],
+    ["folk dance painting", "features", "sword-wielding dancer"],
+    ["manual tilling", "set amid", "yellow blooms"],
+    ["historical crop-processing scene", "symbolizes", "emancipation"],
+    ["video game setting", "symbolizes", "fragmented legacy"],
+    ["digital abstraction", "used in", "emancipation legacy"],
+    ["1826 battle engraving", "depicts", "chaotic cavalry scene"],
+    ["geopolitical map of Eastern Europe", "highlights", "key dates and rulers"],
+    ["Smurfs", "approach", "castle"],
+    ["black-and-white archival footage", "shows", "horse-drawn carriages"],
+    ["historical unrest", "linked to", "Romanian emancipation"],
+    ["historical procession", "spanning", "feudalism to early modernity"],
+    ["stilt-village", "located in", "water-rich terrain"],
+    ["folk dance", "centered on", "sword-wielding dancer"],
+    ["manual tilling", "depicted in", "historical scene"],
+    ["historical procession", "depicted in", "painting"],
+    ["historical crop-processing scene", "linked to", "Article XIII"],
+    ["Romanian-EU flags", "united in", "symbolic imagery"],
+    ["handshake motif", "symbolizes", "reconciliation"],
+    ["handshake motif", "symbolizes", "institutional partnership"],
+    ["split-screen of Romanian and French cultural symbols", "juxtaposed with", "historical critique"],
+    ["historical critique", "overlays", "labor imagery"],
+    ["1837 portrait", "linked to", "national identity"],
+    ["1837 portrait", "linked to", "historical critique"],
+    ["1837 portrait", "linked to", "political reckoning"],
+    ["1837 portrait", "linked to", "contested sites of memory and justice"],
+    ["1837 portrait", "linked to", "national narratives"],
+    ["1837 portrait", "linked to", "moral and political reckoning"],
+    ["1837 portrait", "linked to", "identity as contested site"],
+    ["1837 portrait", "linked to", "historical memory"],
+    ["1837 portrait", "linked to", "national justice"],
+    ["1837 portrait", "linked to", "political identity"],
+    ["1837 portrait", "linked to", "cultural memory"],
+    ["1837 portrait", "linked to", "historical justice"],
+    ["1837 portrait", "linked to", "national memory"],
+    ["1837 portrait", "linked to", "historical identity"],
+    ["1837 portrait", "linked to", "national justice"],
+    ["1837 portrait", "linked to", "historical memory"],
+    ["1837 portrait", "linked to", "cultural identity"],
+    ["1837 portrait", "linked to", "national memory"],
+    ["1837 portrait", "linked to", "historical justice"],
+    ["1837 portrait", "linked to", "national identity"],
+    ["1837 portrait", "linked to", "historical memory"],
+    ["1837 portrait", "linked to", "cultural memory"],
+    ["1837 portrait", "linked to", "national justice"],
+    ["1837 portrait", "linked to", "historical identity"],
+    ["1837 portrait", "linked to", "national memory"],
+    ["1837 portrait", "linked to", "historical justice"],
+    ["1837 portrait", "linked to", "cultural identity"],
+    ["1837 portrait", "linked to", "national memory"],
+    ["1837 portrait", "linked to", "historical justice"],
+    ["1837 portrait", "linked to", "national identity"],
+    ["1837 portrait", "linked to", "historical memory"],
+    ["1837 portrait", "linked to", "cultural memory"],
+    ["1837 portrait", "linked to", "national justice"],
+    ["1837 portrait", "linked to", "historical identity"],
+    ["1837 portrait", "linked to", "national memory"],
+    ["1837 portrait", "linked to", "historical justice"],
+    ["1837 portrait", "linked to", "cultural identity"],
+    ["1837 portrait", "linked to", "national memory"],
+    ["1837 portrait", "linked to", "historical justice"],
+    ["1837 portrait", "linked
+2026-10-22 12:34:40,646 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Gypsy", "is a non-slandrous term for", "Roma/Romani"],
+    ["Roma/Romani", "present in", "Balkans"],
+    ["TITO", "invented", "MACEDONIANS", "in satirical image"],
+    ["Obama", "overlaid on", "dilapidated buildings", "with text", "POREKLOM SAM CIGANIN"],
+    ["Roma presence", "contrasted with", "marginalization imagery"],
+    ["Roma", "subject to", "identity erasure"],
+    ["Roma", "subject to", "societal stigma"],
+    ["Roma", "asserted as having", "cultural continuity"],
+    ["scientific imagery", "juxtaposed with", "exclusionary symbols"],
+    ["Roma", "studied and categorized as", "other"],
+    ["fantasy conflict imagery", "symbolizes", "corruption"],
+    ["Roma", "reduced to", "archetypes of danger or criminality"],
+    ["Roma", "originated from", "Middle East/South Asia"],
+    ["Roma migration", "traced to", "Europe"],
+    ["Roma origins", "since", "13th century"],
+    ["Roma", "misidentified as", "Seljuk Turks"],
+    ["Roma", "misclassified by", "Byzantines"],
+    ["Roma", "embedded in", "historical geopolitics"],
+    ["Roma", "categorized as", "foreign and dangerous"],
+    ["Roma", "targeted through", "language and ideology"],
+    ["Roma", "misrepresented as", "Egyptian", "Turkish", "foreign"],
+    ["Roma", "connected to", "national flags of", "North Macedonia", "Spain", "Greece"],
+    ["Roma", "linked to", "mythic danger", "THE PHARAOH'S CURSE"],
+    ["Roma", "symbolized by", "watermelon", "hanging chair"],
+    ["Roma", "represented in", "Google Translate warning", "Don't Touch"],
+    ["Roma", "symbolized by", "green upward-trending graph"],
+    ["Roma", "linked to", "semantic and geographic ambiguity"],
+    ["Roma", "represented in", "linguistic variations", "CIGANI", "CIGÁNYOK", "TIGANI", "ZIGEUNER"],
+    ["Roma", "originated from", "one single migration", "before 650 to ca. 1700"],
+    ["Roma", "excluded from", "historical record"],
+    ["Roma", "studied within", "academic frameworks"],
+    ["Roma", "redefined as", "Egyptian", "Turkish", "foreign"],
+    ["Roma", "linked to", "absurdist aesthetic"],
+    ["Roma", "linked to", "dreamlike aesthetic"],
+    ["Roma", "linked to", "self-referential nod to censorship"],
+    ["Roma", "linked to", "pop culture imagery"],
+    ["Roma", "linked to", "historical imagery"],
+    ["Roma", "linked to", "blurring past and present"],
+    ["Roma", "linked to", "reverent shot of empty cathedral"],
+    ["Roma", "linked to", "pixelated Mario scene"],
+    ["Roma", "linked to", "SpongeBob falling in bathroom"],
+    ["Roma", "linked to", "cartoon character in fur hat"],
+    ["Roma", "linked to", "Dutch canals"],
+    ["Roma", "linked to", "European bridges"],
+    ["Roma", "linked to", "pub scene with quill-writing hand"],
+    ["Roma", "linked to", "newspaper clipping", "Hannoversches Tageblatt, 1865"],
+    ["Roma", "linked to", "topographical map"],
+    ["Roma", "linked to", "man with tattoos shouting"],
+    ["Roma", "linked to", "cartoon Greek figure screaming", "ATSINGANI"],
+    ["Roma", "linked to", "Bible imagery"],
+    ["Roma", "linked to", "animal sacrifice paintings"],
+    ["Roma", "linked to", "desert imagery"],
+    ["Roma", "linked to", "smiling man in car"],
+    ["Roma", "linked to", "anime girl superimposed over historical painting"],
+    ["Roma", "linked to", "scholarly discussion on medieval Adriatic origins"],
+    ["Roma", "linked to", "circle with line through it", "symbolizing exclusion"],
+    ["Roma", "linked to", "linguistic diversity"],
+    ["Roma", "linked to", "shared historical roots"],
+    ["Roma", "linked to", "meditative tone"],
+    ["Roma", "linked to", "spiritual tone"],
+    ["Roma", "linked to", "ancient and deeply personal identity"],
+    ["Roma", "linked to", "cultural context"],
+    ["Roma", "linked to", "Balkan map"],
+    ["Roma", "linked to", "bearded man against rocky backdrop"],
+    ["Roma", "linked to", "young men outdoors with overlay", "Atsingani"],
+    ["Roma", "linked to", "symbolic national imagery"],
+    ["Roma", "linked to", "cultural juxtaposition"],
+    ["Roma", "linked to", "mythic danger"],
+    ["Roma", "linked to", "symbolic overlays of national flags"],
+    ["Roma", "linked to", "European map"],
+    ["Roma", "linked to", "surreal transitions"],
+    ["Roma", "linked to", "absurdity"],
+    ["Roma", "linked to", "cultural reference"],
+    ["Roma", "linked to", "blurring past and present"],
+    ["Roma", "linked to", "reality and fantasy"],
+    ["Roma", "linked to", "satirical visual interlude"],
+    ["Roma", "linked to", "semantic ambiguity"],
+    ["Roma", "linked to", "geographic ambiguity"],
+    ["Roma", "linked to", "identity redefinition"],
+    ["Roma", "linked to", "historical misclassification"],
+    ["Roma", "linked to", "geopolitical context"],
+    ["Roma", "linked to", "historical erasure"],
+    ["Roma", "linked to", "cultural continuity"],
+    ["Roma", "linked to", "historical invisibility"],
+    ["Roma", "linked to", "stigma"],
+    ["Roma", "linked to", "systemic exclusion"],
+    ["Roma", "linked to", "cultural stereotypes"],
+    ["Roma", "linked to", "archetypes of danger or criminality"],
+    ["Roma", "linked to", "cultural appropriation"],
+    ["Roma", "linked to", "cultural representation"],
+    ["Roma", "linked to", "cultural visibility"],
+    ["Roma", "linked to", "cultural agency"],
+    ["Roma", "linked to", "historical visibility"],
+    ["Roma", "linked to", "historical recognition"],
+    ["Roma", "linked to", "historical acknowledgment"],
+    ["Roma", "linked to", "historical documentation"],
+    ["Roma", "linked to", "historical preservation"],
+    ["Roma", "linked to", "historical memory"],
+    ["Roma", "linked to", "historical justice"],
+    ["Roma", "linked to", "historical truth"],
+    ["Roma", "linked to", "historical accuracy"],
+    ["Roma", "linked to", "historical narrative"],
+    ["Roma", "linked to", "historical interpretation"],
+    ["Roma", "linked to", "historical context"],
+    ["Roma", "linked to", "historical perspective"],
+    ["Roma", "linked to", "historical analysis"],
+    ["Roma", "linked to", "historical criticism"],
+    ["Roma", "linked to", "historical commentary"],
+    ["Roma", "linked to", "historical reflection"],
+    ["Roma", "linked to", "historical insight"],
+    ["Roma", "linked to", "historical understanding"],
+    ["Roma", "linked to", "historical awareness"],
+    ["Roma", "linked to", "historical consciousness"],
+    ["Roma", "linked to", "historical education"],
+    ["Roma", "linked to", "historical literacy"],
+    ["Roma", "linked to", "historical learning"],
+    ["Roma", "linked to", "historical inquiry"],
+    ["Roma", "linked to", "historical research"],
+    ["Roma", "linked to", "historical scholarship"],
+    ["Roma", "linked to", "historical study"],
+    ["Roma", "linked to", "historical investigation"],
+    ["Roma", "linked to", "historical discovery"],
+    ["Roma", "linked to", "historical reconstruction"],
+    ["Roma", "linked to", "historical reinterpretation"],
+    ["Roma", "linked to", "historical reimagining"],
+    ["Roma", "linked to", "historical recontextualization"],
+    ["Roma", "linked to", "historical reevaluation"],
+    ["
+2026-10-22 12:36:13,567 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Gypsy", "is a non-slandrous term for", "Roma/Romani"],
+    ["Roma/Romani", "present in", "Balkans"],
+    ["TITO", "invented", "MACEDONIANS", "in satirical image"],
+    ["Obama", "overlaid on", "dilapidated buildings", "with text", "POREKLOM SAM CIGANIN"],
+    ["Roma presence", "contrasted with", "marginalization imagery"],
+    ["Roma", "subject to", "ethnic hatred"],
+    ["Roma", "subject to", "systemic marginalization"],
+    ["Roma identity", "subject to", "identity erasure"],
+    ["Roma", "subject to", "societal stigma"],
+    ["Roma", "asserts", "cultural continuity"],
+    ["scientific imagery", "juxtaposed with", "exclusionary symbols"],
+    ["Roma", "studied and categorized as", "other"],
+    ["fantasy combat", "symbolizes", "corruption"],
+    ["Roma", "reduced to", "archetypes of danger or criminality"],
+    ["Roma", "despite", "rich cultural contributions"],
+    ["Roma origins", "traced from", "Middle East/South Asia to Europe"],
+    ["Roma origins", "since", "13th century"],
+    ["Roma", "misidentified as", "Seljuk Turks"],
+    ["Roma", "misidentified by", "Byzantines"],
+    ["Roma", "embedded in", "historical geopolitics"],
+    ["Roma", "not invented but", "misclassified"],
+    ["Roma", "categorized as", "foreign and dangerous"],
+    ["Roma", "framed as", "threat to dominant order"],
+    ["Roma", "targeted through", "language and ideology"],
+    ["Roma", "targeted in", "modern times"],
+    ["historical narratives", "often mistranslated or misunderstood"],
+    ["Roma identity", "harmed by", "misinterpretation"],
+    ["Roma", "framed as", "Egyptian, Turkish, or foreign"],
+    ["Roma", "connecting", "disparate nations"],
+    ["Roma", "mythic and real"],
+    ["national flags", "symbolize", "cultural or historical ties"],
+    ["Roma", "associated with", "North Macedonia, Spain, Greece"],
+    ["Roma", "associated with", "Germany"],
+    ["Roma", "associated with", "Carthage"],
+    ["Roma", "associated with", "Simpsons character"],
+    ["Roma", "associated with", "animal sacrifice paintings"],
+    ["Roma", "associated with", "desert"],
+    ["Roma", "associated with", "empty cathedral"],
+    ["Google Translate", "warning", "DON'T TOUCH"],
+    ["Roma identity", "symbolized by", "human cost"],
+    ["Roma", "associated with", "medieval Adriatic"],
+    ["Roma", "associated with", "one single migration"],
+    ["Roma", "associated with", "linguistic variations"],
+    ["Roma", "associated with", "shared historical roots"],
+    ["Roma", "associated with", "meditative tone"],
+    ["Roma", "associated with", "spiritual tone"],
+    ["Roma", "associated with", "ancient and deeply personal"],
+    ["Roma", "associated with", "cultural context"],
+    ["Roma", "associated with", "Balkan map"],
+    ["Roma", "associated with", "anime girl"],
+    ["Roma", "associated with", "traditional attire"],
+    ["Roma", "associated with", "bearded man"],
+    ["Roma", "associated with", "rocky backdrop"],
+    ["Roma", "associated with", "young men outdoors"],
+    ["Roma", "associated with", "reflective tone"],
+    ["Roma", "associated with", "symbolic national imagery"],
+    ["Roma", "associated with", "cultural juxtaposition"],
+    ["Roma", "associated with", "mythic danger"],
+    ["Roma", "associated with", "symbolic overlays"],
+    ["Roma", "associated with", "European map"],
+    ["Roma", "associated with", "surreal transitions"],
+    ["Roma", "associated with", "absurdity"],
+    ["Roma", "associated with", "cultural reference"],
+    ["Roma", "associated with", "blurring past and present"],
+    ["Roma", "associated with", "reality and fantasy"],
+    ["Roma", "associated with", "satirical commentary"],
+    ["Roma", "associated with", "meme juxtapositions"],
+    ["Roma", "associated with", "AVERAGE GREEK BE LIKE"],
+    ["Roma", "associated with", "absurd success or growth"],
+    ["Roma", "associated with", "semantic and geographic ambiguity"],
+    ["Roma", "associated with", "identity redefinition"],
+    ["Roma", "associated with", "historical misclassification"],
+    ["Roma", "associated with", "geopolitical context"],
+    ["Roma", "associated with", "historical erasure"],
+    ["Roma", "associated with", "cultural continuity"],
+    ["Roma", "associated with", "historical invisibility"],
+    ["Roma", "associated with", "scholarly attention"],
+    ["Roma", "associated with", "scholarly grounding"],
+    ["Roma", "associated with", "academic imagery"],
+    ["Roma", "associated with", "historical record exclusion"],
+    ["Roma", "associated with", "historical framing"],
+    ["Roma", "associated with", "historical misreading"],
+    ["Roma", "associated with", "historical categorization"],
+    ["Roma", "associated with", "historical erasure"],
+    ["Roma", "associated with", "cultural erasure"],
+    ["Roma", "associated with", "systemic marginalization"],
+    ["Roma", "associated with", "identity weaponization"],
+    ["Roma", "associated with", "cultural contributions"],
+    ["Roma", "associated with", "historical narratives"],
+    ["Roma", "associated with", "misinterpretation"],
+    ["Roma", "associated with", "historical mistranslation"],
+    ["Roma", "associated with", "identity harm"],
+    ["Roma", "associated with", "historical stigmatization"],
+    ["Roma", "associated with", "systemic exclusion"],
+    ["Roma", "associated with", "cultural stereotypes"],
+    ["Roma", "associated with", "archetypes of danger or criminality"],
+    ["Roma", "associated with", "cultural appropriation"],
+    ["Roma", "associated with", "cultural representation"],
+    ["Roma", "associated with", "cultural visibility"],
+    ["Roma", "associated with", "cultural agency"],
+    ["Roma", "associated with", "historical visibility"],
+    ["Roma", "associated with", "historical recognition"],
+    ["Roma", "associated with", "historical acknowledgment"],
+    ["Roma", "associated with", "historical documentation"],
+    ["Roma", "associated with", "historical preservation"],
+    ["Roma", "associated with", "historical memory"],
+    ["Roma", "associated with", "historical justice"],
+    ["Roma", "associated with", "historical truth"],
+    ["Roma", "associated with", "historical accuracy"],
+    ["Roma", "associated with", "historical narrative"],
+    ["Roma", "associated with", "historical interpretation"],
+    ["Roma", "associated with", "historical context"],
+    ["Roma", "associated with", "historical perspective"],
+    ["Roma", "associated with", "historical analysis"],
+    ["Roma", "associated with", "historical criticism"],
+    ["Roma", "associated with", "historical commentary"],
+    ["Roma", "associated with", "historical reflection"],
+    ["Roma", "associated with", "historical insight"],
+    ["Roma", "associated with", "historical understanding"],
+    ["Roma", "associated with", "historical awareness"],
+    ["Roma", "associated with", "historical consciousness"],
+    ["Roma", "associated with", "historical education"],
+    ["Roma", "associated with", "historical literacy"],
+    ["Roma", "associated with", "historical learning"],
+    ["Roma", "associated with", "historical inquiry"],
+    ["Roma", "associated with", "historical research"],
+    ["Roma", "associated with", "historical scholarship"],
+    ["Roma", "associated with", "historical study"],
+    ["Roma", "associated with", "historical investigation"],
+    ["Roma", "associated with", "historical discovery"],
+    ["Roma", "associated with", "historical reconstruction"],
+    ["Roma", "associated with", "historical interpretation"],
+    ["Roma", "associated with", "historical reclamation"],
+    ["Roma", "associated with", "historical redefinition"],
+    ["Roma", "associated with", "historical reinterpretation"],
+    ["Roma", "associated with", "historical reimagining"],
+    ["Roma", "associated with", "historical recontextualization"],
+    ["Roma", "
+2026-10-22 12:36:22,624 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Romani people", "marginalized in", "German-speaking territories"],
+    ["Romani people", "targeted by", "Nazi rule"],
+    ["Otto von Bismarck", "associated with", "state-building"],
+    ["Otto von Bismarck", "associated with", "militarization"],
+    ["Alfred Dillmann", "appointed head of", "Central Office for Gypsy Affairs"],
+    ["Central Office for Gypsy Affairs", "created in", "1899"],
+    ["Central Office for Gypsy Affairs", "located in", "Bavaria"],
+    ["Zigeunergeschmeiss", "type of", "dehumanizing signage"],
+    ["Zigeuner-Buch", "type of", "bureaucratic racial classification document"],
+    ["Nuremberg Laws", "enacted in", "1935"],
+    ["Nuremberg Laws", "targeted", "Sinti and Roma"],
+    ["Nuremberg Laws", "targeted", "Jews"],
+    ["Gestapo", "documented", "Ludwig Horvath"],
+    ["Gestapo", "documented", "Helene Baranks Huber"],
+    ["Gestapo", "documented", "Maria Bihari"],
+    ["Ludwig Horvath", "detained by", "Gestapo"],
+    ["Helene Baranks Huber", "detained by", "Gestapo"],
+    ["Maria Bihari", "detained by", "Gestapo"],
+    ["Romani people", "deported to", "Auschwitz-Birkenau"],
+    ["Auschwitz-Birkenau", "deportation date", "1942"],
+    ["Auschwitz-Birkenau", "associated with", "striped uniforms"],
+    ["Auschwitz-Birkenau", "associated with", "barbed wire"],
+    ["Auschwitz-Birkenau", "associated with", "Zyklon B containers"],
+    ["Auschwitz-Birkenau", "associated with", "stripped belongings"],
+    ["Communism", "associated with", "Chapter VII"],
+    ["Bulgaria", "associated with", "Process of Revival"],
+    ["Process of Revival", "timeframe", "1984\u20131985"],
+    ["Process of Revival", "resulted in", "forced assimilation"],
+    ["Process of Revival", "resulted in", "family separation"],
+    ["Process of Revival", "affected", "400,000 Muslim Gypsies"],
+    ["Nicolae Ceau\u0219escu", "associated with", "Romania"],
+    ["Romania", "associated with", "2007 headline"],
+    ["2007 headline", "content", "Government acknowledges responsibility for anti-Romani pogroms"],
+    ["EUROPA", "associated with", "expulsion of Romanians and Roma"],
+    ["EUROPA", "associated with", "asylum laws"],
+    ["France 24", "associated with", "journalistic lens"],
+    ["Smurfs", "associated with", "visual juxtaposition"],
+    ["Hungary", "associated with", "far-right rally"],
+    ["British Path\u00e9", "associated with", "documentary tone"],
+    ["PATHE", "associated with", "archival context"],
+    ["HISTORY", "associated with", "archival context"],
+    ["Sinti", "targeted by", "Nuremberg Laws"],
+    ["Jews", "targeted by", "Nuremberg Laws"],
+    ["Romani people", "targeted by", "state repression"],
+    ["Romani people", "targeted by", "institutional exclusion"],
+    ["Romani people", "targeted by", "economic collapse"],
+    ["Romani people", "targeted by", "cultural erasure"],
+    ["Romani people", "associated with", "cultural resilience"],
+    ["Romani people", "associated with", "quiet resilience"],
+    ["Romani people", "associated with", "human dignity"],
+    ["Romani people", "associated with", "resistance"],
+    ["Romani people", "associated with", "identity assertion"],
+    ["Romani people", "associated with", "systemic marginalization"],
+    ["Romani people", "associated with", "state control"],
+    ["Romani people", "associated with", "displacement"],
+    ["Romani people", "associated with", "poverty"],
+    ["Romani people", "associated with", "survival"],
+    ["Romani people", "associated with", "media distortion"],
+    ["Romani people", "associated with", "systemic hardship"],
+    ["Romani people", "associated with", "institutional punishment"],
+    ["Romani people", "associated with", "economic success"],
+    ["Romani people", "associated with", "state-sanctioned punishment"],
+    ["Romani people", "associated with", "denial"],
+    ["Romani people", "associated with", "care amid loss"],
+    ["Romani people", "associated with", "resilience in rural decay"],
+    ["Romani people", "associated with", "collective protest"],
+    ["Romani people", "associated with", "emotional catharsis"],
+    ["Romani people", "associated with", "organized resistance"],
+    ["Romani people", "associated with", "historical memory"],
+    ["Romani people", "associated with", "trauma"],
+    ["Romani people", "associated with", "historical reckoning"],
+    ["Romani people", "associated with", "enduring suffering"],
+    ["Romani people", "associated with", "loss"],
+    ["Romani people", "associated with", "cultural endurance"],
+    ["Romani people", "associated with", "human agency"],
+    ["Romani people", "associated with", "quiet dignity"],
+    ["Romani people", "associated with", "symbolic resistance"],
+    ["Romani people", "associated with", "visual narrative"],
+    ["Romani people", "associated with", "documentary critique"],
+    ["Romani people", "associated with", "archival documentation"],
+    ["Romani people", "associated with", "historical documentation"],
+    ["Romani people", "associated with", "historical interpretation"],
+    ["Romani people", "associated with", "ideological confrontation"],
+    ["Romani people", "associated with", "historical reckoning"],
+    ["Romani people", "associated with", "ideological narrative"],
+    ["Romani people", "associated with", "systemic oppression"],
+    ["Romani people", "associated with", "state-sanctioned discrimination"],
+    ["Romani people", "associated with", "institutionalized marginalization"],
+    ["Romani people", "associated with", "bureaucratic racialization"],
+    ["Romani people", "associated with", "state surveillance"],
+    ["Romani people", "associated with", "public stigma"],
+    ["Romani people", "associated with", "state weaponization"],
+    ["Romani people", "associated with", "systemic persecution"],
+    ["Romani people", "associated with", "state control"],
+    ["Romani people", "associated with", "militarized social order"],
+    ["Romani people", "associated with", "institutional control"],
+    ["Romani people", "associated with", "state power"],
+    ["Romani people", "associated with", "authoritarian regimes"],
+    ["Romani people", "associated with", "systemic repression"],
+    ["Romani people", "associated with", "state mobilization"],
+    ["Romani people", "associated with", "forced displacement"],
+    ["Romani people", "associated with", "institutionalized segregation"],
+    ["Romani people", "associated with", "forced assimilation"],
+    ["Romani people", "associated with", "state confiscation"],
+    ["Romani people", "associated with", "state punishment"],
+    ["Romani people", "associated with", "state-sanctioned erasure"],
+    ["Romani people", "associated with", "cultural rupture"],
+    ["Romani people", "associated with", "media distortion"],
+    ["Romani people", "associated with", "historical distortion"],
+    ["Romani people", "associated with", "historical narrative"],
+    ["Romani people", "associated with", "historical documentation"],
+    ["Romani people", "associated with", "historical interpretation"],
+    ["Romani people", "associated with", "historical memory"],
+    ["Romani people", "associated with", "historical trauma"],
+    ["Romani people", "associated with", "historical justice"],
+    ["Romani people", "associated with", "historical accountability"],
+    ["Romani people", "associated with", "historical responsibility"],
+    ["Romani people", "associated with", "historical legacy"],
+    ["Romani people", "associated with", "historical memory"],
+    ["Romani people", "associated with", "historical reckoning"],
+    ["Romani people", "associated with", "historical justice"],
+    ["Romani people", "associated with", "historical accountability"],
+    ["Romani people", "associated with", "historical responsibility"],
+    ["Romani people", "associated with", "historical legacy"],
+    ["Romani people", "associated with", "historical memory"],
+    ["Romani people", "associated with",
+2026-10-22 12:36:51,613 worldmm.llm.qwen3vl WARNING Failed to parse response as JSON: {
+  "triples": [
+    ["Tiganiada", "authored by", "Ion Budai-Deleanu"],
+    ["Tiganiada", "depicts", "Gypsy-led armies"],
+    ["Tiganiada", "features", "Vlad Cepish"],
+    ["Gypsy-led armies", "fight against", "Ottoman forces"],
+    ["Romanian rulers", "use", "Gypsy slave labor"],
+    ["Romanian rulers", "use", "Gypsy warriors"],
+    ["Romanian rulers", "resist", "Ottoman expansion"],
+    ["Imperial Watch", "demands", "payment or forfeiture"],
+    ["1830 firman", "issued by", "Sultan Mahmud II"],
+    ["1830 firman", "freed", "white slaves"],
+    ["Russo-Ottoman War", "involves", "Tsar Nicolas I"],
+    ["Russo-Ottoman War", "involves", "Sultan Mahmud II"],
+    ["Alexandru Ghica", "involved in", "Roma emancipation"],
+    ["Article XIII", "abolished", "slavery"],
+    ["Romanian-EU flags", "symbolize", "reconciliation"],
+    ["Romanian-EU flags", "symbolize", "institutional partnership"],
+    ["1844\u20131856", "period of", "abolition"],
+    ["Spinning Mule", "used in", "cotton industry"],
+    ["Cotton Gin", "used in", "cotton industry"],
+    ["Gypsy labor", "associated with", "15th-century Eastern Europe"],
+    ["Gypsy warriors", "associated with", "15th-century Eastern Europe"],
+    ["Gypsy enslavement", "depicted in", "historical imagery"],
+    ["Gypsy enslavement", "condemned in", "archival footage"],
+    ["Gypsy nomadism", "associated with", "migration"],
+    ["Gypsy nomadism", "associated with", "cultural adaptation"],
+    ["Gypsy nomadism", "associated with", "survival"],
+    ["THE DEVOURING CHAPTER VI", "opens over", "pointillist park scene"],
+    ["pointillist park scene", "set in", "Late XIX\u2013Mid XX"],
+    ["THE DEVOURING", "signals", "theme of danger or mystery"],
+    ["Christian manga", "juxtaposed with", "domestic scenes"],
+    ["Christian manga", "labeled as", "ENTERTAINMENT"],
+    ["V-2 rocket casing", "symbolizes", "innocence vs. war"],
+    ["V-2 plaque", "evokes", "memorial or spiritual dread"],
+    ["transatlantic history", "anchors in", "colonial ship"],
+    ["transatlantic history", "anchors in", "Rio Janeiro"],
+    ["transatlantic history", "anchors in", "Oranje"],
+    ["underground labor", "evoked in", "dimly lit tunnel"],
+    ["underground labor", "evoked in", "worker with tool"],
+    ["industrialization", "linked to", "mechanized labor"],
+    ["industrialization", "linked to", "cotton industry"],
+    ["emancipation", "framed as", "political achievement"],
+    ["emancipation", "framed as", "historical milestone"],
+    ["national identity", "framed through", "historical critique"],
+    ["national identity", "framed through", "moral and political reckoning"],
+    ["institutional legacy", "symbolized by", "fragmented legacy"],
+    ["institutional legacy", "symbolized by", "digital abstraction"],
+    ["political mobilization", "symbolized by", "constitutional rally"],
+    ["political mobilization", "symbolized by", "collective oath"],
+    ["religious imagery", "interplays with", "rural imagery"],
+    ["religious imagery", "interplays with", "diplomatic meetings"],
+    ["cultural heritage", "persisted through", "ritual and tradition"],
+    ["cultural heritage", "persisted through", "practice and memory"],
+    ["nomadism", "framed as", "resilient form of cultural adaptation"],
+    ["nomadism", "framed as", "form of survival"],
+    ["folklore", "associated with", "title transition"],
+    ["folklore", "associated with", "THE DEVOURING"],
+    ["falling dollar bills", "symbolizes", "economic power shifts"],
+    ["falling dollar bills", "symbolizes", "geopolitical power shifts"],
+    ["ITS OVER", "suggests", "commentary on power shifts"],
+    ["satirical critique", "uses", "symbolic imagery"],
+    ["satirical critique", "uses", "economic metaphors"],
+    ["satirical critique", "uses", "cultural symbols"],
+    ["symbolic imagery", "layered with", "economic critique"],
+    ["symbolic imagery", "layered with", "historical conflict"],
+    ["symbolic imagery", "layered with", "cultural identity"],
+    ["symbolic imagery", "layered with", "agency"],
+    ["symbolic imagery", "layered with", "mythmaking"],
+    ["visual montage", "blends", "sepia-toned photographs"],
+    ["visual montage", "blends", "historical paintings"],
+    ["visual montage", "blends", "CGI animations"],
+    ["visual montage", "depicts", "15th-century Eastern European warfare"],
+    ["visual montage", "depicts", "Gypsy labor under Romanian rulers"],
+    ["visual montage", "depicts", "Gypsy warriors under Romanian rulers"],
+    ["visual montage", "depicts", "resistance against Ottoman expansion"],
+    ["visual montage", "features", "falling dollar bills over Ottoman maps"],
+    ["visual montage", "features", "phrase 'ITS OVER'"],
+    ["visual montage", "uses", "symbolic imagery"],
+    ["visual montage", "uses", "satirical critique"],
+    ["visual montage", "uses", "historical realism"],
+    ["visual montage", "uses", "metaphorical framing"],
+    ["visual montage", "uses", "cultural symbolism"],
+    ["visual montage", "uses", "mythological framing"],
+    ["visual montage", "uses", "economic critique"],
+    ["visual montage", "uses", "geopolitical commentary"],
+    ["visual montage", "uses", "historical realism"],
+    ["visual montage", "uses", "satirical tone"],
+    ["visual montage", "uses", "mythmaking"],
+    ["visual montage", "uses", "cultural agency"],
+    ["visual montage", "uses", "power structure critique"],
+    ["visual montage", "uses", "commodification of history"],
+    ["visual montage", "uses", "cultural identity framing"],
+    ["visual montage", "uses", "narrative transformation"],
+    ["visual montage", "uses", "historical transition"],
+    ["visual montage", "uses", "mythic framing"],
+    ["visual montage", "uses", "symbolic abstraction"],
+    ["visual montage", "uses", "economic abstraction"],
+    ["visual montage", "uses", "political abstraction"],
+    ["visual montage", "uses", "cultural abstraction"],
+    ["visual montage", "uses", "historical abstraction"],
+    ["visual montage", "uses", "mythic abstraction"],
+    ["visual montage", "uses", "narrative abstraction"],
+    ["visual montage", "uses", "symbolic narrative"],
+    ["visual montage", "uses", "mythic narrative"],
+    ["visual montage", "uses", "cultural narrative"],
+    ["visual montage", "uses", "historical narrative"],
+    ["visual montage", "uses", "political narrative"],
+    ["visual montage", "uses", "economic narrative"],
+    ["visual montage", "uses", "social narrative"],
+    ["visual montage", "uses", "cultural transformation"],
+    ["visual montage", "uses", "historical transformation"],
+    ["visual montage", "uses", "political transformation"],
+    ["visual montage", "uses", "economic transformation"],
+    ["visual montage", "uses", "social transformation"],
+    ["visual montage", "uses", "cultural redefinition"],
+    ["visual montage", "uses", "historical redefinition"],
+    ["visual montage", "uses", "political redefinition"],
+    ["visual montage", "uses", "economic redefinition"],
+    ["visual montage", "uses", "social redefinition"],
+    ["visual montage", "uses", "cultural reinterpretation"],
+    ["visual montage", "uses", "historical reinterpretation"],
+    ["visual montage", "uses", "political reinterpretation"],
+    ["visual montage", "uses", "economic reinterpretation"],
+    ["visual montage", "uses", "social reinterpretation"],
+    ["visual montage", "uses", "cultural commodification"],
+    ["visual montage", "uses", "historical commodification"],
+    ["visual montage", "uses", "political commodification"],
+    ["visual montage", "uses", "economic commodification"],
+    ["visual montage", "uses", "social commodification"],
+    ["visual montage", "uses", "cultural critique"],
+    ["visual montage", "uses", "historical critique"],
+    ["visual montage", "uses", "political critique"],
+    ["visual montage", "uses", "economic critique"],
+    ["visual montage", "uses", "social critique"],
+    ["visual montage", "uses", "cultural analysis"],
+    ["visual montage", "uses", "historical analysis"],
+    ["visual montage", "uses", "political analysis

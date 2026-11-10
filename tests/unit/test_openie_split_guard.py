@@ -18,7 +18,7 @@ ok = []
 def check(name, cond): ok.append(bool(cond)); print(("PASS " if cond else "FAIL ") + name)
 
 CAP = CFG["paths"]["caption_dir"]
-LOG = os.path.join(RF, "outputs", "3videos_20261022_120438", "prebuild_indexer.log")
+LOG = os.path.join(os.path.dirname(HERE), "fixtures", "prebuild_indexer_20261022.log")   # = outputs/3videos_20261022_120438/prebuild_indexer.log
 
 # --- split_passage on real 10min captions -------------------------------------------------------
 long_caps = json.load(open(f"{CAP}/0RxMZBLeqRI/10min.json"))

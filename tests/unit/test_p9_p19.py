@@ -25,7 +25,7 @@ check("loop: heading kept, each sentence once", new.startswith("# Title") and ne
 clean = "# T\n\nOne [citation:txt1]. Two.\n\n![](citation:img1)\n\nThree [citation:txt2]."
 new2, st2 = G.dedupe_repeated_sentences(clean)
 check("clean section unchanged", new2 == clean and st2 == {"removed_sentences": 0, "max_repeat": 1, "ends_mid_sentence": False})
-c5 = os.path.join(RF, "outputs", "c5_c0_20261025_132851", "-QuCz7kxBr8__c0_written__r1", "report.json")
+c5 = os.path.join(os.path.dirname(HERE), "fixtures", "c5_loop_report", "report.json")   # = outputs/c5_c0_20261025_132851/-QuCz7kxBr8__c0_written__r1
 if os.path.isfile(c5):
     sec = json.load(open(c5))["outline"][1]["content"]
     new3, st3 = G.dedupe_repeated_sentences(sec)
