@@ -3,10 +3,12 @@ Inputs: real 10min captions, the 14 real failed OpenIE responses of the stopped 
 and fake OpenAI-compatible servers. No GPU, writes only under a temp dir."""
 import json, os, re, sys, tempfile, threading
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
-os.environ["HF_HOME"] = "/data1/jyheo/workspace/.cache/huggingface"
 HERE = os.path.dirname(os.path.abspath(__file__))
 RF = os.path.dirname(HERE)
 sys.path.insert(0, RF)
+from rf_config import load_config  # noqa: E402
+CFG = load_config(os.path.join(RF, "config.yaml"))
+os.environ["HF_HOME"] = CFG["paths"]["hf_home"]   # before importing torch/transformers (via worldmm)
 from flask import Flask, jsonify, request
 from werkzeug.serving import make_server
 import prebuild_episodic_index as P
@@ -15,7 +17,7 @@ from worldmm.memory.episodic.utils import NerRawOutput, TripleRawOutput
 ok = []
 def check(name, cond): ok.append(bool(cond)); print(("PASS " if cond else "FAIL ") + name)
 
-CAP = "/data1/jyheo/workspace/VideoRAG/WorldMM/claude_output/full/caption"
+CAP = CFG["paths"]["caption_dir"]
 LOG = os.path.join(RF, "outputs", "3videos_20261022_120438", "prebuild_indexer.log")
 
 # --- split_passage on real 10min captions -------------------------------------------------------
@@ -120,8 +122,7 @@ check("unsalvageable output still retried (3 x 5 = 15) then empty with error",
 srv.shutdown()
 
 # --- plan_video counts split pieces -------------------------------------------------------------
-import yaml
-cfg = yaml.safe_load(open(os.path.join(RF, "config.yaml")))
+cfg = load_config(os.path.join(RF, "config.yaml"))
 cfg["paths"]["episodic_cache_root"] = tmp
 plan = P.plan_video(cfg, "0RxMZBLeqRI", "qwen3vl-8b")
 g = plan["granularities"]["10min"]

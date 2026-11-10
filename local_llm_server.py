@@ -31,7 +31,7 @@ import time
 import uuid
 from typing import Any, Dict, List, Optional
 
-import yaml
+from rf_config import load_config
 
 logger = logging.getLogger("local_llm_server")
 
@@ -163,7 +163,7 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=None, help="Override llm.local.endpoint.port")
     args = parser.parse_args()
 
-    cfg = yaml.safe_load(open(args.config, encoding="utf-8"))
+    cfg = load_config(args.config)
     endpoint = cfg["llm"]["local"]["endpoint"]
     if endpoint["server"] != "hf":
         raise SystemExit(f"config llm.local.endpoint.server={endpoint['server']}: this script serves only 'hf'")

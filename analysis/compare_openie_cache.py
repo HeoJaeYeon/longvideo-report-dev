@@ -7,11 +7,13 @@ Default set: video 1 10min (split target, baseline = backup before the split), v
 (not split targets: re-computation vs. backup = sampling variance), and the new-only caches (video 2 10min, video 3).
 Usage: python analysis/compare_openie_cache.py [--out analysis/c2_openie_compare.json]
 """
-import argparse, json, os, statistics
+import argparse, json, os, statistics, sys
 from collections import Counter
 
 RF = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CACHE = os.path.join(RF, "cache", "episodic")
+sys.path.insert(0, RF)
+from rf_config import load_config  # noqa: E402
+CACHE = load_config(os.path.join(RF, "config.yaml"))["paths"]["episodic_cache_root"]
 BACKUP = os.path.join(RF, "backups", "cache_before_split_20261022")
 NAME = "openie_results_ner_qwen3vl-8b.json"
 RUN_CUT = 15   # prebuild_episodic_index.MAX_SAME_SUBJ_PRED_RUN

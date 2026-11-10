@@ -1,5 +1,6 @@
 # 보고서 생성 파이프라인 (Video-RAG × Deep-Reporter)
 
+- 2026-11-10 경로 정리(동작 변경 없음, `internal/REORG_LOG_20261110.md`): 사전 인덱싱 캐시 `cache/episodic/` → `WorldMM/output/memory/videomme_long_qwen3vl-8b/report_framework_index/`, WorldMM 메모리 `WorldMM/claude_output/full/` → 같은 폴더(`caption/`, `metadata/`, …). 본문의 옛 경로는 작성 당시 기준이다.
 - 작성: 2026-10-22. 최종 갱신: 2026-10-26 — 단계별 중간 산출물(planner 프롬프트·outline, 섹션별 query 문장, 검색 결과, writer 프롬프트·출력, 후처리 결과)을 실제 실행 기록으로 정리했다. 모든 중간 산출물을 파일로 열어 볼 수 있도록 `analysis/export_stages.py`와 `inspect/`를 추가했다. 같은 날 ④-2(b) 검색을 코드 기준으로 자세히 다시 썼다(그래프 구성, 그래프 검색 6단계, RRF, L1 필터, semantic, image). 이전 판은 `backups/REPORT_PIPELINE.md.bak_20261026_pipeline`, `backups/REPORT_PIPELINE.md.bak_20261026_retrieval`.
 - 기준 코드: `report_framework/` (`run_report.py`, `videorag_retriever_service.py`, `local_llm_server.py`, `domain_templates.py`, `grounding_postprocessor.py`, `report_translator.py`, `prebuild_episodic_index.py`, `config.yaml`)와 Deep-Reporter `deep_reporter/` (읽기 전용).
 - 이 문서는 **보고서 1건이 어떻게 만들어지는지**를 단계별로 설명하고, 단계마다 **실제로 들어간 입력과 나온 출력**을 보여 준다. 설계 배경·결정·검증 이력은 `DESIGN_AND_STATUS.md`, 문제와 개선 이력은 `REPORT_ISSUES_AND_FIXES.md`, 반복 실행 간 차이는 `SELF_CONSISTENCY_ANALYSIS.md`·`SELF_CONSISTENCY_CAUSES.md`에 있다.

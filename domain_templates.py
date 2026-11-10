@@ -43,7 +43,10 @@ import threading
 from contextlib import contextmanager
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-DEEP_REPORT_ROOT = "/data1/jyheo/workspace/VideoRAG/Deep-Report"
+# Fallback only, when deep_reporter is not importable (normally it is on PYTHONPATH): $DEEPREPORTER_DIR, else the
+# Deep-Report checkout next to report_framework/.
+DEEP_REPORT_ROOT = os.environ.get("DEEPREPORTER_DIR") or os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Deep-Report"))
 
 # Deep-Reporter graph node -> module-level template variable it formats at call time.
 NODE_TEMPLATE_VARS = {

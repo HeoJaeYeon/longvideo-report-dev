@@ -14,6 +14,7 @@ import argparse, copy, json, os, queue, subprocess, threading, time
 from collections import defaultdict
 import requests, yaml
 from gpu_3videos import PY, QUERY, RF, VIDEOS, Watch, count_calls, gpu_mem, start, stop_all, wait_health
+from rf_config import load_config  # report_framework is on sys.path via gpu_3videos
 
 LLM_PORT, SVC_PORT, EXPECT_MIB = 18850, 18860, 19000
 VARIANTS = {
@@ -49,7 +50,7 @@ def main():
                "results": []}
     procs = []
     watch = Watch(sorted(set(gpus)), args.abort_used_mib, procs)
-    cfg0 = yaml.safe_load(open(os.path.join(RF, "config.yaml")))
+    cfg0 = load_config(os.path.join(RF, "config.yaml"))
     lock = threading.Lock()
     try:
         stacks = []

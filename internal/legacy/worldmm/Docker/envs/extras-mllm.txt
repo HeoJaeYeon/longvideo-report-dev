@@ -1,0 +1,21 @@
+# 다양한 LVLM/MLLM 로드에 흔히 필요하나 WorldMM uv.lock 에는 '없는' 선택 라이브러리.
+# base.Dockerfile 이 timm/sentencepiece/einops/einops-exts 는 이미 baked venv 에 설치함.
+# 그 외 필요 시 컨테이너 내부에서 아래를 참고해 개별 설치:
+#
+#   uv pip install --python /opt/worldmm/venv <패키지>
+#
+# 주의: baked venv(/opt/worldmm/venv)는 root 소유 → 추가 설치는 `sudo` 또는
+#       마운트 repo 에서 별도 .venv 를 만들어 진행.
+# 주의: 마운트 repo 에서 `uv sync`(exact)를 돌리면 lock 에 없는 이 패키지들은 제거됨
+#       → 보존하려면 `uv sync --inexact`.
+#
+# ── 백본별 호환 메모 ─────────────────────────────────────────
+# Qwen3-VL / Qwen2.5-VL / Qwen2-VL : transformers 4.57.6 + qwen-vl-utils (lock 포함) → 추가 설치 불필요
+# InternVL2.5                      : trust_remote_code + 아래 timm/sentencepiece/einops (baked) → 대체로 동작
+# LLaVA-Video (lmms-lab)           : 'llava'(LLaVA-NeXT) 패키지 필요. transformers 구버전 핀과 충돌 →
+#                                    이 이미지에 넣지 말고 '별도 env/이미지'로 분리 실행 권장.
+#
+timm
+sentencepiece
+einops
+einops-exts

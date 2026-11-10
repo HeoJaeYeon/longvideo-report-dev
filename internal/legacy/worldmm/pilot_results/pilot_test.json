@@ -1,0 +1,554 @@
+[
+ {
+  "ID": "611-1",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Action Recognition",
+  "video_id": "H8fGd3fCJbg",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Literature & Art",
+  "url": "https://www.youtube.com/watch?v=H8fGd3fCJbg",
+  "question": "Based on the video, what is not true about the artwork \"Apollo and Daphne\"?",
+  "choice_a": "Apollo didn't touch Daphne's skin physically.",
+  "choice_b": "Apollo tried to grab Daphne.",
+  "choice_c": "Apollo had curly hair in the sculpture.",
+  "choice_d": "Daphne's fingertips took root.",
+  "answer": "D",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "611-2",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Temporal Reasoning",
+  "video_id": "H8fGd3fCJbg",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Literature & Art",
+  "url": "https://www.youtube.com/watch?v=H8fGd3fCJbg",
+  "question": "As depicted in the video, in what order does the author present Bernini's four masterpieces created for Borghese in a single scene?",
+  "choice_a": "\"The rape of  Persephone\", \"Apollo and Daphne\", \"David\" and \"Aeneas, Anchises, and Ascanius fleeing Troy\".",
+  "choice_b": "\"David\", \"Aeneas, Anchises, and Ascanius fleeing Troy\", \"Apollo and Daphne\" and \"The rape of  Persephone\".",
+  "choice_c": "\"Apollo and Daphne\", \"Aeneas, Anchises, and Ascanius fleeing Troy\", \"David\" and \"The rape of  Persephone\".",
+  "choice_d": "\"Aeneas, Anchises, and Ascanius fleeing Troy\", \"David\", \"The rape of  Persephone\" and \"Apollo and Daphne\".",
+  "answer": "D",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "611-3",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "H8fGd3fCJbg",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Literature & Art",
+  "url": "https://www.youtube.com/watch?v=H8fGd3fCJbg",
+  "question": "What is true about Bernini's David as described in the video?",
+  "choice_a": "David opened his mouth slightly to breathe better.",
+  "choice_b": "David tried to kill the youth Acis in the statue.",
+  "choice_c": "Bernini's David portrayed the biblical hero in contemplation.",
+  "choice_d": "The contrast between the two famous \"David\" showed the move from Renaissance to Baroque.",
+  "answer": "D",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "638-1",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Information Synopsis",
+  "video_id": "mzoX7zEZ6h4",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Finance & Commerce",
+  "url": "https://www.youtube.com/watch?v=mzoX7zEZ6h4",
+  "question": "Which of the following is NOT one of the primary methods to reach the theme introduced in the video?",
+  "choice_a": "The minting of physical coins and printing of paper money by government entities.",
+  "choice_b": "The issuance of loans and creation of digital debt records by private banks.",
+  "choice_c": "Direct investment by central banks into research and development of technological innovations.",
+  "choice_d": "Quantitative easing measures undertaken by central banks to inject liquidity into the economy.",
+  "answer": "C",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "638-2",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Information Synopsis",
+  "video_id": "mzoX7zEZ6h4",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Finance & Commerce",
+  "url": "https://www.youtube.com/watch?v=mzoX7zEZ6h4",
+  "question": "What is the main focus of this video?",
+  "choice_a": "The mechanics of money creation by central banks, private banks, and governments, and the resulting implications.",
+  "choice_b": "The historical evolution of the US monetary system from the gold standard to the current debt-based system.",
+  "choice_c": "The role of financial instruments like derivatives in the 2008 financial crisis and their ongoing impact on the global economy.",
+  "choice_d": "The issue of wealth inequality, its connection to central bank policies, and potential solutions for a more equitable distribution of wealth.",
+  "answer": "A",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "638-3",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "mzoX7zEZ6h4",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Finance & Commerce",
+  "url": "https://www.youtube.com/watch?v=mzoX7zEZ6h4",
+  "question": "What does the video identify as a significant consequence of central bank interventions like quantitative easing?",
+  "choice_a": "A decrease in the value of the US dollar compared to other currencies.",
+  "choice_b": "A reduction in the overall national debt through bond purchases.",
+  "choice_c": "An increase in the velocity of money, leading to rapid circulation within the real economy.",
+  "choice_d": "A distortion of market realities, leading to inflated asset prices like stocks and real estate.",
+  "answer": "D",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "642-1",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Information Synopsis",
+  "video_id": "lAgwMGRvJrM",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Astronomy",
+  "url": "https://www.youtube.com/watch?v=lAgwMGRvJrM",
+  "question": "What subject is central to the content of the video?",
+  "choice_a": "The formation and evolution of stellar nurseries.",
+  "choice_b": "An exploration of the varied subclasses of supernovae phenomena.",
+  "choice_c": "The impact of dark matter on galactic rotation curves.",
+  "choice_d": "The mechanisms behind pulsar emission.",
+  "answer": "B",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "642-2",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Temporal Reasoning",
+  "video_id": "lAgwMGRvJrM",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Astronomy",
+  "url": "https://www.youtube.com/watch?v=lAgwMGRvJrM",
+  "question": "What is the order in which the following is introduced in the video?\n\u2460 SN-1987A\n\u2461 Type 1a Supernova\n\u2462 Kilonova",
+  "choice_a": "\u2460\u2462\u2461.",
+  "choice_b": "\u2461\u2462\u2460.",
+  "choice_c": "\u2460\u2461\u2462.",
+  "choice_d": "\u2462\u2460\u2461.",
+  "answer": "C",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "642-3",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "lAgwMGRvJrM",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Astronomy",
+  "url": "https://www.youtube.com/watch?v=lAgwMGRvJrM",
+  "question": "What was Fritz Zwicky's significant contribution as highlighted in the video?",
+  "choice_a": "He discovered the existence of dark matter through observations of galaxy clusters.",
+  "choice_b": "He invented the Schmidt telescope, which revolutionized astronomical observation.",
+  "choice_c": "He was the first to propose the theory of neutron stars as remnants of supernova explosions.",
+  "choice_d": "He developed the system for classifying supernovae based on their spectral characteristics.",
+  "answer": "D",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "647-1",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Temporal Reasoning",
+  "video_id": "0w4OTD4L0GQ",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Astronomy",
+  "url": "https://www.youtube.com/watch?v=0w4OTD4L0GQ",
+  "question": "What is the order in which the following is introduced in the video?\n\u2460 Our Local Universe\n\u2461 The Zone of Avoidance\n\u2462 Dark Flow\n\u2463 The Vela Supercluster",
+  "choice_a": "\u2462\u2460\u2461\u2463.",
+  "choice_b": "\u2460\u2462\u2461\u2463.",
+  "choice_c": "\u2461\u2460\u2463\u2462.",
+  "choice_d": "\u2460\u2461\u2462\u2463.",
+  "answer": "D",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "647-2",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "0w4OTD4L0GQ",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Astronomy",
+  "url": "https://www.youtube.com/watch?v=0w4OTD4L0GQ",
+  "question": "What is the \"Great Attractor\" according to the video?",
+  "choice_a": "An immense region of dark matter influencing the motion of galaxies across billions of light-years.",
+  "choice_b": "A phenomenon to the outskirts of the Milky Way, attracting the contents of the cluster towards it.",
+  "choice_c": "The central supermassive black hole of the Milky Way, Sagittarius A*.",
+  "choice_d": "A celestial object akin to a quasar, emitting immense amounts of energy and affecting local space.",
+  "answer": "B",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "647-3",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "0w4OTD4L0GQ",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Astronomy",
+  "url": "https://www.youtube.com/watch?v=0w4OTD4L0GQ",
+  "question": "What aspect is NOT described in the video?",
+  "choice_a": "The role of dark matter in the formation of the Great Attractor.",
+  "choice_b": "Its gravitational influence on the local galaxy supercluster, Laniakea.",
+  "choice_c": "The challenges posed by the Zone of Avoidance in studying the Great Attractor.",
+  "choice_d": "Observational history and methods used to investigate the Great Attractor region.",
+  "answer": "A",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "671-1",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Information Synopsis",
+  "video_id": "HnS87Tw4amM",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Life Tip",
+  "url": "https://www.youtube.com/watch?v=HnS87Tw4amM",
+  "question": "What is the central theme of the video?",
+  "choice_a": "How to install a washing machine without water leakage.",
+  "choice_b": "How to remove mold grime and bad smells from washing machines.",
+  "choice_c": "How to repair a washing machine when the drum cubes are broken.",
+  "choice_d": "How to deal with hard water that leaves calcification problems on washing machines.",
+  "answer": "B",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "671-2",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Temporal Reasoning",
+  "video_id": "HnS87Tw4amM",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Life Tip",
+  "url": "https://www.youtube.com/watch?v=HnS87Tw4amM",
+  "question": "In which order are the following steps introduced in this video?\n(a) Removing a washing machine door seal.\n(b) Astonishing Results of the beach on the washing machine door seal.\n(c) Washing machine hoses to clean to remove Mold Mildew fungus.\n(d) Cleaning mold out of soap draw.",
+  "choice_a": "(b)(c)(a)(d).",
+  "choice_b": "(a)(b)(c)(d).",
+  "choice_c": "(a)(c)(b)(d).",
+  "choice_d": "(b)(d)(a)(c).",
+  "answer": "C",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "671-3",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "HnS87Tw4amM",
+  "duration": "long",
+  "domain": "Knowledge",
+  "sub_category": "Life Tip",
+  "url": "https://www.youtube.com/watch?v=HnS87Tw4amM",
+  "question": "How and why does the water filled in the drum change color?",
+  "choice_a": "It turns dirty because it soaks the rubbish in the washing machine.",
+  "choice_b": "It turns clean due to the water purification of the drum.",
+  "choice_c": "It turns clean because it soaks the rubbish in the washing machine.",
+  "choice_d": "It turns dirty due to the water purification of the drum.",
+  "answer": "A",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "706-1",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Action Reasoning",
+  "video_id": "ctqn-UJGX5M",
+  "duration": "long",
+  "domain": "Film & Television",
+  "sub_category": "Movie & TV Show",
+  "url": "https://www.youtube.com/watch?v=ctqn-UJGX5M",
+  "question": "How is Arya Stark when she was a child?",
+  "choice_a": "Quiet.",
+  "choice_b": "Naught.",
+  "choice_c": "Bad.",
+  "choice_d": "Troublesome.",
+  "answer": "B",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "706-2",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "ctqn-UJGX5M",
+  "duration": "long",
+  "domain": "Film & Television",
+  "sub_category": "Movie & TV Show",
+  "url": "https://www.youtube.com/watch?v=ctqn-UJGX5M",
+  "question": "What is the girl most important quality?",
+  "choice_a": "Loyal.",
+  "choice_b": "Smart.",
+  "choice_c": "Honest.",
+  "choice_d": "Tough.",
+  "answer": "D",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "706-3",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Information Synopsis",
+  "video_id": "ctqn-UJGX5M",
+  "duration": "long",
+  "domain": "Film & Television",
+  "sub_category": "Movie & TV Show",
+  "url": "https://www.youtube.com/watch?v=ctqn-UJGX5M",
+  "question": "What does the video tell us?",
+  "choice_a": "The challenge of the girl.",
+  "choice_b": "The identity of the girl.",
+  "choice_c": "The transformation of the girl.",
+  "choice_d": "The suffer of the girl.",
+  "answer": "C",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "819-1",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Action Recognition",
+  "video_id": "GsYi-l5PEEs",
+  "duration": "long",
+  "domain": "Artistic Performance",
+  "sub_category": "Acrobatics",
+  "url": "https://www.youtube.com/watch?v=GsYi-l5PEEs",
+  "question": "What is the man doing when the carousel starts spinning for the first time?",
+  "choice_a": "He is trying to stand on the balance board on the third level.",
+  "choice_b": "He is jumping from the ground onto the platform.",
+  "choice_c": "He is standing on the balance board on the fourth level.",
+  "choice_d": "He is having a conversation with the little boy on the ground.",
+  "answer": "B",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "819-2",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "GsYi-l5PEEs",
+  "duration": "long",
+  "domain": "Artistic Performance",
+  "sub_category": "Acrobatics",
+  "url": "https://www.youtube.com/watch?v=GsYi-l5PEEs",
+  "question": "Which statement about this video is true?",
+  "choice_a": "The man eventually reached the top of the 5-layer balance board.",
+  "choice_b": "The entire performance took place in bright daylight, without the sky turning dim.",
+  "choice_c": "At the end of the performance, the man failed to do a handstand.",
+  "choice_d": "There are zoom shots in the entire video.",
+  "answer": "D",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "819-3",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "GsYi-l5PEEs",
+  "duration": "long",
+  "domain": "Artistic Performance",
+  "sub_category": "Acrobatics",
+  "url": "https://www.youtube.com/watch?v=GsYi-l5PEEs",
+  "question": "Who is most likely to have filmed this video?",
+  "choice_a": "A professional videographer hired for the event.",
+  "choice_b": "The event organizer.",
+  "choice_c": "An audience sitting and watching the show.",
+  "choice_d": "A random passerby.",
+  "answer": "C",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "862-1",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "uzyYKAPcfmE",
+  "duration": "long",
+  "domain": "Life Record",
+  "sub_category": "Travel",
+  "url": "https://www.youtube.com/watch?v=uzyYKAPcfmE",
+  "question": "What is the relationship between the two travelers in the video?",
+  "choice_a": "They are couples.",
+  "choice_b": "They are colleagues.",
+  "choice_c": "They are traveling friends.",
+  "choice_d": "It is impossible to extrapolate.",
+  "answer": "A",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "862-2",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Temporal Reasoning",
+  "video_id": "uzyYKAPcfmE",
+  "duration": "long",
+  "domain": "Life Record",
+  "sub_category": "Travel",
+  "url": "https://www.youtube.com/watch?v=uzyYKAPcfmE",
+  "question": "What did the people in the video do on the third day of their trip?",
+  "choice_a": "They visited Lake Titicaca.",
+  "choice_b": "They went on a spelunking expedition.",
+  "choice_c": "They did their shopping in the town of Daloria.",
+  "choice_d": "They upgraded their room to a twin room.",
+  "answer": "B",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ },
+ {
+  "ID": "862-3",
+  "query_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  },
+  "type": "Object Reasoning",
+  "video_id": "uzyYKAPcfmE",
+  "duration": "long",
+  "domain": "Life Record",
+  "sub_category": "Travel",
+  "url": "https://www.youtube.com/watch?v=uzyYKAPcfmE",
+  "question": "What's so special about the trip in the video?",
+  "choice_a": "This trip is a high-altitude trip.",
+  "choice_b": "During this trip, they visited uninhabited areas and explored the beautiful natural scenery.",
+  "choice_c": "Most time of the trip was spent on the train.",
+  "choice_d": "This is a honeymoon trip for two people.",
+  "answer": "C",
+  "target_time": {
+   "date": "DAY1",
+   "time": "23595999"
+  }
+ }
+]

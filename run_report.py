@@ -39,7 +39,6 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
-import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 if HERE not in sys.path:
@@ -47,6 +46,7 @@ if HERE not in sys.path:
 import domain_templates as D  # noqa: E402
 import grounding_postprocessor as G  # noqa: E402
 import report_translator as RT  # noqa: E402
+from rf_config import load_config  # noqa: E402
 
 logger = logging.getLogger("run_report")
 FAILURE_MARKERS = G.FAILURE_MARKERS
@@ -357,7 +357,7 @@ def main() -> None:
     parser.add_argument("--out-dir", default=None, help="Default: {report.outputs_dir}/{video_id}_{timestamp}")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
-    cfg = yaml.safe_load(open(args.config, encoding="utf-8"))
+    cfg = load_config(args.config)
     out_dir = args.out_dir or os.path.join(cfg["report"]["outputs_dir"],
                                            f"{args.video_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
     sys.exit(run(cfg, args.video_id, args.query, args.checklist, out_dir))

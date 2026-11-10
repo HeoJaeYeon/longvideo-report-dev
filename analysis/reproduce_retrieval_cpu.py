@@ -31,6 +31,7 @@ import numpy as np
 import torch
 import yaml
 from export_stages import load_jobs, log_lines
+from rf_config import load_config
 
 
 def tree_md5(root):
@@ -142,6 +143,10 @@ def main():
     vid, run = a.video, os.path.abspath(a.run)
     job = f"{vid}__c0_written__r{a.repeat}"
     cfg = yaml.safe_load(open(os.path.join(run, f"config_{job}.yaml")))
+    # Data locations come from the current config.yaml: the run's config copy records where they were at run time
+    # (the memory and the episodic index moved on 2026-11-10). All retrieval settings stay those of the run.
+    current = load_config(os.path.join(RF, "config.yaml"))["paths"]
+    cfg["paths"].update({k: current[k] for k in ("worldmm_root", "caption_dir", "metadata_dir", "episodic_cache_root")})
     rj = json.load(open(os.path.join(run, job, "report.json")))
     sessions = {}
     for p in glob.glob(os.path.join(run, "dr_logs_s*", "*.jsonl")):

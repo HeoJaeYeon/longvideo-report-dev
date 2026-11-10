@@ -19,9 +19,10 @@ import argparse, itertools, json, os, re, statistics, sys
 RF = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, RF)
 import grounding_postprocessor as G
+from rf_config import load_config
 
 RUN_DIR = os.path.join(RF, "outputs", "p9p19_check_20261025_141401")
-CAPTIONS = "/data1/jyheo/workspace/VideoRAG/WorldMM/claude_output/full/caption"
+CAPTIONS = load_config(os.path.join(RF, "config.yaml"))["paths"]["caption_dir"]
 VIDEOS = ["-QuCz7kxBr8", "0RxMZBLeqRI", "54k2g9ddy4M"]
 RUNS = (1, 2, 3)
 NAME_RE = re.compile(r"(?<![.!?]\s)(?<!^)\b([A-Z][a-zA-Z’'\-]+(?:\s+(?:[A-Z][a-zA-Z’'\-]+|of|the|de|des))*\s*[A-Z]?[a-zA-Z’'\-]*)")

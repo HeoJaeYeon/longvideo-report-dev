@@ -29,7 +29,7 @@ import numpy as np
 import yaml
 import grounding_postprocessor as G
 from export_stages import load_jobs, log_lines, cited_txt, cited_img
-from build_running_example import WM, CAP, META, GRANS, sec, cut, cell, fence, details
+from build_running_example import WM, CAP, META, EPI, GRANS, sec, cut, cell, fence, details
 
 VID = "-QuCz7kxBr8"
 REPEAT = 1
@@ -37,7 +37,7 @@ RUN = os.path.join(RF, "outputs", "p9p19_check_20261025_141401")
 JOB = f"{VID}__c0_written__r{REPEAT}"
 ASSET_REL = f"assets/{VID}"                                  # relative to running_example/
 ASSET_DIR = os.path.join(RF, "running_example", ASSET_REL)
-WMF = f"{WM}/claude_output/full"
+WMF = os.path.dirname(CAP)   # WorldMM memory folder (parent of caption/): transcript/, logs/
 PRE_LOG = f"{WMF}/logs/{VID}.log"
 VIDEO = f"{WM}/data/Video-MME/data/{VID}.mp4"
 # 10sec segments shown frame by frame: the §3.2 example + the three segments whose center frames became Figure 1-3
@@ -263,7 +263,7 @@ def render():
     w("")
     w(f"- **대상**: §6.1의 보고서와 같은 건(`{rel(os.path.join(RUN, JOB))}`). §2–§7이 세 영상을 비교했다면, 이 절은 한 영상에 대해 **사전 구축 메모리의 실제 내용, 모듈이 실제로 받은 프레임, 모듈별 입력·출력 원문**을 모두 펼친다.")
     w("- **만든 방법**: `analysis/build_running_example_deep.py`가 아래 원본에서 직접 생성했다(LLM 재호출 없음, CPU).")
-    w(f"  - WorldMM 전처리 결과: `{rel(WMF) if WMF.startswith(RF) else WMF}/` 아래 caption·transcript·metadata, 전처리 로그 `logs/{VID}.log`")
+    w(f"  - WorldMM 전처리 결과: `{os.path.relpath(WMF, os.path.dirname(RF))}/` 아래 caption·transcript·metadata, 전처리 로그 `logs/{VID}.log`")
     w("  - WorldMM 코드를 수정 없이 불러와 다시 계산: 10초 구간 분할·캡션 입력 프레임(`preprocess/episodic_memory/generate_fine_caption.py`), VLM2Vec 프레임 범위·리사이즈(`VLM2Vec/.../qwen_vl_utils.py`), 캡션 계층 묶음(`gen_multiscale._summarize_level`과 같은 규칙)")
     w("  - 재사용한 WorldMM 코드는 전처리 당시 코드와 같다고 본다. 전처리 로그의 경로는 이름 변경 전 `VAU_RAG/WorldMM`인데, 같은 디렉터리가 `VideoRAG`로 이름만 바뀌었다(`DESIGN_AND_STATUS.md` §10). 재사용한 파일들의 마지막 수정 시각은 모두 2026-09-20 이전으로, 메모리 생성(2026-09-21–22)보다 앞선다. [확인: 파일 수정 시각]")
     w("  - 보고서 실행 기록: `report.json`·`validation.json`·`report.md`, Deep-Reporter 세션 로그, LLM 서버·검색 서비스 로그")
@@ -444,7 +444,7 @@ def render():
     w("")
     # HippoRAG graphs
     import pandas as pd
-    base = os.path.join(RF, "cache", "episodic", VID, "episodic_memory")
+    base = os.path.join(EPI, VID, "episodic_memory")
     w("**HippoRAG 그래프 구성 규칙** (`hipporag/HippoRAG.py`, 기본 설정) [확인]")
     w("")
     w("- 노드: passage(캡션 1개 = 1노드, id `chunk-<md5>`) + entity(triple 주어·목적어, 소문자화 등 정규화 후, id `entity-<md5>`).")
@@ -721,6 +721,7 @@ def render():
     w(f"- 맞은 섹션: text {fmt(lambda x: x['text_match'])} / semantic {fmt(lambda x: x['semantic_match'])} / image {fmt(lambda x: x['visual_match'])}.")
     w(f"- text가 어긋난 섹션: 기록된 근거의 RRF 점수가 다른 섹션({fmt(lambda x: not x['checks']['episodic_rrf']['ok'])})은 그 근거가 목록 하나에 더 들어가거나 빠지거나 순위가 한 칸 바뀐 값이다(각 섹션 ③의 근거). 점수는 모두 같은데 L1 프롬프트 토큰 수만 다른 섹션({fmt(lambda x: x['checks']['episodic_rrf']['ok'] and not x['checks']['l1_prompt_tokens']['ok'])})은 L1이 고르지 않은 후보 일부가 다르다. 모두 목록 **끝자리 근처의 순위 차이**다. [확인]")
     w("- 원인: 섹션 1·2를 CPU에서 float32와 bfloat16으로 따로 돌려 본 진단에서 text 후보는 두 정밀도가 서로 같았고, 둘 다 기록과 같은 지점에서 달랐다. 그래서 CPU와 GPU(flash_attention_2) 사이 질의 임베딩의 미세한 차이로 보인다. GPU로 다시 돌려 확인하지는 않았다. [부분 확인]")
+    w("- 재현의 실행 간 차이: 이 표는 2026-11-02 CPU 재현 결과다. 2026-11-10에 같은 코드·같은 데이터(캐시 md5 동일)로 다시 돌린 두 번의 결과는 서로도, 이 표와도 달랐다(예: S1 text — 11-02 불일치, 11-10 한 번은 일치·한 번은 불일치). CPU 재현 자체가 실행마다 점수가 조금씩 달라(그래프 검색 점수 최대 차이 약 0.008) 점수가 비슷한 후보의 순위가 바뀐다. 그래서 \"맞은 섹션\" 목록은 고정된 값이 아니다. [확인: 대조 실험, `internal/REORG_LOG_20261110.md` 9절] 실행마다 달라지는 구체적 기제는 확인하지 않았다. [가설]")
     w("")
     for i, (s, rs) in enumerate(zip(outline, repro["sections"]), 1):
         content = s["content"] or ""

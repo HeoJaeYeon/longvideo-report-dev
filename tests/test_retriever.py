@@ -9,11 +9,12 @@ real WorldMM/HippoRAG code; only the models are fakes (no GPU):
 All writes go to the scratchpad directory.
 """
 import copy, hashlib, json, os, re, sys, threading, time
-import numpy as np, requests, yaml
+import numpy as np, requests
 
-RF = "/data1/jyheo/workspace/VideoRAG/report_framework"
+RF = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_artifacts")
 sys.path.insert(0, RF)
+from rf_config import load_config  # noqa: E402
 VID = "-QuCz7kxBr8"
 LABEL = "fake-llm"
 
@@ -100,7 +101,7 @@ check.failed = 0
 def main():
     import logging
     logging.basicConfig(level=logging.WARNING)
-    cfg = yaml.safe_load(open(os.path.join(RF, "config.yaml")))
+    cfg = load_config(os.path.join(RF, "config.yaml"))
     cfg["paths"]["episodic_cache_root"] = os.path.join(SCRATCH, "test_cache", "episodic")
     cfg["service"]["frames_dir"] = os.path.join(SCRATCH, "test_cache", "frames")
     cfg["worldmm"]["episodic_cache_label"] = LABEL

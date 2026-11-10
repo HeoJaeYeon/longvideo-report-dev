@@ -1,0 +1,37 @@
+diff --git a/README.md b/README.md
+index 0781372..fa78cf5 100644
+--- a/README.md
++++ b/README.md
+@@ -35,6 +35,32 @@ Deep-Report/
+ └── start.py                # Quick-start report generation entry point  
+ ```
+ 
++
++```
++Deep-Report/
++├── start.py                     # 최상위 실행 예(1 리포트)
++├── deep_reporter/
++│   ├── api.py                   # LongGenAPI.generate_article(...) 진입점 ★
++│   ├── core/
++│   │   ├── state.py             # MultimodalLongFormState, SectionInfo (상태=데이터계약) ★
++│   │   └── graph.py             # StateGraph 배선/라우팅 ★
++│   ├── nodes/                   # 6개 노드
++│   │   ├── planner_node.py          # outline 생성/검증
++│   │   ├── query_generation_node.py # 섹션별 text/image 쿼리 생성
++│   │   ├── search_node.py           # HTTP 검색 호출(교체지점) ★
++│   │   ├── filter_node.py           # (옵션) 텍스트 LLM / 이미지 VLM 필터
++│   │   ├── section_writing_node.py  # 섹션 작성(writer 코어) ★
++│   │   └── combine_node.py          # 섹션 연결 → 최종본
++│   ├── prompts/templates.py     # outline/query/writing/filter 프롬프트 ★
++│   ├── llms/factory.py          # OpenAI 호환 LLM 팩토리(primary/aux/filter/vlm)
++│   ├── llms/reasoning_openai.py # ChatOpenAI 래퍼
++│   ├── config/{base_config,runtime_config}.py  # 설정(모델/URL/키/topk)
++│   └── utils/{common_utils,llm_utils,session_logger,stream_formatter}.py
++├── retriever/retriever_app.py   # 원래 내장 retriever(Flask+Milvus+Jina) — Video RAG로 대체 대상
++└── evaluation/                  # 다차원 평가(citation precision 등)
++```
++
++
+ ---
+ 
+ ## Quick Start

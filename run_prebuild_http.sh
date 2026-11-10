@@ -7,8 +7,10 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
-WORLDMM=/data1/jyheo/workspace/VideoRAG/WorldMM
-PY=/opt/venv/bin/python
+# WorldMM checkout: $WORLDMM_DIR (set in the videorag_report container), else the one next to report_framework/.
+WORLDMM="${WORLDMM_DIR:-$HERE/../WorldMM}"
+# Python with worldmm/hipporag installed (default: the container venv); override with RF_PYTHON.
+PY="${RF_PYTHON:-/opt/venv/bin/python}"
 LLM_GPUS="${1:?usage: run_prebuild_http.sh <LLM_GPUS> <INDEXER_GPU> [args]}"
 INDEXER_GPU="${2:?usage: run_prebuild_http.sh <LLM_GPUS> <INDEXER_GPU> [args]}"
 shift 2

@@ -1,0 +1,20 @@
+# ────────────────────────────────────────────────────────────────────────────
+#  통합 venv(=WorldMM/.venv) 에 WorldMM uv.lock '밖'으로 더 얹는 패키지들의 단일 출처.
+#  build 시: base.Dockerfile 이 named build-context(int) 로 이 파일을 읽어 캐시 프리워밍.
+#  run  시: `intsetup` 이 `uv pip install -r <이 파일>` 로 WorldMM/.venv 에 설치(캐시 재사용).
+#  → 빌드/런타임이 '같은 파일'을 사용하므로 버전 이중기재 없음(단일 출처).
+#
+#  주의: 아래는 WorldMM uv.lock 과 '함께' 설치됨. langchain-openai 가 openai 를 2.45+ 로 올리므로
+#        통합 venv 의 openai 는 2.29 → 2.54 로 상승(WorldMM/MERIT 는 openai 2.x API 에서 동작).
+#  근거: claude_output/deepreporter_env_compat_checklist.md (해결 검증) + MERIT 호환 분석(보고서 §2).
+# ────────────────────────────────────────────────────────────────────────────
+
+# ── Deep-Reporter 코어 (LangGraph 그래프 + OpenAI 호환 chat 래퍼) ──
+#    코어 실제 import = langgraph / langchain_core / langchain_openai (openai/httpx/requests 는 전이의존).
+#    meta 'langchain' 과 retriever(pymilvus/jina)는 불필요 — 검색은 우리 [A] 서비스로 대체.
+langgraph==1.2.16
+langchain-core==1.6.12
+langchain-openai==1.4.3
+
+# ── [A] Video-RAG 검색서비스용 HTTP 서버 ──
+flask==3.1.3

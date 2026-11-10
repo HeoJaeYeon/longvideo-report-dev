@@ -41,12 +41,12 @@ import time
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
-import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 if HERE not in sys.path:
     sys.path.insert(0, HERE)
 from prebuild_episodic_index import make_labeled_episodic_memory_class, plan_video  # noqa: E402
+from rf_config import load_config  # noqa: E402
 
 logger = logging.getLogger("videorag_retriever")
 
@@ -468,7 +468,7 @@ def main() -> None:
     parser.add_argument("--preload", default="", help="Video id to load at startup")
     args = parser.parse_args()
 
-    cfg = yaml.safe_load(open(args.config, encoding="utf-8"))
+    cfg = load_config(args.config)
     os.environ["HF_HOME"] = cfg["paths"]["hf_home"]
     if args.gpu is not None:
         os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu

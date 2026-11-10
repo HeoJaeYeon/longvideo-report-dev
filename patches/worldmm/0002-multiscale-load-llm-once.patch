@@ -1,0 +1,42 @@
+diff --git a/src/worldmm/memory/episodic/multiscale.py b/src/worldmm/memory/episodic/multiscale.py
+index 1ec3190..cf6627e 100644
+--- a/src/worldmm/memory/episodic/multiscale.py
++++ b/src/worldmm/memory/episodic/multiscale.py
+@@ -14,7 +14,7 @@ from .gen_multiscale import gen_multiscale
+ 
+ def _process_video_dir(
+     video_dir: str,
+-    model_name: str,
++    llm: "LLMModel",
+     base_name: str,
+     windows: List[int],
+     granularity_names: List[str],
+@@ -24,7 +24,6 @@ def _process_video_dir(
+     if not os.path.exists(base_json):
+         return video_dir, f"Skipping {video_dir}: {base_name} not found"
+ 
+-    llm = LLMModel(model_name=model_name)
+     gen_multiscale(
+         input_json=base_json,
+         save_dir=video_dir,
+@@ -78,14 +77,18 @@ def generate_multiscale_memory(
+ 
+     print(f"Processing {len(video_dirs)} video(s) for multiscale memory (perspective={perspective})...")
+     failures: list[tuple[str, str]] = []
+-    max_workers = min(8, len(video_dirs)) if video_dirs else 1
++    # Load the LLM once and share it. A local model instance cannot be loaded
++    # per-video concurrently (N x weights -> GPU OOM); generation is already
++    # serialized inside the wrapper, so a single worker is used.
++    llm = LLMModel(model_name=model_name)
++    max_workers = 1
+ 
+     with ThreadPoolExecutor(max_workers=max_workers) as executor:
+         future_to_video_dir = {
+             executor.submit(
+                 _process_video_dir,
+                 video_dir,
+-                model_name,
++                llm,
+                 base_name,
+                 windows,
+                 granularity_names,

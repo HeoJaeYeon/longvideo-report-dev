@@ -3,6 +3,7 @@
 - 작성: 2026-10-21~22 (Claude Code, 사용자 지시와 승인에 따라 작성). 최종 갱신: 2026-10-26 (흐름 오류·추측 표현 측정 §9.17, P19 영상 끝 근거·반복 경고 기준·검사 오탐 수정 §8.13. 2026-10-25: P9·P19·I28 §8.12·§9.16, 결정 16, C-1–C-5 §9.10–§9.14, 재시도 이력 §9.15, I29·I30)
 - 위치: `/data1/jyheo/workspace/VideoRAG/report_framework/DESIGN_AND_STATUS.md`
 - **처음 이어받는 사람은 §2(현재 상태)와 §13(인수인계)부터 읽는다.**
+- **2026-11-10 경로 정리** (동작 변경 없음, 상세 `internal/REORG_LOG_20261110.md`): WorldMM 메모리 `WorldMM/claude_output/full/` → `WorldMM/output/memory/videomme_long_qwen3vl-8b/`, 사전 인덱싱 캐시 `report_framework/cache/episodic/` → 같은 폴더의 `report_framework_index/`(둘 다 복사, md5 동일, 원본은 삭제 승인 전까지 보존). `config.yaml`의 경로는 `report_framework/` 기준 상대 경로이고 `rf_config.load_config()`가 해석한다. 메모리 구축 스크립트는 `scripts/memory_build/`, Docker 정의 사본은 `docker/`, WorldMM 로컬 수정 patch는 `patches/worldmm/`에 있다. 본문의 옛 경로는 당시 기록이다.
 
 ## 0. 문서 안내
 
@@ -168,7 +169,7 @@
 - WorldMM에는 로컬 수정이 있다(`git diff`): `qwen3vl.py`(생성 lock 추가, JSON 파싱 보강), `multiscale.py`(LLM 1회 로드, worker 1개), `script/4_eval.sh`·`script/videomme/4_eval.sh`(모델명 `qwen3vl`). 이 중 **`qwen3vl`은 `MODEL_DICT` 키(`qwen3vl-2b/4b/8b`)가 아니어서 기본값으로 실행하면 `ValueError`가 난다**. `eval.py`는 semantic 파일을 `semantic_consolidation_results_{retriever_model}.json`으로 찾으므로 `--retriever-model qwen3vl-8b`로 실행해야 한다.
 - `Qwen3VLModel`은 `max_retries=3`, 기본 `max_new_tokens=2048`이고, 구조화 응답을 `_parse_structured_response`로 파싱한다(코드블록 제거, 첫 JSON 값만 디코드, 필드가 1개인 스키마의 bare 배열은 그 필드로 감쌈). OpenIE는 그 위에 별도 재시도(기본 5회)를 건다.
 
-**구축된 데이터** (✔): `WorldMM/claude_output/full/`
+**구축된 데이터** (✔): `WorldMM/claude_output/full/` (2026-11-10부터 사본 `WorldMM/output/memory/videomme_long_qwen3vl-8b/`를 쓴다. 목록은 `lists/`, 진행 표식은 `build_state/` 아래로 옮겼다)
 - 50개 영상 모두 캡션 4종, `episodic_memory/openie_results_qwen3vl-8b.json`, `semantic_consolidation_results_qwen3vl-8b.json`, `visual_embeddings.pkl`을 갖췄다. `done/` 표식 50개, `failed/` 비어 있음.
 - Video-MME `test.json`은 2,700행이고, 그중 이 50개 영상의 QA는 150문항(영상당 3문항)이다.
 
@@ -513,7 +514,7 @@ repo 파일은 수정하지 않는다. 바꾸는 대상은 두 가지다.
 
 | 절 | 주요 값 |
 |---|---|
-| `paths` | `hf_home`(실제 모델 캐시), `caption_dir`·`metadata_dir`(WorldMM 산출물), `episodic_cache_root`(`report_framework/cache/episodic`), `log_dir` |
+| `paths` | `hf_home`(실제 모델 캐시), `caption_dir`·`metadata_dir`(WorldMM 산출물), `episodic_cache_root`(`report_framework/cache/episodic`; 2026-11-10부터 `../WorldMM/output/memory/videomme_long_qwen3vl-8b/report_framework_index`), `log_dir`. 2026-11-10부터 상대 경로는 `report_framework/` 기준(`rf_config.py`) |
 | `worldmm` | `granularities: [10sec, 30sec, 3min, 10min]`, `query_time: 123595999`(DAY1 23:59:59, 전체), `metadata_model: qwen3vl-8b`, `text_embedding_model: Qwen/Qwen3-Embedding-4B`, `episodic_cache_label: qwen3vl-8b` |
 | `llm` | `backend: local`. local: `worldmm_model: qwen3vl-8b`, 엔드포인트 `server: hf`, `127.0.0.1:8010`, `model: qwen3vl-8b`, `api_key: EMPTY`, `default_max_tokens: 8192`. openai: `gpt-5-mini` |
 | `retrieval` | `episodic_filter: L1`, `rrf_k: 60`, 후보 `{10sec:3, 30sec:3, 3min:2, 10min:1}`, `full_top_k_per_query: 3`, `episodic_k: 8`, `semantic_k_per_query: 5`, `semantic_k: 4`, `visual_k_per_query: 3`, `image_k: 4`, `filter_max_tokens: 512` |
@@ -1099,7 +1100,7 @@ CPU 테스트는 `CUDA_VISIBLE_DEVICES=""`로 실행하고, 산출물은 `tests/
 |---|---|
 | 캐시 계획·완전성 판정 / 시드 / 라벨 클래스 / HTTP OpenIE | `prebuild_episodic_index.py`: `plan_video`, `build_seed_docs`, `make_labeled_episodic_memory_class`, `make_http_llm_model`, `check_endpoints` |
 | 긴 청크 분할 / 응답 구제 / 폭주 절단 / 캐시 병합 | `prebuild_episodic_index.py`: `count_tokens`, `split_passage`, `openie_split_docs`, `json_list_items`, `salvage_structured`, `cut_long_runs`, `write_cache_docs`, 상수 `SPLIT_MIN_TOKENS`, `SPLIT_PIECE_TOKENS`, `MAX_SAME_SUBJ_PRED_RUN`, `MAX_SALVAGED_ENTITIES` |
-| 10min 캡션 생성(잘림 원인) | `WorldMM/src/worldmm/memory/episodic/gen_multiscale.py` (`_summarize_batch`), `WorldMM/claude_output/full/process_one_video.sh:26` |
+| 10min 캡션 생성(잘림 원인) | `WorldMM/src/worldmm/memory/episodic/gen_multiscale.py` (`_summarize_batch`), `WorldMM/claude_output/full/process_one_video.sh:26` (2026-11-10에 옮긴 사본: `report_framework/scripts/memory_build/process_one_video.sh`의 3) multiscale 단계) |
 | 검색 로드 검사 / DSPy 없는 그래프 검색 / episodic 병합·L1 | `videorag_retriever_service.py`: `check_inputs`, `_graph_search`, `search_episodic` |
 | 템플릿 / 계약 / 교체 / C0 | `domain_templates.py`: `VIDEOMME_*`, `build_templates`, `resolve_targets`, `validate_templates`, `apply_templates`, `written_context_summary`, `apply_written_context` |
 | 인용 치환 / 규칙 검사 / absence / 이미지 시간 | `grounding_postprocessor.py`: `ground_report`, `check_section_grounding`, `absence_clause`, `image_time_alignment` |
@@ -1151,7 +1152,7 @@ python -B tests/gpu_e2e.py                                                      
 - 실제 GPU 실행에서는 위 서버들 대신 상한 래퍼(`tests/run_llm_server_capped.py <port>`, `tests/run_service_capped.py <config> --preload=<vid>`)를 쓴다.
 - 사전 인덱싱 캐시가 없거나 불완전한 영상은 검색 서비스가 409로 거부한다 → `run_report.py`가 exit 2.
 - **완성된 실제 캐시**는 `tests/_artifacts/gpu_test/`의 영상 1개(`-QuCz7kxBr8`), 10sec 단위만 있다(테스트 전용). 이것으로 실행하려면 config 사본에서 `paths.episodic_cache_root`를 그 경로로, `worldmm.granularities`를 `[10sec]`으로, `retrieval.episodic_candidates_per_query`를 `{10sec: 6}`으로 바꿔 검색 서비스와 `run_report.py`에 함께 넘긴다. `tests/gpu_e2e.py`가 이 설정을 자동으로 만든다.
-- `report_framework/cache/episodic/`에는 검증 영상 3개의 4개 단위 캐시와 완료 표식 3개가 있다(2026-10-25 C-1, dry-run 남은 호출 0회 ✔). C-1 직전 캐시 사본은 `backups/cache_before_c1_20261025/`다. 나머지 47개 영상은 캐시가 없어 검색 서비스가 409로 거부한다.
+- `report_framework/cache/episodic/`에는 검증 영상 3개의 4개 단위 캐시와 완료 표식 3개가 있다(2026-10-25 C-1, dry-run 남은 호출 0회 ✔). 2026-11-10부터 설정은 그 사본 `WorldMM/output/memory/videomme_long_qwen3vl-8b/report_framework_index/`를 쓴다(md5 동일, dry-run 출력 동일 ✔). C-1 직전 캐시 사본은 `backups/cache_before_c1_20261025/`다. 나머지 47개 영상은 캐시가 없어 검색 서비스가 409로 거부한다.
 
 ### 13.3 다음 작업
 
@@ -1219,7 +1220,9 @@ python -B tests/gpu_e2e.py                                                      
 | `tests/_artifacts/analysis/` | `smoke_metrics.json`(A), `e2e_run1_metrics.json`(B) |
 | `tests/_artifacts/pipeline_test/{ok, bad_planner, no_conclusion, too_many, translate_*, edge}` | CPU 테스트 출력 |
 | `tests/_artifacts/test_cache/`, `dr_logs*` | 가짜 모델 캐시, Deep-Reporter 세션 로그(테스트) |
-| `cache/episodic/` | 사전 인덱싱 캐시 (`-QuCz7kxBr8`의 10sec·30sec·3min만, `_done/` 비어 있음) |
+| `cache/episodic/` | 사전 인덱싱 캐시: 검증 영상 3개의 4단위 캐시, `_done/` 표식 3개(2026-10-25 C-1). 2026-11-10에 `WorldMM/output/memory/videomme_long_qwen3vl-8b/report_framework_index/`로 복사했고 설정은 그쪽을 쓴다. 이 원본은 삭제 승인 전까지 보존 |
+| `WorldMM/output/memory/videomme_long_qwen3vl-8b/` | (report_framework 밖) 50개 영상 메모리와 사전 인덱싱 캐시. `README.md`, `MANIFEST.json`(파일별 md5) |
+| `scripts/memory_build/`, `docker/`, `patches/worldmm/`, `rf_config.py` | 2026-11-10 추가: 메모리 구축 스크립트, 컨테이너 정의 사본, WorldMM 로컬 수정 patch, 설정 로더 |
 | `outputs/3videos_20261022_120438/`, `outputs/3videos_20261022_141051/` | 영상 3개 실행 기록(§9.6, §9.8). 보고서는 없음 |
 | `outputs/3videos_20261022_160548_gated/` | 대기 후 자동 시작 기록(§9.9, `gate_run.log`, `gate.json`). 시작하지 않음 |
 | `migration/`, `MIGRATION_HANDOFF.md` | 서버 이전 준비(rsync 규칙, 영상 md5, 패키지 목록, 인수인계 메모) |

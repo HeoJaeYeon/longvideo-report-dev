@@ -11,10 +11,10 @@ import torch
 BUDGET_MIB = 19000
 torch.cuda.set_per_process_memory_fraction(BUDGET_MIB / (torch.cuda.get_device_properties(0).total_memory / 2**20))
 
-import yaml
-RF = "/data1/jyheo/workspace/VideoRAG/report_framework"
+RF = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_artifacts")
 sys.path.insert(0, RF)
+from rf_config import load_config  # noqa: E402
 VID = "-QuCz7kxBr8"
 LLM_PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 0
 
@@ -27,7 +27,7 @@ def mem(tag):
 def main():
     import logging
     logging.basicConfig(level=logging.WARNING)
-    cfg = yaml.safe_load(open(os.path.join(RF, "config.yaml")))
+    cfg = load_config(os.path.join(RF, "config.yaml"))
     os.environ["HF_HOME"] = cfg["paths"]["hf_home"]
     cfg["paths"]["episodic_cache_root"] = os.path.join(SCRATCH, "gpu_test", "episodic")
     cfg["service"]["frames_dir"] = os.path.join(SCRATCH, "gpu_test", "frames")

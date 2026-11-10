@@ -1,0 +1,26 @@
+diff --git a/script/4_eval.sh b/script/4_eval.sh
+index 841ebe1..d51ea3f 100755
+--- a/script/4_eval.sh
++++ b/script/4_eval.sh
+@@ -5,7 +5,7 @@
+ set -e
+ trap 'echo -e "\nInterrupted."; exit 130' INT TERM
+ 
+-PERSON="A1_JAKE" RET_MODEL="gpt-5-mini" RESP_MODEL="gpt-5"
++PERSON="A1_JAKE" RET_MODEL="qwen3vl" RESP_MODEL="qwen3vl"
+ MAX_ROUNDS=5 MAX_ERRORS=5 EPISODIC_K=3 SEMANTIC_K=10 VISUAL_K=3
+ OUTPUT_DIR="output" DATA_DIR="data/EgoLife"
+ 
+diff --git a/script/videomme/4_eval.sh b/script/videomme/4_eval.sh
+index f28ccf4..798aafb 100755
+--- a/script/videomme/4_eval.sh
++++ b/script/videomme/4_eval.sh
+@@ -5,7 +5,7 @@
+ set -e
+ trap 'echo -e "\nInterrupted."; exit 130' INT TERM
+ 
+-RET_MODEL="gpt-5-mini" RESP_MODEL="gpt-5"
++RET_MODEL="qwen3vl" RESP_MODEL="qwen3vl"
+ MAX_ROUNDS=5 MAX_ERRORS=5 EPISODIC_K=3 SEMANTIC_K=10 VISUAL_K=3
+ OUTPUT_DIR="output"
+ EVAL_JSON="data/Video-MME/videomme/test.json"

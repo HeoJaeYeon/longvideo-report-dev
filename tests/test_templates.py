@@ -6,11 +6,11 @@ Part B: Deep-Reporter generate_article end-to-end (real graph/nodes) with the vi
         (fake-embedding cache from test_retriever.py). Writes only to the scratchpad.
 """
 import copy, json, os, re, sys, threading, time
-import yaml
 
-RF = "/data1/jyheo/workspace/VideoRAG/report_framework"
+RF = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_artifacts")
 sys.path.insert(0, RF); sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from rf_config import load_config  # noqa: E402
 VID = "-QuCz7kxBr8"
 
 
@@ -149,7 +149,7 @@ def part_b():
     import videorag_retriever_service as S
     import test_retriever as T
     print("[B] Deep-Reporter generate_article end-to-end (CPU, fake models)")
-    cfg = yaml.safe_load(open(os.path.join(RF, "config.yaml")))
+    cfg = load_config(os.path.join(RF, "config.yaml"))
     cfg["paths"]["episodic_cache_root"] = os.path.join(SCRATCH, "test_cache", "episodic")
     cfg["service"]["frames_dir"] = os.path.join(SCRATCH, "test_cache", "frames")
     cfg["worldmm"]["episodic_cache_label"] = T.LABEL

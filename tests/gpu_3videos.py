@@ -15,14 +15,16 @@ its cap, or EXPECT_MIB (measured peak of one Qwen3-VL-8B server / indexer / serv
 Outputs: outputs/3videos_<stamp>/
 Usage: python tests/gpu_3videos.py [--llm-gpus 4,4,5,5,6,6,7 --aux-gpu 7] [--skip-prebuild] [--skip-reports] [--videos a,b,c]
 """
-import argparse, json, os, signal, subprocess, threading, time
+import argparse, json, os, signal, subprocess, sys, threading, time
 from collections import Counter
 import requests, yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RF = os.path.dirname(HERE)
-PY = "/opt/venv/bin/python"
-WORLDMM = "/data1/jyheo/workspace/VideoRAG/WorldMM"
+sys.path.insert(0, RF)
+from rf_config import load_config  # noqa: E402
+PY = os.environ.get("RF_PYTHON", "/opt/venv/bin/python")   # Python with worldmm/hipporag (container venv)
+WORLDMM = load_config(os.path.join(RF, "config.yaml"))["paths"]["worldmm_root"]
 VIDEOS = ["-QuCz7kxBr8", "0RxMZBLeqRI", "54k2g9ddy4M"]
 QUERY = ("Write a report describing what happens in this video: the main people or subjects, "
          "the key events in the order they occur, and how the video concludes.")
@@ -124,7 +126,7 @@ def main():
     procs = []
     watch = Watch(gpus, args.abort_used_mib, procs)
     cfg_path = os.path.join(out, "config.yaml")
-    cfg = yaml.safe_load(open(os.path.join(RF, "config.yaml")))
+    cfg = load_config(os.path.join(RF, "config.yaml"))
     cfg["llm"]["local"]["endpoint"]["port"] = LLM_PORT
     cfg["service"]["port"] = SVC_PORT
     cfg["report"].update({"outputs_dir": os.path.join(out, "reports"), "deep_reporter_log_dir": os.path.join(out, "dr_logs")})
@@ -154,7 +156,7 @@ def main():
             rc = idx.wait()
             summary["prebuild"] = {"exit": rc, "wall_sec": round(time.time() - t0, 1), "llm_calls": count_calls(llm_logs)}
             print(f"[prebuild] {summary['prebuild']}", flush=True)
-        done = os.path.join(RF, "cache", "episodic", "_done")
+        done = os.path.join(cfg["paths"]["episodic_cache_root"], "_done")
         summary["done_markers"] = {v: os.path.isfile(os.path.join(done, f"{v}.qwen3vl-8b.json")) for v in videos}
         if watch.aborted or not all(summary["done_markers"].values()):
             print(f"[stop] prebuild incomplete or aborted: {summary['done_markers']} {watch.aborted}", flush=True)

@@ -46,7 +46,7 @@ import sys
 import time
 from typing import Any, Dict, List, Tuple
 
-import yaml
+from rf_config import load_config
 
 logger = logging.getLogger("prebuild")
 
@@ -434,7 +434,7 @@ def main() -> None:
     args = parser.parse_args()
     endpoints = [e.strip().rstrip("/") for e in args.llm_endpoints.split(",") if e.strip()]
 
-    cfg = yaml.safe_load(open(args.config, encoding="utf-8"))
+    cfg = load_config(args.config)
     paths, wm = cfg["paths"], cfg["worldmm"]
     label = cfg["llm"][cfg["llm"]["backend"]]["worldmm_model"]
     videos = select_videos(paths["caption_dir"], args.videos, args.shard)

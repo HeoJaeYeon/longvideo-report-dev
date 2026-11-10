@@ -13,8 +13,10 @@ sys.path.insert(0, RF)
 sys.path.insert(0, os.path.join(RF, "analysis"))
 import numpy as np
 from reproduce_retrieval_cpu import cpu_vlm2vec
+from rf_config import load_config
 
-WM = "/data1/jyheo/workspace/VideoRAG/WorldMM"
+_PATHS = load_config(os.path.join(RF, "config.yaml"))["paths"]
+WM = _PATHS["worldmm_root"]
 
 
 def main():
@@ -22,7 +24,7 @@ def main():
     ap.add_argument("--video", default="-QuCz7kxBr8")
     ap.add_argument("--segments", default="00004000,00344000")
     a = ap.parse_args()
-    stored = pickle.load(open(f"{WM}/claude_output/full/metadata/visual_memory/{a.video}/visual_embeddings.pkl", "rb"))
+    stored = pickle.load(open(f"{_PATHS['metadata_dir']}/visual_memory/{a.video}/visual_embeddings.pkl", "rb"))
     model = cpu_vlm2vec("VLM2Vec/VLM2Vec-V2.0")
     vp = f"{WM}/data/Video-MME/data/{a.video}.mp4"
     rows = []

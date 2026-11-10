@@ -1,0 +1,156 @@
+diff --git a/src/worldmm/llm/qwen3vl.py b/src/worldmm/llm/qwen3vl.py
+index b2427e9..3ae8c53 100644
+--- a/src/worldmm/llm/qwen3vl.py
++++ b/src/worldmm/llm/qwen3vl.py
+@@ -8,6 +8,7 @@ import copy
+ import json
+ import logging
+ import os
++import threading
+ from concurrent.futures import ThreadPoolExecutor, as_completed
+ from pathlib import Path
+ from typing import Any, Dict, List, Optional, Tuple, Union
+@@ -86,6 +87,12 @@ class Qwen3VLModel:
+         self.nframes = nframes
+         self.kwargs = kwargs
+ 
++        # Serialize GPU generation: a single local model instance is not safe
++        # under concurrent generate() calls (e.g. OpenIE's ThreadPoolExecutor),
++        # which triggers CUDA illegal memory access. CPU-side preprocessing
++        # stays outside this lock.
++        self._gen_lock = threading.Lock()
++
+         # Initialize model
+         try:
+             self._init_model()
+@@ -355,49 +362,52 @@ class Qwen3VLModel:
+         messages = self._preprocess_prompt(prompt_copy)
+         
+         try:
+-            # Prepare text for Qwen3VL processor
+-            text = self.processor.apply_chat_template(
+-                messages, tokenize=False, add_generation_prompt=True
+-            )
+-            
+-            # Process vision info (images and videos)
+-            # process_vision_info returns (image_inputs, video_inputs, video_kwargs)
+-            vision_outputs = process_vision_info(messages)
+-            image_inputs = vision_outputs[0] if len(vision_outputs) > 0 else None
+-            video_inputs = vision_outputs[1] if len(vision_outputs) > 1 else None
+-            
+-            # Prepare inputs
+-            inputs = self.processor(
+-                text=[text],
+-                images=image_inputs,
+-                videos=video_inputs,
+-                padding=True,
+-                return_tensors="pt",
+-            )
+-            inputs = inputs.to(self.model.device)
+-            
+-            # Merge kwargs with instance kwargs (call-specific kwargs take precedence)
+-            gen_kwargs = {**self.kwargs, **kwargs}
+-            
+-            # Set default generation parameters if not specified
+-            if "max_new_tokens" not in gen_kwargs:
+-                gen_kwargs["max_new_tokens"] = 2048
+-            
+-            # Generate
+-            generated_ids = self.model.generate(**inputs, **gen_kwargs)
+-            generated_ids_trimmed = [
+-                out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)
+-            ]
+-            
+-            # Decode output
+-            output_text = self.processor.batch_decode(
+-                generated_ids_trimmed, 
+-                skip_special_tokens=True, 
+-                clean_up_tokenization_spaces=False
+-            )
+-            
+-            result = output_text[0].strip() if output_text else ""
+-            
++            # Serialize GPU work: concurrent generate() on one local model
++            # instance causes CUDA illegal memory access.
++            with self._gen_lock:
++                # Prepare text for Qwen3VL processor
++                text = self.processor.apply_chat_template(
++                    messages, tokenize=False, add_generation_prompt=True
++                )
++
++                # Process vision info (images and videos)
++                # process_vision_info returns (image_inputs, video_inputs, video_kwargs)
++                vision_outputs = process_vision_info(messages)
++                image_inputs = vision_outputs[0] if len(vision_outputs) > 0 else None
++                video_inputs = vision_outputs[1] if len(vision_outputs) > 1 else None
++
++                # Prepare inputs
++                inputs = self.processor(
++                    text=[text],
++                    images=image_inputs,
++                    videos=video_inputs,
++                    padding=True,
++                    return_tensors="pt",
++                )
++                inputs = inputs.to(self.model.device)
++
++                # Merge kwargs with instance kwargs (call-specific kwargs take precedence)
++                gen_kwargs = {**self.kwargs, **kwargs}
++
++                # Set default generation parameters if not specified
++                if "max_new_tokens" not in gen_kwargs:
++                    gen_kwargs["max_new_tokens"] = 2048
++
++                # Generate
++                generated_ids = self.model.generate(**inputs, **gen_kwargs)
++                generated_ids_trimmed = [
++                    out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)
++                ]
++
++                # Decode output
++                output_text = self.processor.batch_decode(
++                    generated_ids_trimmed,
++                    skip_special_tokens=True,
++                    clean_up_tokenization_spaces=False
++                )
++
++                result = output_text[0].strip() if output_text else ""
++
+             # Parse response using text_format if provided
+             if text_format is not None:
+                 result = self._parse_structured_response(result, text_format)
+@@ -503,15 +513,28 @@ class Qwen3VLModel:
+         try:
+             # Clean the response by removing markdown code blocks if present
+             cleaned_response = response.strip()
+-            if cleaned_response.startswith('```json'):
+-                cleaned_response = cleaned_response[7:]
++            if cleaned_response.startswith('```'):
++                # Drop the opening fence line (```json / ``` / ```JSON ...)
++                cleaned_response = cleaned_response.split('\n', 1)[-1]
+             if cleaned_response.endswith('```'):
+                 cleaned_response = cleaned_response[:-3]
+             cleaned_response = cleaned_response.strip()
+-            
+-            # Try to parse as JSON first
+-            json_data = json.loads(cleaned_response)
+-            
++
++            # Try to parse as JSON first. Local models sometimes append extra
++            # text after a valid JSON value ("Extra data" json.loads error), so
++            # decode the first JSON value and ignore any trailing content.
++            json_data, _ = json.JSONDecoder(strict=False).raw_decode(cleaned_response)
++
++            # Local models often emit a bare JSON array for schemas whose only
++            # field is a list (e.g. NerRawOutput.named_entities,
++            # TripleRawOutput.triples), whereas the OpenAI path enforces the
++            # object shape server-side. Wrap it into the single field so
++            # validation succeeds. Multi-field schemas are left untouched.
++            if isinstance(json_data, list) and getattr(text_format, "model_fields", None) \
++                    and len(text_format.model_fields) == 1:
++                only_field = next(iter(text_format.model_fields))
++                json_data = {only_field: json_data}
++
+             # If it's a Pydantic model, use model_validate (Pydantic v2)
+             if hasattr(text_format, 'model_validate'):
+                 return text_format.model_validate(json_data)

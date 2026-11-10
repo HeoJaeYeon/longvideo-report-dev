@@ -10,11 +10,12 @@ import domain_templates as D
 import grounding_postprocessor as G
 import local_llm_server as L
 import run_report as R
+from rf_config import load_config
 
 ok = []
 def check(name, cond): ok.append(bool(cond)); print(("PASS " if cond else "FAIL ") + name)
 
-CAP = "/data1/jyheo/workspace/VideoRAG/WorldMM/claude_output/full/caption"
+CAP = load_config(os.path.join(RF, "config.yaml"))["paths"]["caption_dir"]
 
 # --- P9 (c): repeated-sentence removal -----------------------------------------------------------
 loop = "# Title\n\nA happens [citation:txt1]. B happens [citation:txt2]. " + "C repeats [citation:txt3]. D repeats [citation:txt3]. " * 20 + "C rep"

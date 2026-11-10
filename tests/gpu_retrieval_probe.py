@@ -11,6 +11,7 @@ import argparse, copy, json, os, time
 from collections import Counter
 import requests, yaml
 from gpu_3videos import PY, RF, VIDEOS, Watch, gpu_mem, start, stop_all, wait_health
+from rf_config import load_config  # report_framework is on sys.path via gpu_3videos
 
 LLM_PORT, SVC_PORT = 18830, 18840
 MODES = ("L0", "L1", "full")
@@ -45,7 +46,7 @@ def main():
               "gpu_baseline_used_mib": {i: u for i, (u, _) in base.items()}, "loads": [], "searches": []}
     procs = []
     watch = Watch(gpus, args.abort_used_mib, procs)
-    cfg0 = yaml.safe_load(open(os.path.join(RF, "config.yaml")))
+    cfg0 = load_config(os.path.join(RF, "config.yaml"))
     cfg0["llm"]["local"]["endpoint"]["port"] = LLM_PORT
     cfg0["service"]["frames_dir"] = os.path.join(args.out, "frames")
     try:

@@ -12,7 +12,11 @@ Run with CUDA_VISIBLE_DEVICES=<gpu>; per-process cap 19,000 MiB.
 import argparse, json, os, re, sys, time
 from collections import Counter
 
-os.environ.setdefault("HF_HOME", "/data1/jyheo/workspace/.cache/huggingface")
+RF = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, RF)
+from rf_config import load_config  # noqa: E402
+CFG = load_config(os.path.join(RF, "config.yaml"))
+os.environ.setdefault("HF_HOME", CFG["paths"]["hf_home"])
 import torch
 torch.cuda.set_per_process_memory_fraction(19000 / (torch.cuda.get_device_properties(0).total_memory / 2**20))
 from transformers import AutoProcessor, Qwen3VLForConditionalGeneration, LogitsProcessorList
@@ -21,7 +25,7 @@ from worldmm.llm import PromptTemplateManager
 from worldmm.llm.qwen3vl import Qwen3VLModel
 from worldmm.memory.episodic.utils import NerRawOutput, TripleRawOutput, filter_invalid_triples
 
-CAP = "/data1/jyheo/workspace/VideoRAG/WorldMM/claude_output/full/caption"
+CAP = CFG["paths"]["caption_dir"]
 CHUNKS = [("0RxMZBLeqRI", 0), ("0RxMZBLeqRI", 1), ("0RxMZBLeqRI", 2), ("-QuCz7kxBr8", 0)]
 
 

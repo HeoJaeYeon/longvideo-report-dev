@@ -6,12 +6,12 @@ Part 2: run_report.run() end-to-end with a fake OpenAI-compatible LLM server and
 Outputs go to tests/_artifacts/.
 """
 import copy, json, os, re, sys, threading, time
-import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RF = os.path.dirname(HERE)
 ART = os.path.join(HERE, "_artifacts")
 sys.path.insert(0, RF); sys.path.insert(0, HERE)
+from rf_config import load_config  # noqa: E402
 VID = "-QuCz7kxBr8"
 
 
@@ -142,7 +142,7 @@ def part2():
     import run_report as R
     import test_retriever as T
     print("[2] run_report end-to-end (CPU, fake LLM + CPU retrieval service)")
-    cfg = yaml.safe_load(open(os.path.join(RF, "config.yaml")))
+    cfg = load_config(os.path.join(RF, "config.yaml"))
     cfg["paths"]["episodic_cache_root"] = os.path.join(ART, "test_cache", "episodic")
     cfg["service"].update({"frames_dir": os.path.join(ART, "test_cache", "frames"), "port": 18420})
     cfg["worldmm"]["episodic_cache_label"] = T.LABEL

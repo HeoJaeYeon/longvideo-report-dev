@@ -12,14 +12,16 @@ import requests, yaml
 HERE = os.path.dirname(os.path.abspath(__file__))
 RF = os.path.dirname(HERE)
 OUT = os.path.join(HERE, "_artifacts", "gpu_e2e")
-PY = "/opt/venv/bin/python"
+PY = os.environ.get("RF_PYTHON", "/opt/venv/bin/python")   # Python with worldmm/hipporag (container venv)
+sys.path.insert(0, RF)
+from rf_config import load_config  # noqa: E402
 VID = "-QuCz7kxBr8"
 QUERY = "Write a report describing what happens in this video: who takes part, what is tested, and how the tests turn out."
 LLM_PORT, SVC_PORT, FULL_PORT = 18610, 18620, 18630
 
 
 def make_config(path, port, mode):
-    cfg = yaml.safe_load(open(os.path.join(RF, "config.yaml")))
+    cfg = load_config(os.path.join(RF, "config.yaml"))
     cfg["paths"]["episodic_cache_root"] = os.path.join(HERE, "_artifacts", "gpu_test", "episodic")
     cfg["worldmm"]["granularities"] = ["10sec"]
     cfg["retrieval"]["episodic_candidates_per_query"] = {"10sec": 6}

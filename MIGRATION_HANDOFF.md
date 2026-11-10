@@ -3,6 +3,8 @@
 > 새 서버에서 작업을 이어갈 때 **이 문서를 가장 먼저 읽는다.** 그다음 `DESIGN_AND_STATUS.md` §2·§13, `REPORT_ISSUES_AND_FIXES.md` 순서로 읽는다.
 > 이 문서는 `DESIGN_AND_STATUS.md`(2026-10-22 오후 기준)에 아직 반영되지 않은 내용만 담는다. 표기: ✔ = 직접 확인, (사용자) = 사용자가 알려준 사실, (계획) = 아직 하지 않은 일.
 >
+> **2026-11-10 경로 정리** (동작 변경 없음, `internal/REORG_LOG_20261110.md`): 사전 인덱싱 캐시 `cache/episodic/` → `WorldMM/output/memory/videomme_long_qwen3vl-8b/report_framework_index/`, WorldMM 메모리 `WorldMM/claude_output/full/` → 같은 폴더(`caption/`, `metadata/`, …). 본문의 옛 경로는 작성 당시 기준이다. 메모리 구축 스크립트는 `scripts/memory_build/`, Docker 정의 사본은 `report_framework/docker/`.
+>
 > **2026-10-25 갱신**
 > - §2의 내용(대기 실행 기록, HF 캐시 정정)은 `DESIGN_AND_STATUS.md` §3·§9.9·§10·§11과 `REPORT_ISSUES_AND_FIXES.md` I4·I22·I27에 반영했다.
 > - **사용자가 이전 서버의 GPU 4–7 사용을 허용해(2026-10-25) 작업을 이전 서버에서 계속한다.** 2026-10-23 복사 이후 이전 서버에서 바뀌거나 생긴 파일(문서 6종, 캐시, `outputs/`, 로그 등)은 실제로 옮길 때 같은 rsync 명령으로 다시 동기화해야 한다(§1.1).

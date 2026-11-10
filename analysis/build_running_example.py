@@ -23,10 +23,13 @@ import yaml
 import grounding_postprocessor as G
 import domain_templates as D
 from export_stages import load_jobs, log_lines, cited_txt, cited_img
+from rf_config import load_config
 
-WM = "/data1/jyheo/workspace/VideoRAG/WorldMM"
-CAP = f"{WM}/claude_output/full/caption"
-META = f"{WM}/claude_output/full/metadata"
+_PATHS = load_config(os.path.join(RF, "config.yaml"))["paths"]
+WM = _PATHS["worldmm_root"]
+CAP = _PATHS["caption_dir"]
+META = _PATHS["metadata_dir"]
+EPI = _PATHS["episodic_cache_root"]   # report_framework HippoRAG index: <vid>/episodic_memory/<granularity>/
 GRANS = ["10sec", "30sec", "3min", "10min"]
 # 10sec caption used to illustrate the caption hierarchy and OpenIE (start_time HHMMSSFF)
 EXAMPLE_10SEC = {"-QuCz7kxBr8": "00004000", "0RxMZBLeqRI": "00011000", "54k2g9ddy4M": "00043000"}
@@ -235,12 +238,12 @@ def main():
     w("- 라벨은 `[시작, 시작+10분)`이지만, WorldMM은 시작 시각이 창 안인 3min 캡션을 그 창에 넣으므로 실제 내용 구간이 라벨과 다를 수 있다(위 표의 두 번째 열). [확인]")
     w("")
     # HippoRAG
-    w("### 2.3 HippoRAG 그래프 (단위마다 1개, `cache/episodic/" + vid + "/episodic_memory/<단위>/`)")
+    w("### 2.3 HippoRAG 그래프 (단위마다 1개, `" + os.path.relpath(EPI, os.path.dirname(RF)) + "/" + vid + "/episodic_memory/<단위>/`)")
     w("")
     w("| 단위 | passage(캡션) | entity | fact(triple) | fact 엣지 | synonym 엣지 | passage–entity 엣지 |")
     w("|---|---|---|---|---|---|---|")
     import pandas as pd
-    base = os.path.join(RF, "cache", "episodic", vid, "episodic_memory")
+    base = os.path.join(EPI, vid, "episodic_memory")
     for g in GRANS:
         d_ = glob.glob(f"{base}/{g}/qwen3vl-8b_*")[0]
         Gr = pickle.load(open(f"{d_}/graph.pickle", "rb"))

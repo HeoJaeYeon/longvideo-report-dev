@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.join(RF, "analysis"))
 import yaml
 import grounding_postprocessor as G
 from export_stages import load_jobs, log_lines, cited_txt, cited_img
-from build_running_example import (WM, CAP, META, GRANS, EXAMPLE_10SEC, sec, hms_s, cut, cell, fence, details,
+from build_running_example import (WM, CAP, META, EPI, GRANS, EXAMPLE_10SEC, sec, hms_s, cut, cell, fence, details,
                                    windows_10min)
 from running_example_observations import OBS
 
@@ -312,7 +312,7 @@ def main():
             span = f"{', '.join(G.hms_from_time_str(i['start_time'])[3:] for i in items)} → {G.hms_from_time_str(items[0]['start_time'])}–{hms_s(min(sec(items[-1]['end_time']), C[v]['end_sec']))}"
             w(f"| {G.hms_from_time_str(e['start_time'])}–{G.hms_from_time_str(e['end_time'])} | {span} | {tk:,} | {'**예**' if tk >= 2048 else '아니오'} | {cell(cut(e['text'][-120:], 120))} |")
         w("")
-    w("### 3.4 HippoRAG 그래프 (단위마다 1개, `cache/episodic/<영상>/episodic_memory/<단위>/`)")
+    w(f"### 3.4 HippoRAG 그래프 (단위마다 1개, `{os.path.relpath(EPI, os.path.dirname(RF))}/<영상>/episodic_memory/<단위>/`)")
     w("")
     w("- 그래프 구성: 캡션 1개 = passage 노드 1개. 캡션의 OpenIE triple에서 주어·목적어가 entity 노드가 된다. 엣지는 세 종류다: fact(entity–entity, 가중치 = 횟수), passage–entity(1.0), synonym(entity 임베딩 유사도 ≥ 0.8).")
     w("- 임베딩은 Qwen3-Embedding-4B(instruction 없음, 정규화)로 만든다(`REPORT_PIPELINE.md` ④-2(b-0)).")
@@ -321,7 +321,7 @@ def main():
     w("| 영상 | 단위 | passage(캡션) | entity | fact(triple) | fact 엣지 | synonym 엣지 | passage–entity 엣지 |")
     w("|---|---|---|---|---|---|---|---|")
     for v in VIDEOS:
-        base = os.path.join(RF, "cache", "episodic", v, "episodic_memory")
+        base = os.path.join(EPI, v, "episodic_memory")
         C[v]["base"] = base
         for g in GRANS:
             d_ = glob.glob(f"{base}/{g}/qwen3vl-8b_*")[0]
@@ -585,7 +585,7 @@ def main():
     w("## 9. 재생성 방법과 발표 활용")
     w("")
     w("```bash")
-    w("cd /data1/jyheo/workspace/VideoRAG/report_framework")
+    w("cd report_framework")
     w("python -B analysis/build_running_example_combined.py          # 이 문서 (running_example/RUNNING_EXAMPLE.md)")
     w("# (선택) 영상별 분리본: build_running_example.py --video=<vid> 후 running_example_observations.py")
     w("python -B analysis/export_stages.py                         # inspect/: 프롬프트·근거 원문 전체")
