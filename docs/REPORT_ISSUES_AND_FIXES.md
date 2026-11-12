@@ -342,7 +342,7 @@
 - **현상 (2026-10-21 15:36 확인)**: 환경변수 `HF_HOME`(`/data1/USER/workspace/VideoRAG/.cache/huggingface`)이 가리키는 곳에는 모델이 없고, 실제 모델은 `/data1/USER/workspace/.cache/huggingface/hub`에 있었다.
 - **처음 조치**: `config.yaml`의 `paths.hf_home`을 스크립트가 torch·transformers import 전에 `HF_HOME`에 설정한다(`local_llm_server.py`, `videorag_retriever_service.py`, `prebuild_episodic_index.py`, 테스트들).
 - **정정 (2026-10-25, 실측·코드)**
-  - 컨테이너에는 `HF_HOME` 외에 **`HUGGINGFACE_HUB_CACHE=/data1/USER/workspace/VideoRAG/.cache/huggingface/hub`**도 설정돼 있다(`Deep-Report/Docker/Makefile` `docker-run`의 `-e`). `huggingface_hub` 0.36.2는 모델 위치를 `HF_HUB_CACHE` → `HUGGINGFACE_HUB_CACHE` → `$HF_HOME/hub` 순서로 정한다(`huggingface_hub/constants.py:129-155`).
+  - 컨테이너에는 `HF_HOME` 외에 **`HUGGINGFACE_HUB_CACHE=/data1/USER/workspace/VideoRAG/.cache/huggingface/hub`**도 설정돼 있다(`report_framework/docker/Makefile` `docker-run`의 `-e`, 당시 위치 `Deep-Report/Docker/`). `huggingface_hub` 0.36.2는 모델 위치를 `HF_HUB_CACHE` → `HUGGINGFACE_HUB_CACHE` → `$HF_HOME/hub` 순서로 정한다(`huggingface_hub/constants.py:129-155`).
   - 그래서 처음 조치는 **모델 위치를 바꾸지 못한다.** 실험: `import torch` 뒤 `HF_HOME`을 `paths.hf_home`으로 바꾸고 `huggingface_hub.constants`를 처음 import해도 `HF_HUB_CACHE`는 `VideoRAG/.cache/huggingface/hub`였다.
   - 2026-10-21 16:24–16:31 GPU 스모크(`DESIGN_AND_STATUS.md` §9.2)와 LLM 서버가 모델 4개를 그 위치에 내려받았다(근거: `.locks/` 생성 16:26–16:31, Qwen3-VL-8B blob 16:28:41–16:31:14, 첫 Qwen3-Embedding 로드 90초 → 두 번째 15초). 그 뒤 모든 실제 모델 실행은 이 위치의 모델을 썼다. 두 위치의 모델은 snapshot 해시·바이트 수가 같아 결과에는 영향이 없다.
   - `local_llm_server.py`의 로그 `Loading ... (HF_HOME=...)`는 설정값을 출력할 뿐 실제 위치가 아니다.

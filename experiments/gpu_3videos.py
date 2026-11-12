@@ -6,7 +6,7 @@ with another user's processes, which must never be disturbed.
                (round-robin); reports use the first one.
   aux GPU      --aux-gpu (6): phase 1 prebuild_episodic_index.py (embedding only), then phase 2 the retrieval service
                (L1), cap --aux-cap-mib (default 15,000 MiB; 0 = no cap)
-  Phase 1  pre-indexing (decision 1 = A, long-passage split + output guards) -> cache/episodic
+  Phase 1  pre-indexing (decision 1 = A, long-passage split + output guards) -> paths.episodic_cache_root
   Phase 2  run_report.py for each video, one after another (the service loads each video on preflight);
            skipped with --skip-reports
 Watchdog: if a used GPU's total memory exceeds --abort-used-mib, only our processes are stopped.

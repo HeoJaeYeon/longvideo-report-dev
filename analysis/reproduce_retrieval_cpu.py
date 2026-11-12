@@ -5,7 +5,7 @@ list, the exact L1 filter prompt, semantic per-query results, and visual similar
 (2026-11-02, CPU only, no LLM call).
 
 The service's own WorldMMRetriever class is used (videorag_retriever_service.py), with:
-  - a COPY of cache/episodic/<vid> (loading a video rewrites HippoRAG OpenIE cache files; the real
+  - a COPY of <paths.episodic_cache_root>/<vid> (loading a video rewrites HippoRAG OpenIE cache files; the real
     cache is md5-checked before/after and must be unchanged),
   - Qwen3-Embedding-4B (--dtype, default bfloat16) and VLM2Vec-V2.0 (bfloat16) on CPU with sdpa attention instead of
     flash_attention_2 (the GPU run used flash_attention_2; numbers can differ slightly),

@@ -5,7 +5,7 @@ the recorded files (no LLM is called, CPU only, 2026-11-02).
 Sources
   - Video-MME metadata (WorldMM/data/Video-MME/videomme/test.json) and the video file (decord: frames, fps)
   - WorldMM captions (10sec/30sec/3min/10min), semantic triples, visual embeddings; HippoRAG cache (graph, parquet,
-    OpenIE results) under report_framework/cache/episodic/<vid>/
+    OpenIE results) under the episodic index (config paths.episodic_cache_root)/<vid>/
   - run outputs: report.json, validation.json, report.md, report_raw.md
   - Deep-Reporter session log (planner / query / writer prompts and raw outputs)
   - LLM server log (tokens / finish / seconds per call) and retrieval service log (per request)

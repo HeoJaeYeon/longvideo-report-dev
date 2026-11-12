@@ -3,7 +3,7 @@
 - 작성: 2026-10-21~22 (Claude Code, 사용자 지시와 승인에 따라 작성). 최종 갱신: 2026-10-26 (흐름 오류·추측 표현 측정 §9.17, P19 영상 끝 근거·반복 경고 기준·검사 오탐 수정 §8.13. 2026-10-25: P9·P19·I28 §8.12·§9.16, 결정 16, C-1–C-5 §9.10–§9.14, 재시도 이력 §9.15, I29·I30)
 - 위치: `report_framework/internal/status/DESIGN_AND_STATUS.md` (2026-11-10 이전: `report_framework/DESIGN_AND_STATUS.md`). 2026-11-12: §2.5(10-26–11-12 진행)와 §13.3 (2-2) 추가.
 - **처음 이어받는 사람은 §2(현재 상태)와 §13(인수인계)부터 읽는다.**
-- **2026-11-10 경로 정리** (동작 변경 없음, 상세 `internal/status/REORG_LOG_20261110.md`): WorldMM 메모리 `WorldMM/claude_output/full/` → `WorldMM/output/memory/videomme_long_qwen3vl-8b/`, 사전 인덱싱 캐시 `report_framework/cache/episodic/` → 같은 폴더의 `report_framework_index/`(둘 다 복사, md5 동일, 원본은 삭제 승인 전까지 보존). `config.yaml`의 경로는 `report_framework/` 기준 상대 경로이고 `rf_config.load_config()`가 해석한다. 메모리 구축 스크립트는 `scripts/memory_build/`, Docker 정의 사본은 `docker/`, WorldMM 로컬 수정 patch는 `patches/worldmm/`에 있다. 메모리·캐시의 옛 경로 표기는 당시 기록이다. 같은 날 폴더 재배치(P2): 스크립트·결과 경로(`tests/*` → `tests/unit/`·`tests/gpu/`·`experiments/`·`scripts/launch/`, `analysis/*.json` → `results/`, `inspect/`·`running_example/` → `internal/`)는 본문에서도 새 위치로 고쳐 적었다. 문서 위치는 `docs/README.md` 색인.
+- **2026-11-10 경로 정리** (동작 변경 없음, 상세 `internal/status/REORG_LOG_20261110.md`): WorldMM 메모리 `WorldMM/claude_output/full/` → `WorldMM/output/memory/videomme_long_qwen3vl-8b/`, 사전 인덱싱 캐시 `report_framework/cache/episodic/` → 같은 폴더의 `report_framework_index/`(둘 다 복사, md5 동일. 원본은 2026-11-12 삭제). `config.yaml`의 경로는 `report_framework/` 기준 상대 경로이고 `rf_config.load_config()`가 해석한다. 메모리 구축 스크립트는 `scripts/memory_build/`, Docker 정의 사본은 `docker/`, WorldMM 로컬 수정 patch는 `patches/worldmm/`에 있다. 메모리·캐시의 옛 경로 표기는 당시 기록이다. 같은 날 폴더 재배치(P2): 스크립트·결과 경로(`tests/*` → `tests/unit/`·`tests/gpu/`·`experiments/`·`scripts/launch/`, `analysis/*.json` → `results/`, `inspect/`·`running_example/` → `internal/`)는 본문에서도 새 위치로 고쳐 적었다. 문서 위치는 `docs/README.md` 색인.
 
 ## 0. 문서 안내
 
@@ -1181,7 +1181,7 @@ python -B tests/gpu/gpu_e2e.py                                                  
 - 실제 GPU 실행에서는 위 서버들 대신 상한 래퍼(`scripts/launch/run_llm_server_capped.py <port>`, `scripts/launch/run_service_capped.py <config> --preload=<vid>`)를 쓴다.
 - 사전 인덱싱 캐시가 없거나 불완전한 영상은 검색 서비스가 409로 거부한다 → `run_report.py`가 exit 2.
 - **완성된 실제 캐시**는 `tests/_artifacts/gpu_test/`의 영상 1개(`-QuCz7kxBr8`), 10sec 단위만 있다(테스트 전용). 이것으로 실행하려면 config 사본에서 `paths.episodic_cache_root`를 그 경로로, `worldmm.granularities`를 `[10sec]`으로, `retrieval.episodic_candidates_per_query`를 `{10sec: 6}`으로 바꿔 검색 서비스와 `run_report.py`에 함께 넘긴다. `tests/gpu/gpu_e2e.py`가 이 설정을 자동으로 만든다.
-- `report_framework/cache/episodic/`에는 검증 영상 3개의 4개 단위 캐시와 완료 표식 3개가 있다(2026-10-25 C-1, dry-run 남은 호출 0회 ✔). 2026-11-10부터 설정은 그 사본 `WorldMM/output/memory/videomme_long_qwen3vl-8b/report_framework_index/`를 쓴다(md5 동일, dry-run 출력 동일 ✔). C-1 직전 캐시 사본은 `backups/cache_before_c1_20261025/`다. 나머지 47개 영상은 캐시가 없어 검색 서비스가 409로 거부한다.
+- (2026-11-12 이 원본은 삭제됨) `report_framework/cache/episodic/`에는 검증 영상 3개의 4개 단위 캐시와 완료 표식 3개가 있었다(2026-10-25 C-1, dry-run 남은 호출 0회 ✔). 2026-11-10부터 설정은 그 사본 `WorldMM/output/memory/videomme_long_qwen3vl-8b/report_framework_index/`를 쓴다(md5 동일, dry-run 출력 동일 ✔). C-1 직전 캐시 사본은 `backups/cache_before_c1_20261025/`다. 나머지 47개 영상은 캐시가 없어 검색 서비스가 409로 거부한다.
 
 ### 13.3 다음 작업
 
@@ -1255,7 +1255,7 @@ python -B tests/gpu/gpu_e2e.py                                                  
 | `tests/_artifacts/analysis/` | `smoke_metrics.json`(A), `e2e_run1_metrics.json`(B) |
 | `tests/_artifacts/pipeline_test/{ok, bad_planner, no_conclusion, too_many, translate_*, edge}` | CPU 테스트 출력 |
 | `tests/_artifacts/test_cache/`, `dr_logs*` | 가짜 모델 캐시, Deep-Reporter 세션 로그(테스트) |
-| `cache/episodic/` | 사전 인덱싱 캐시: 검증 영상 3개의 4단위 캐시, `_done/` 표식 3개(2026-10-25 C-1). 2026-11-10에 `WorldMM/output/memory/videomme_long_qwen3vl-8b/report_framework_index/`로 복사했고 설정은 그쪽을 쓴다. 이 원본은 삭제 승인 전까지 보존 |
+| `cache/episodic/` | 사전 인덱싱 캐시: 검증 영상 3개의 4단위 캐시, `_done/` 표식 3개(2026-10-25 C-1). 2026-11-10에 `WorldMM/output/memory/videomme_long_qwen3vl-8b/report_framework_index/`로 복사했고 설정은 그쪽을 쓴다. 이 원본은 2026-11-12 삭제(목록 `internal/legacy/DELETED_20261112_originals.txt`) |
 | `WorldMM/output/memory/videomme_long_qwen3vl-8b/` | (report_framework 밖) 50개 영상 메모리와 사전 인덱싱 캐시. `README.md`, `MANIFEST.json`(파일별 md5) |
 | `scripts/memory_build/`, `docker/`, `patches/worldmm/`, `rf_config.py` | 2026-11-10 추가: 메모리 구축 스크립트, 컨테이너 정의 사본, WorldMM 로컬 수정 patch, 설정 로더 |
 | `outputs/3videos_20261022_120438/`, `outputs/3videos_20261022_141051/` | 영상 3개 실행 기록(§9.6, §9.8). 보고서는 없음 |
@@ -1267,7 +1267,7 @@ python -B tests/gpu/gpu_e2e.py                                                  
 | `outputs/c5_c0_20261025_132130/` | C-5 첫 시도(중단, `ABORTED.txt`, 비교에 미사용) |
 | `outputs/c5_c0_20261025_132851/` | C-5 재실행 8건(§9.14, 각 폴더 `metrics.json`) |
 | `results/c2_openie_compare.json` | C-2 비교 결과(§9.11) |
-| `backups/cache_before_c1_20261025/`, `backups/cache_after_c1_verified_20261025/` | C-1 직전 캐시, I29 확인 후 캐시 사본 |
+| `backups/cache_before_c1_20261025/`, `backups/cache_after_c1_verified_20261025/` | C-1 직전 캐시, I29 확인 후 캐시 사본 (뒤의 것은 현재 인덱스와 같아 2026-11-12 삭제) |
 | `results/openie_exp/` | OpenIE 디코딩 실험 결과(§9.7) |
 | `logs/` | 사전 인덱싱 로그(`prebuild_*.log`, `prebuild_http_pilot.out`, `prebuild_llm_*_gpu{4,5,6}.log`), 3영상 실행 콘솔 출력(`gpu_3videos.out`, `gpu_3videos_2gpu.out`) |
 | `backups/` | `.venv` 수리 전 원본, 2026-10-22 수정 전 파일(`prebuild_episodic_index.py.bak_20261022_split`, `run_service_capped.py.bak_20261022`, `REPORT_ISSUES_AND_FIXES.md.bak_20261022_i22`, `DESIGN_AND_STATUS.md.bak_20261022_split`), 2026-10-25 문서 정합성 수정 전 문서 6종(`*.md.bak_20261025_b`), 삭제 전 캐시 일부(`cache_before_split_20261022/`: 영상 1의 10min OpenIE 결과와 완료 표식, 영상 2의 10sec·30sec·3min OpenIE 결과. 2026-10-25 파일로 재확인) |

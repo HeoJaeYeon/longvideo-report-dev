@@ -90,7 +90,7 @@
 
 ## 3. 새 서버 환경 메모
 
-- Docker: `Deep-Report/Docker/Makefile`은 자기 위치에서 경로를 유도한다 → 새 서버에서 `VideoRAG=/home/USER/workspace/VideoRAG`, `WORKSPACE=/home/USER/workspace`, 컨테이너 안 경로도 같다(same-path 마운트). `VideoRAG/.claude`가 컨테이너의 `~/.claude`로 마운트된다.
+- Docker: `report_framework/docker/Makefile`(2026-11-12 전에는 `Deep-Report/Docker/`)은 자기 위치에서 경로를 유도한다 → 새 서버에서 `VideoRAG=/home/USER/workspace/VideoRAG`, `WORKSPACE=/home/USER/workspace`, 컨테이너 안 경로도 같다(same-path 마운트). `VideoRAG/.claude`가 컨테이너의 `~/.claude`로 마운트된다.
 - **데이터 디스크 자동 마운트 대상은 소문자 `/data1`–`/data6`뿐**이다. 새 서버의 `/DATA1`·`/DATA2`·`/DATA3`는 대상이 아니므로 `make docker-run EXTRA_MOUNTS='-v /DATA3:/DATA3'`가 반드시 필요하다(영상과 모델이 모두 `/DATA3`).
 - 컨테이너 환경변수 `HF_HOME=/home/USER/workspace/VideoRAG/.cache/huggingface`, **`HUGGINGFACE_HUB_CACHE=/home/USER/workspace/VideoRAG/.cache/huggingface/hub`** (Makefile 고정). 모델 위치를 정하는 것은 `HUGGINGFACE_HUB_CACHE`다(§2.2). `config.yaml`의 `paths.hf_home`은 컨테이너 안에서는 모델 위치에 영향이 없다.
 - 빌드 정보: `docker-base`는 `nvidia/cuda:12.8.1-cudnn-devel-ubuntu22.04` 기반, uv 0.9.5, `envs/uv.lock`(= WorldMM `uv.lock`과 동일 ✔) + `envs/extras-integration.txt`(langgraph 1.2.16, langchain-core 1.6.12, langchain-openai 1.4.3, flask 3.1.3). extras의 하위 의존성은 버전이 고정돼 있지 않아 이전 서버와 다를 수 있다 → `migration/opt_venv_freeze.txt`와 비교.
@@ -112,7 +112,7 @@
 ### 4.2 Docker (계획)
 
 ```bash
-cd /home/USER/workspace/VideoRAG/Deep-Report/Docker
+cd /home/USER/workspace/VideoRAG/report_framework/docker     # 2026-11-12 전에는 Deep-Report/Docker
 make docker-base CUDA_ARCH_LIST=8.6
 make docker-user
 make docker-run GPUS='"device=<사용자가 허용한 GPU>"' EXTRA_MOUNTS='-v /DATA3:/DATA3'   # 포트 충돌 시 PORT_JUPYTER/PORT_TB

@@ -31,7 +31,7 @@
 ## 4. 다음 작업 (위에서부터)
 
 1. **P7 (GPU 필요)**: 새 경로로 LLM 서버·검색 서비스를 띄워 보고서 1건 생성·검증. GPU는 사용자 허용 시에만.
-2. **P8**: P7 뒤 옛 원본 삭제(`WorldMM/claude_output/full/`, `report_framework/cache/episodic/`, `Deep-Report/Docker/`; 사본은 md5 확인 완료).
+2. (완료 2026-11-12) 옛 원본 삭제: `WorldMM/claude_output/full/`, `report_framework/cache/episodic/`, `Deep-Report/Docker/`, `backups/cache_after_c1_verified_20261025/`(모두 사본과 바이트 동일 확인 후, 목록 `internal/legacy/DELETED_20261112_originals.txt`).
 3. **사용자 결정 대기**: (b) 단계 패키지 구조화(이름·시점), 외부 공개 방식(새 저장소·라이선스·데이터), 원인 분리 실험 E1–E4(GPU), 평가 지표 조사·적용, 결정 7(근거 구성) 실험, C-7(50개 영상 사전 인덱싱).
 
 ## 5. 작업 규칙
