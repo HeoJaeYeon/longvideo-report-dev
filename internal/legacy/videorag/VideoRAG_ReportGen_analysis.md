@@ -1,7 +1,7 @@
 # Video RAG → 관제 보고서 생성 프레임워크: 구성요소 분석 및 보고서 생성 방법론 선정
 
 작성일: 2026-10-13
-대상 코드: `/data1/jyheo/workspace/VideoRAG/{WorldMM, MERIT, qraft, Deep-Report}`
+대상 코드: `/data1/USER/workspace/VideoRAG/{WorldMM, MERIT, qraft, Deep-Report}`
 목표: WorldMM/MERIT로 retrieve한 영상 evidence를 활용해 long-form 보고서를 자동 생성.
 근단기 타깃: Video-MME 등 Long Video Understanding QA. (CCTV 쿼리는 추후)
 

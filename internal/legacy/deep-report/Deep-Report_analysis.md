@@ -1,7 +1,7 @@
 # Deep-Report (Deep-Reporter) 구현 분석 — 전체 구조·모듈·동작 (코드 정독 기반)
 
 > 목적: 사용자가 Deep-Report의 전체 구조/핵심 모듈/동작을 **정확히 이해하고 결정**할 수 있도록, 실제 소스(`deep_reporter/`, `retriever/`)를 **전부 정독**해 정리. 추측 없음, 누락 없음 지향. 중요 주의사항(§8)은 반드시 확인 필요.
-> 분석 경로: `/data1/jyheo/workspace/VAU_RAG/Deep-Report`. 기존 파일 무수정, 본 문서는 신규(`Deep-Report/claude_output/`).
+> 분석 경로: `/data1/USER/workspace/VAU_RAG/Deep-Report`. 기존 파일 무수정, 본 문서는 신규(`Deep-Report/claude_output/`).
 > **근거(references)**: 논문 = *Deep-Reporter: Deep Research for Grounded Multimodal Long-Form Generation* (ACL 2026 Long #1909 / arXiv:2604.10741) — **arXiv HTML 전문**(https://arxiv.org/html/2604.10741)에서 발췌(PDF 2종은 10MB 초과로 직접 파싱 불가 → HTML 전문 사용). 코드 = `deep_reporter/`, `retriever/`, `evaluation/` 직접 정독. 논문 주장과 코드 사실을 구분 표기.
 
 ---

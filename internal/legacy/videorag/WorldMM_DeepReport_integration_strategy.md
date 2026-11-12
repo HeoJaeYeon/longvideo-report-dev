@@ -1,7 +1,7 @@
 # WorldMM(+MERIT) × Deep-Report 통합 전략 & 어댑터 사양 (코드 기반 확정)
 
 > 목표: Video RAG(WorldMM 중심, MERIT 교체 가능)가 **비디오 근거 검색/분석**을 수행하고, retrieve된 evidence를 근거로 **Deep-Report의 agent orchestration**이 체계적 보고서를 작성하는 프레임워크.
-> 본 문서는 **실제 구현 코드 정독**으로 양쪽 데이터 계약을 확정하고, **어댑터 사양(#2)을 먼저 확정**한다. 경로=`/data1/jyheo/workspace/VAU_RAG`. 기존 repo 무수정, 신규는 `claude_output/`에만.
+> 본 문서는 **실제 구현 코드 정독**으로 양쪽 데이터 계약을 확정하고, **어댑터 사양(#2)을 먼저 확정**한다. 경로=`/data1/USER/workspace/VAU_RAG`. 기존 repo 무수정, 신규는 `claude_output/`에만.
 
 ---
 

@@ -1,7 +1,7 @@
 # WorldMM × Deep-Reporter 통합 설계 — 비판적 재검토 & 개선 전략 (확정판)
 
 > 목적: 지금까지의 분석(`VideoRAG_ReportGen_analysis_v2.md`, `WorldMM_DeepReport_integration_strategy.md`, `WorldMM/claude_output/WorldMM_analysis.md`, `Deep-Report/claude_output/Deep-Report_analysis.md`)을 **객관적·비판적으로 재검토**하고, 구체적 통합 설계와 개선책을 확정. 모든 주장은 코드 정독 근거. 신규 작성물은 `claude_output/`에만.
-> 경로: `/data1/jyheo/workspace/VAU_RAG`. 작성 2026-10-16.
+> 경로: `/data1/USER/workspace/VAU_RAG`. 작성 2026-10-16.
 
 ---
 
@@ -96,7 +96,7 @@ Deep-Reporter의 **외부 검색 seam(`retriever_url` HTTP)** 을 **WorldMM 검�
 ---
 
 ## 10. MERIT 코드 분석 (D3 — 스위치 교체 설계 근거, 코드 정독)
-경로 `/data1/jyheo/workspace/VAU_RAG/MERIT`. 정독 파일: `src/merit/{types.py, merit_memory.py(563), multikey_memory.py(273)}`, `preprocess/extract_keys.py(175)`.
+경로 `/data1/USER/workspace/VAU_RAG/MERIT`. 정독 파일: `src/merit/{types.py, merit_memory.py(563), multikey_memory.py(273)}`, `preprocess/extract_keys.py(175)`.
 
 ### 10.1 구조 (사실)
 - **단일 메모리**: MultiKeyMemory(episodic 전용). WorldMM의 3메모리(episodic/semantic/visual)와 달리 **1종**.

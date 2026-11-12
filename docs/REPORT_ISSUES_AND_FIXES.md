@@ -339,10 +339,10 @@
 - **조치**: 반드시 `UV_PROJECT_ENVIRONMENT`로 대상을 지정하고 `--frozen --inexact`를 붙인다는 규칙을 인수인계에 넣었다.
 
 ### I4. `HF_HOME` 경로에 모델 없음 — 🟡 정정 (2026-10-25)
-- **현상 (2026-10-21 15:36 확인)**: 환경변수 `HF_HOME`(`/data1/jyheo/workspace/VideoRAG/.cache/huggingface`)이 가리키는 곳에는 모델이 없고, 실제 모델은 `/data1/jyheo/workspace/.cache/huggingface/hub`에 있었다.
+- **현상 (2026-10-21 15:36 확인)**: 환경변수 `HF_HOME`(`/data1/USER/workspace/VideoRAG/.cache/huggingface`)이 가리키는 곳에는 모델이 없고, 실제 모델은 `/data1/USER/workspace/.cache/huggingface/hub`에 있었다.
 - **처음 조치**: `config.yaml`의 `paths.hf_home`을 스크립트가 torch·transformers import 전에 `HF_HOME`에 설정한다(`local_llm_server.py`, `videorag_retriever_service.py`, `prebuild_episodic_index.py`, 테스트들).
 - **정정 (2026-10-25, 실측·코드)**
-  - 컨테이너에는 `HF_HOME` 외에 **`HUGGINGFACE_HUB_CACHE=/data1/jyheo/workspace/VideoRAG/.cache/huggingface/hub`**도 설정돼 있다(`Deep-Report/Docker/Makefile` `docker-run`의 `-e`). `huggingface_hub` 0.36.2는 모델 위치를 `HF_HUB_CACHE` → `HUGGINGFACE_HUB_CACHE` → `$HF_HOME/hub` 순서로 정한다(`huggingface_hub/constants.py:129-155`).
+  - 컨테이너에는 `HF_HOME` 외에 **`HUGGINGFACE_HUB_CACHE=/data1/USER/workspace/VideoRAG/.cache/huggingface/hub`**도 설정돼 있다(`Deep-Report/Docker/Makefile` `docker-run`의 `-e`). `huggingface_hub` 0.36.2는 모델 위치를 `HF_HUB_CACHE` → `HUGGINGFACE_HUB_CACHE` → `$HF_HOME/hub` 순서로 정한다(`huggingface_hub/constants.py:129-155`).
   - 그래서 처음 조치는 **모델 위치를 바꾸지 못한다.** 실험: `import torch` 뒤 `HF_HOME`을 `paths.hf_home`으로 바꾸고 `huggingface_hub.constants`를 처음 import해도 `HF_HUB_CACHE`는 `VideoRAG/.cache/huggingface/hub`였다.
   - 2026-10-21 16:24–16:31 GPU 스모크(`DESIGN_AND_STATUS.md` §9.2)와 LLM 서버가 모델 4개를 그 위치에 내려받았다(근거: `.locks/` 생성 16:26–16:31, Qwen3-VL-8B blob 16:28:41–16:31:14, 첫 Qwen3-Embedding 로드 90초 → 두 번째 15초). 그 뒤 모든 실제 모델 실행은 이 위치의 모델을 썼다. 두 위치의 모델은 snapshot 해시·바이트 수가 같아 결과에는 영향이 없다.
   - `local_llm_server.py`의 로그 `Loading ... (HF_HOME=...)`는 설정값을 출력할 뿐 실제 위치가 아니다.
@@ -531,7 +531,7 @@
 - **대응**: `experiments/gpu_report_batch.py`가 run_report 전에 영상별 잠금을 잡고 직접 불러온다(`bbceff6`). 서비스 코드는 고치지 않았다. 여러 서비스를 띄울 때 같은 영상을 동시에 불러오지 않는다는 규칙이 필요하다.
 
 ### I30. 같은 작업 폴더에서 Claude 세션 2개가 겹쳐 실행 — 🟡 운영 규칙 (2026-10-25)
-- **현상 (실측)**: 2026-10-25 13:50 `ps`에 같은 작업 폴더(`/data1/jyheo/workspace/VideoRAG`)의 `claude` 프로세스가 3개 있었다(PID 251: 약 3일 23시간 전 시작, pts/0 / PID 57851: 약 2일 12시간 전, pts/1 / PID 180368: 13:39:44 시작, pts/3 = 새 세션). 새 세션이 13:47:46에 문서를 확인했을 때 `DESIGN_AND_STATUS.md` §9.14와 I29는 없었는데, 13:48:32–13:49:24에 문서 5종이 고쳐지고 커밋 `fbfb796`(13:49:24, "C-5: …")이 생겼고, 13:49:40에 Claude 메모리 파일이 고쳐졌다. 이전 세션(PID 251과 57851 중 하나, 어느 쪽인지는 확인하지 않음)이 C-5 기록을 마무리한 것이다.
+- **현상 (실측)**: 2026-10-25 13:50 `ps`에 같은 작업 폴더(`/data1/USER/workspace/VideoRAG`)의 `claude` 프로세스가 3개 있었다(PID 251: 약 3일 23시간 전 시작, pts/0 / PID 57851: 약 2일 12시간 전, pts/1 / PID 180368: 13:39:44 시작, pts/3 = 새 세션). 새 세션이 13:47:46에 문서를 확인했을 때 `DESIGN_AND_STATUS.md` §9.14와 I29는 없었는데, 13:48:32–13:49:24에 문서 5종이 고쳐지고 커밋 `fbfb796`(13:49:24, "C-5: …")이 생겼고, 13:49:40에 Claude 메모리 파일이 고쳐졌다. 이전 세션(PID 251과 57851 중 하나, 어느 쪽인지는 확인하지 않음)이 C-5 기록을 마무리한 것이다.
 - **영향**: 이번에는 두 세션의 수정 시점이 겹치지 않아 충돌이 없었다. 새 세션은 이전 세션의 C-5 기록을 직접 계산한 값과 대조해 핵심 수치가 일치함을 확인했다(writer 프롬프트 평균만 계산 방식 차이로 수십 토큰 다름).
 - **위험**: 두 세션이 같은 파일을 동시에 고치면 한쪽 수정이 덮어써질 수 있고, GPU 작업을 두 세션이 각각 띄우면 자원·캐시 충돌(I29)이 생길 수 있다.
 - **함께 확인한 것**: 새 세션 시작 시 이전 세션의 백그라운드 작업 2개(C-5 배치 대기, 5분 점검 타이머)가 "stopped"로 표시됐지만, `setsid`로 띄운 C-5 배치 자체는 13:46:00에 8건을 모두 끝냈다(`summary.json`).

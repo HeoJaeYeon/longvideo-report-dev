@@ -486,7 +486,7 @@ recreational environment [citation:txt12][citation:img1].
 GPU 없이 이 문서의 단계별 값을 다시 볼 수 있다.
 
 ```bash
-cd /data1/jyheo/workspace/VideoRAG/report_framework
+cd /data1/USER/workspace/VideoRAG/report_framework
 R=outputs/p9p19_check_20261025_141401
 # 단계별 출력: report.json의 outline[i] (section_description, sectional_checklist, text_queries, image_queries,
 #              retrieved_texts, retrieved_images, content)

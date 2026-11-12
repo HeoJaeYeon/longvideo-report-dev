@@ -18,10 +18,10 @@
 
 | 항목 | 이전 서버 | 새 서버 |
 |---|---|---|
-| 프로젝트 경로 | `/data1/jyheo/workspace/VideoRAG` | **`/home/jyheo/workspace/VideoRAG`** (사용자) |
+| 프로젝트 경로 | `/data1/USER/workspace/VideoRAG` | **`/home/USER/workspace/VideoRAG`** (사용자) |
 | 호스트 | 컨테이너 `videorag_report` (이미지 `videorag_report:cu128-torch28-ubuntu2204`) | `super`, 211.180.114.160, SSH 포트 20202 (사용자). 호스트 키 ED25519 `SHA256:GGKbrk8GzdNKcvP0868fR0ZhnreaKJpNX10lxFXFqU0` |
 | Video-MME 영상 | `/data6/dataset/Video-MME/videomme/data` (링크) | **`/DATA3/datasets/Video-MME/videomme/data`** (사용자, `-QuCz7kxBr8.mp4` 존재 확인) |
-| HF 모델 | `/data1/jyheo/workspace/.cache/huggingface/hub` 와 `VideoRAG/.cache/huggingface/hub` (같은 내용 두 벌, ✔) | **복사하지 않음.** `/DATA3/models`에 새로 내려받는다 (사용자, §4.3) |
+| HF 모델 | `/data1/USER/workspace/.cache/huggingface/hub` 와 `VideoRAG/.cache/huggingface/hub` (같은 내용 두 벌, ✔) | **복사하지 않음.** `/DATA3/models`에 새로 내려받는다 (사용자, §4.3) |
 | GPU | A6000 × 8, 다른 사용자와 공유 | A6000 (사용자). 사용할 GPU와 공유 여부는 **새 서버에서 사용자에게 확인** |
 | 디스크 여유 | — | `/` 404GB, `/DATA3` 689GB, `/DATA1` 569GB, `/DATA2` 846GB (사용자 `df`, 2026-10-23) |
 
@@ -39,7 +39,7 @@
 | `claude_output/` (VideoRAG 바로 아래, 이전 설계 문서), `CLAUDE.md` | `.claude/.credentials.json` 및 세션 임시 상태(`sessions`, `plugins`, `skills`, `cache` 등) |
 | `.claude/projects/`, `.claude/history.jsonl`, `.claude/settings*.json` | `HolmesVAU/`(8.5G), `AdaVideoRAG/`, `Vgent/` (현재 코드가 참조하지 않음, 전수 검색 ✔) |
 
-- 함께 넘어간 끊긴 링크 68개(`WorldMM/claude_output/pilot` 18개, `claude_output/full/work/*/cap` 50개)는 옛 경로 `/data1/jyheo/workspace/VAU_RAG/...`를 가리키며 **이전 서버에서도 이미 끊겨 있었다.** 과거 전처리용이고 현재 실행과 무관하다.
+- 함께 넘어간 끊긴 링크 68개(`WorldMM/claude_output/pilot` 18개, `claude_output/full/work/*/cap` 50개)는 옛 경로 `/data1/USER/workspace/VAU_RAG/...`를 가리키며 **이전 서버에서도 이미 끊겨 있었다.** 과거 전처리용이고 현재 실행과 무관하다.
 
 ### 1.2 `report_framework/migration/` (2026-10-23 생성)
 
@@ -75,9 +75,9 @@
 
 ### 2.2 `DESIGN_AND_STATUS.md` §3의 정정할 내용 (✔ 2026-10-23, 2026-10-25 원인 확인 후 문서 반영 완료)
 
-- §3에 "환경변수 `HF_HOME=/data1/jyheo/workspace/VideoRAG/.cache/huggingface`에는 **모델이 없다**"고 적혀 있으나 사실이 아니다. 그 위치에도 2026-10-21 16:26–16:31에 모델 4개가 들어와 있었고, `/data1/jyheo/workspace/.cache/huggingface/hub`와 snapshot 해시·바이트 수가 같았다. 새 서버에서는 두 경로를 하나로 정리하므로(§4.3) 문서를 고칠 때 새 구조로 바꿔 쓴다.
+- §3에 "환경변수 `HF_HOME=/data1/USER/workspace/VideoRAG/.cache/huggingface`에는 **모델이 없다**"고 적혀 있으나 사실이 아니다. 그 위치에도 2026-10-21 16:26–16:31에 모델 4개가 들어와 있었고, `/data1/USER/workspace/.cache/huggingface/hub`와 snapshot 해시·바이트 수가 같았다. 새 서버에서는 두 경로를 하나로 정리하므로(§4.3) 문서를 고칠 때 새 구조로 바꿔 쓴다.
 - **원인 (2026-10-25 확인)**: 컨테이너에는 `HF_HOME` 외에 `HUGGINGFACE_HUB_CACHE=<VideoRAG>/.cache/huggingface/hub`가 설정돼 있고(Makefile `docker-run`), `huggingface_hub`는 이것을 `HF_HOME`보다 먼저 쓴다. 그래서 우리 스크립트가 `HF_HOME`을 `paths.hf_home`으로 바꿔도 모델 위치는 그대로였고, 2026-10-21 16:24–16:31 GPU 스모크와 LLM 서버가 그 위치에 모델을 내려받았다. 이후 모든 실제 모델 실행은 `VideoRAG/.cache/huggingface/hub`의 모델을 썼다(`REPORT_ISSUES_AND_FIXES.md` I4).
-- §13.5 등 문서 곳곳의 `/data1/jyheo/workspace/...` 경로 표기는 이전 서버 기준이다.
+- §13.5 등 문서 곳곳의 `/data1/USER/workspace/...` 경로 표기는 이전 서버 기준이다.
 
 ### 2.3 이전 직전 상태 (변화 없음, ✔)
 
@@ -90,12 +90,12 @@
 
 ## 3. 새 서버 환경 메모
 
-- Docker: `Deep-Report/Docker/Makefile`은 자기 위치에서 경로를 유도한다 → 새 서버에서 `VideoRAG=/home/jyheo/workspace/VideoRAG`, `WORKSPACE=/home/jyheo/workspace`, 컨테이너 안 경로도 같다(same-path 마운트). `VideoRAG/.claude`가 컨테이너의 `~/.claude`로 마운트된다.
+- Docker: `Deep-Report/Docker/Makefile`은 자기 위치에서 경로를 유도한다 → 새 서버에서 `VideoRAG=/home/USER/workspace/VideoRAG`, `WORKSPACE=/home/USER/workspace`, 컨테이너 안 경로도 같다(same-path 마운트). `VideoRAG/.claude`가 컨테이너의 `~/.claude`로 마운트된다.
 - **데이터 디스크 자동 마운트 대상은 소문자 `/data1`–`/data6`뿐**이다. 새 서버의 `/DATA1`·`/DATA2`·`/DATA3`는 대상이 아니므로 `make docker-run EXTRA_MOUNTS='-v /DATA3:/DATA3'`가 반드시 필요하다(영상과 모델이 모두 `/DATA3`).
-- 컨테이너 환경변수 `HF_HOME=/home/jyheo/workspace/VideoRAG/.cache/huggingface`, **`HUGGINGFACE_HUB_CACHE=/home/jyheo/workspace/VideoRAG/.cache/huggingface/hub`** (Makefile 고정). 모델 위치를 정하는 것은 `HUGGINGFACE_HUB_CACHE`다(§2.2). `config.yaml`의 `paths.hf_home`은 컨테이너 안에서는 모델 위치에 영향이 없다.
+- 컨테이너 환경변수 `HF_HOME=/home/USER/workspace/VideoRAG/.cache/huggingface`, **`HUGGINGFACE_HUB_CACHE=/home/USER/workspace/VideoRAG/.cache/huggingface/hub`** (Makefile 고정). 모델 위치를 정하는 것은 `HUGGINGFACE_HUB_CACHE`다(§2.2). `config.yaml`의 `paths.hf_home`은 컨테이너 안에서는 모델 위치에 영향이 없다.
 - 빌드 정보: `docker-base`는 `nvidia/cuda:12.8.1-cudnn-devel-ubuntu22.04` 기반, uv 0.9.5, `envs/uv.lock`(= WorldMM `uv.lock`과 동일 ✔) + `envs/extras-integration.txt`(langgraph 1.2.16, langchain-core 1.6.12, langchain-openai 1.4.3, flask 3.1.3). extras의 하위 의존성은 버전이 고정돼 있지 않아 이전 서버와 다를 수 있다 → `migration/opt_venv_freeze.txt`와 비교.
 - 이전 서버 드라이버 580.126.09 / CUDA 12.8. 새 서버 드라이버도 CUDA 12.8 이상을 지원해야 한다.
-- 대화 기록 폴더는 실행 경로로 이름이 정해진다: 새 서버에서는 `.claude/projects/-home-jyheo-workspace-VideoRAG`.
+- 대화 기록 폴더는 실행 경로로 이름이 정해진다: 새 서버에서는 `.claude/projects/-home-USER-workspace-VideoRAG`.
 
 ---
 
@@ -105,25 +105,25 @@
 
 1. 이전 서버에서 마지막 동기화(이 세션 종료 후, 같은 rsync 명령) → 체크섬 비교 출력 0건 확인.
 2. `ln -sfn /DATA3/datasets/Video-MME/videomme/data WorldMM/data/Video-MME/data` → `migration/videos50.md5`로 50개 비교(`md5sum -c`).
-3. **마지막 동기화 뒤에** `mv .claude/projects/-data1-jyheo-workspace-VideoRAG .claude/projects/-home-jyheo-workspace-VideoRAG` (먼저 바꾸면 동기화가 옛 이름 폴더를 다시 만든다).
+3. **마지막 동기화 뒤에** `mv .claude/projects/-data1-USER-workspace-VideoRAG .claude/projects/-home-USER-workspace-VideoRAG` (먼저 바꾸면 동기화가 옛 이름 폴더를 다시 만든다).
 4. `mkdir -p /DATA3/models/huggingface/hub` → `ln -sfn /DATA3/models/huggingface VideoRAG/.cache/huggingface`.
 5. `docker ps`(권한), `nvidia-smi`(드라이버·다른 사용자 사용량), `docker info | grep -i runtime`(nvidia 런타임) 확인.
 
 ### 4.2 Docker (계획)
 
 ```bash
-cd /home/jyheo/workspace/VideoRAG/Deep-Report/Docker
+cd /home/USER/workspace/VideoRAG/Deep-Report/Docker
 make docker-base CUDA_ARCH_LIST=8.6
 make docker-user
 make docker-run GPUS='"device=<사용자가 허용한 GPU>"' EXTRA_MOUNTS='-v /DATA3:/DATA3'   # 포트 충돌 시 PORT_JUPYTER/PORT_TB
 # 컨테이너 안
-intcheck; pip list --editable          # worldmm·hipporag·merit → /home/jyheo/workspace/VideoRAG/...
-pip freeze --exclude-editable | diff /home/jyheo/workspace/VideoRAG/report_framework/migration/opt_venv_freeze.txt -
+intcheck; pip list --editable          # worldmm·hipporag·merit → /home/USER/workspace/VideoRAG/...
+pip freeze --exclude-editable | diff /home/USER/workspace/VideoRAG/report_framework/migration/opt_venv_freeze.txt -
 ```
 
 ### 4.3 모델 (계획) — HF 캐시 구조로, 이전 서버와 같은 revision
 
-코드는 모델을 저장소 이름(`Qwen/Qwen3-VL-8B-Instruct` 등)으로 불러오므로 일반 폴더가 아니라 HF 캐시 구조여야 한다. 컨테이너 안에서 `hf download`는 `HUGGINGFACE_HUB_CACHE`(`/home/jyheo/workspace/VideoRAG/.cache/huggingface/hub`)에 저장하고, §4.1의 링크(`VideoRAG/.cache/huggingface` → `/DATA3/models/huggingface`)를 거쳐 실제 파일은 `/DATA3/models/huggingface/hub`에 쌓인다. 미리 받지 않아도 첫 모델 로드 때 같은 위치로 자동 다운로드된다(인터넷 필요):
+코드는 모델을 저장소 이름(`Qwen/Qwen3-VL-8B-Instruct` 등)으로 불러오므로 일반 폴더가 아니라 HF 캐시 구조여야 한다. 컨테이너 안에서 `hf download`는 `HUGGINGFACE_HUB_CACHE`(`/home/USER/workspace/VideoRAG/.cache/huggingface/hub`)에 저장하고, §4.1의 링크(`VideoRAG/.cache/huggingface` → `/DATA3/models/huggingface`)를 거쳐 실제 파일은 `/DATA3/models/huggingface/hub`에 쌓인다. 미리 받지 않아도 첫 모델 로드 때 같은 위치로 자동 다운로드된다(인터넷 필요):
 
 | 모델 | revision | 이전 서버 snapshot 바이트 |
 |---|---|---|
@@ -140,7 +140,7 @@ hf download <repo> --revision <revision>
 
 ### 4.4 경로 수정 (계획, **수정 전 보고·승인 필요**)
 
-`/data1/jyheo/workspace/...`가 박혀 있는 파일 13개(✔ 전수 검색). 바꿀 값: `/data1/jyheo/workspace/VideoRAG` → `/home/jyheo/workspace/VideoRAG`, 모델 경로 `/data1/jyheo/workspace/.cache/huggingface` → `/DATA3/models/huggingface`(컨테이너 안에서는 `HUGGINGFACE_HUB_CACHE`가 우선해 모델 위치에 영향이 없지만, 컨테이너 밖 실행과 표기 일관성을 위해 바꾼다). 수정 전 사본을 `backups/`에 둔다.
+`/data1/USER/workspace/...`가 박혀 있는 파일 13개(✔ 전수 검색). 바꿀 값: `/data1/USER/workspace/VideoRAG` → `/home/USER/workspace/VideoRAG`, 모델 경로 `/data1/USER/workspace/.cache/huggingface` → `/DATA3/models/huggingface`(컨테이너 안에서는 `HUGGINGFACE_HUB_CACHE`가 우선해 모델 위치에 영향이 없지만, 컨테이너 밖 실행과 표기 일관성을 위해 바꾼다). 수정 전 사본을 `backups/`에 둔다.
 
 | 파일 | 행 | 현재 값 |
 |---|---|---|

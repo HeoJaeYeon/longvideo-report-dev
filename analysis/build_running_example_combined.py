@@ -229,7 +229,7 @@ def main():
     w("|---|---|---|---|---|---|---|")
     for v in VIDEOS:
         c = C[v]
-        w(f"| `{v}` | `{c['vpath']}` | {os.path.getsize(c['vpath']):,} bytes | {c['shape'][1]}×{c['shape'][0]} / {c['fps']:.3f} | {c['nfr']:,} → {c['nfr'] / c['fps']:,.1f}초 (10sec 캡션 끝 {hms_s(c['end_sec'])}) | {c['vm'][0]['domain']} / {c['vm'][0]['sub_category']} / `{c['vm'][0]['duration']}` | {c['vm'][0]['url']} |")
+        w(f"| `{v}` | `{os.path.relpath(c['vpath'], os.path.dirname(RF))}` | {os.path.getsize(c['vpath']):,} bytes | {c['shape'][1]}×{c['shape'][0]} / {c['fps']:.3f} | {c['nfr']:,} → {c['nfr'] / c['fps']:,.1f}초 (10sec 캡션 끝 {hms_s(c['end_sec'])}) | {c['vm'][0]['domain']} / {c['vm'][0]['sub_category']} / `{c['vm'][0]['duration']}` | {c['vm'][0]['url']} |")
     w("- 보고서 생성 단계에서 영상 파일을 직접 읽는 곳은 image 검색의 프레임 추출뿐이다(코드: `extract_center_frame`).")
     w("- 영상마다 Video-MME QA가 3문항 있다(보고서 생성에는 쓰지 않음).")
     for v in VIDEOS:

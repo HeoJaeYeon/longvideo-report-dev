@@ -1,7 +1,7 @@
 # Video-RAG × Deep-Reporter 장편 비디오 보고서 프레임워크 — 분석·설계·구현 현황
 
 - 작성: 2026-10-21~22 (Claude Code, 사용자 지시와 승인에 따라 작성). 최종 갱신: 2026-10-26 (흐름 오류·추측 표현 측정 §9.17, P19 영상 끝 근거·반복 경고 기준·검사 오탐 수정 §8.13. 2026-10-25: P9·P19·I28 §8.12·§9.16, 결정 16, C-1–C-5 §9.10–§9.14, 재시도 이력 §9.15, I29·I30)
-- 위치: `/data1/jyheo/workspace/VideoRAG/report_framework/DESIGN_AND_STATUS.md`
+- 위치: `/data1/USER/workspace/VideoRAG/report_framework/DESIGN_AND_STATUS.md`
 - **처음 이어받는 사람은 §2(현재 상태)와 §13(인수인계)부터 읽는다.**
 - **2026-11-10 경로 정리** (동작 변경 없음, 상세 `internal/status/REORG_LOG_20261110.md`): WorldMM 메모리 `WorldMM/claude_output/full/` → `WorldMM/output/memory/videomme_long_qwen3vl-8b/`, 사전 인덱싱 캐시 `report_framework/cache/episodic/` → 같은 폴더의 `report_framework_index/`(둘 다 복사, md5 동일, 원본은 삭제 승인 전까지 보존). `config.yaml`의 경로는 `report_framework/` 기준 상대 경로이고 `rf_config.load_config()`가 해석한다. 메모리 구축 스크립트는 `scripts/memory_build/`, Docker 정의 사본은 `docker/`, WorldMM 로컬 수정 patch는 `patches/worldmm/`에 있다. 메모리·캐시의 옛 경로 표기는 당시 기록이다. 같은 날 폴더 재배치(P2): 스크립트·결과 경로(`tests/*` → `tests/unit/`·`tests/gpu/`·`experiments/`·`scripts/launch/`, `analysis/*.json` → `results/`, `inspect/`·`running_example/` → `internal/`)는 본문에서도 새 위치로 고쳐 적었다. 문서 위치는 `docs/README.md` 색인.
 
@@ -21,7 +21,7 @@
 | `FRAMEWORK_OVERVIEW.md` | 팀·지도교수 보고용 전체 설명(구조, 동작, 이슈, 한계) |
 | `REPORT_AND_SLIDES_DRAFT.md` | 보고서 초안과 슬라이드 구성안 |
 | (2026-11-10) 문서 위치 | 아래 문서들은 `docs/`·`internal/{status,analysis,meetings}/`로 옮겼다. 위치 색인: `docs/README.md` |
-| `MIGRATION_HANDOFF.md` | 다른 서버(`/home/jyheo/workspace/VideoRAG`)로의 이전 준비 기록: 복사 범위·검증, 새 서버에서 할 일(경로 수정 13개 파일, 모델 위치, Docker 마운트) |
+| `MIGRATION_HANDOFF.md` | 다른 서버(`/home/USER/workspace/VideoRAG`)로의 이전 준비 기록: 복사 범위·검증, 새 서버에서 할 일(경로 수정 13개 파일, 모델 위치, Docker 마운트) |
 
 ### 0.3 표기
 
@@ -131,9 +131,9 @@
 | 컨테이너 기본 venv | **`/opt/venv`** (Docker 이미지에 구워져 있음). `PATH`, `VIRTUAL_ENV`, `UV_PROJECT_ENVIRONMENT`가 모두 `/opt/venv`를 가리킨다. Python 3.13.9 |
 | `/opt/venv` 내용 | torch 2.8.0+cu128, transformers 4.57.6, flash_attn 2.8.3, sentence-transformers 5.3.0, decord 0.6.0, igraph 1.0.0, flask 3.1.3, langgraph 1.2.16, langchain-core 1.6.12, langchain-openai 1.4.3, openai 2.54.0, qwen-vl-utils 0.0.14 |
 | `/opt/venv`의 editable 설치 | worldmm → `VideoRAG/WorldMM/src`, hipporag → `VideoRAG/WorldMM/src/HippoRAG/src`, merit → `VideoRAG/MERIT/src` (모두 올바른 경로) |
-| `PYTHONPATH` | `/data1/jyheo/workspace/VideoRAG/Deep-Report` (`deep_reporter` 패키지를 import할 수 있음) |
+| `PYTHONPATH` | `/data1/USER/workspace/VideoRAG/Deep-Report` (`deep_reporter` 패키지를 import할 수 있음) |
 | `WorldMM/.venv` | 9월에 만든 예전 venv. 이름 변경 전 경로(`VAU_RAG`)를 가리키던 문제를 2026-10-21 15:47에 수리했다(§10). Deep-Reporter 의존성(langgraph 등)과 merit는 없다 |
-| HF 모델 캐시 (**2026-10-25 정정**) | 컨테이너 환경변수는 `HF_HOME=/data1/jyheo/workspace/VideoRAG/.cache/huggingface`와 **`HUGGINGFACE_HUB_CACHE=/data1/jyheo/workspace/VideoRAG/.cache/huggingface/hub`** 두 개다(Makefile `docker-run`의 `-e`). `huggingface_hub`는 모델 저장 위치를 `HF_HUB_CACHE` → `HUGGINGFACE_HUB_CACHE` → `$HF_HOME/hub` 순서로 정하므로(`huggingface_hub/constants.py:129-155`, 0.36.2), 우리 스크립트가 `HF_HOME`을 `paths.hf_home`으로 바꿔도 **모델 저장 위치는 바뀌지 않는다**(✔ 실험: `HF_HOME` 변경 후 `HF_HUB_CACHE`가 그대로 `VideoRAG/.cache/huggingface/hub`). 경위: 2026-10-21 15:36 확인 때 `VideoRAG/.cache/huggingface/hub`에는 모델이 없었고(I4), 16:24–16:31 GPU 스모크(§9.2)와 LLM 서버가 모델을 그 위치에 내려받았다(근거: `.locks/` 생성 시각 16:26–16:31, Qwen3-VL-8B blob 16:28:41–16:31:14, 첫 Qwen3-Embedding 로드 90초 → 두 번째 15초). 그 뒤 모든 실제 모델 실행은 이 위치의 모델을 썼다. 모델 4개(`Qwen3-VL-8B-Instruct`, `Qwen3-Embedding-4B`, `VLM2Vec-V2.0`, `Qwen2-VL-2B-Instruct`)는 `/data1/jyheo/workspace/.cache/huggingface/hub`에도 있고 snapshot 해시·바이트 수가 같다(✔ 2026-10-23). 로그의 `HF_HOME=...` 표시(`local_llm_server.py`)는 실제 저장 위치가 아니다 |
+| HF 모델 캐시 (**2026-10-25 정정**) | 컨테이너 환경변수는 `HF_HOME=/data1/USER/workspace/VideoRAG/.cache/huggingface`와 **`HUGGINGFACE_HUB_CACHE=/data1/USER/workspace/VideoRAG/.cache/huggingface/hub`** 두 개다(Makefile `docker-run`의 `-e`). `huggingface_hub`는 모델 저장 위치를 `HF_HUB_CACHE` → `HUGGINGFACE_HUB_CACHE` → `$HF_HOME/hub` 순서로 정하므로(`huggingface_hub/constants.py:129-155`, 0.36.2), 우리 스크립트가 `HF_HOME`을 `paths.hf_home`으로 바꿔도 **모델 저장 위치는 바뀌지 않는다**(✔ 실험: `HF_HOME` 변경 후 `HF_HUB_CACHE`가 그대로 `VideoRAG/.cache/huggingface/hub`). 경위: 2026-10-21 15:36 확인 때 `VideoRAG/.cache/huggingface/hub`에는 모델이 없었고(I4), 16:24–16:31 GPU 스모크(§9.2)와 LLM 서버가 모델을 그 위치에 내려받았다(근거: `.locks/` 생성 시각 16:26–16:31, Qwen3-VL-8B blob 16:28:41–16:31:14, 첫 Qwen3-Embedding 로드 90초 → 두 번째 15초). 그 뒤 모든 실제 모델 실행은 이 위치의 모델을 썼다. 모델 4개(`Qwen3-VL-8B-Instruct`, `Qwen3-Embedding-4B`, `VLM2Vec-V2.0`, `Qwen2-VL-2B-Instruct`)는 `/data1/USER/workspace/.cache/huggingface/hub`에도 있고 snapshot 해시·바이트 수가 같다(✔ 2026-10-23). 로그의 `HF_HOME=...` 표시(`local_llm_server.py`)는 실제 저장 위치가 아니다 |
 | vLLM | `/opt/venv`, `WorldMM/.venv` 어디에도 설치돼 있지 않다 |
 | GPU | A6000 48GB(49,140 MiB) × 8. 2026-10-22 사용 이력: GPU 4–7(20,000 MiB 규칙) → 중지 지시 → GPU 4–7 전부 사용 허용(20,000 MiB 규칙 해제, 12:04 실행) → "다른 사용자 프로세스를 침범하지 않는 여유 메모리 안에서"(12:41 실험) → **GPU 6·7만**(14:10 실행, 16:05 대기 실행). 다른 사용자 사용량 관측: §9.8 시점 GPU 6 약 18–30GB, GPU 7 약 18–34GB, §9.9(18:15–00:05) 10분 최대값 GPU 6 30.4–38.2GB, GPU 7 28.5–39.2GB. **2026-10-25: GPU 4–7 사용 가능**(사용자 지시, 11:44 확인 시 GPU 0–7 모두 0–3 MiB) |
 | CPU | 8코어 (`nproc`). OpenIE의 `ThreadPoolExecutor` 기본 동시성은 min(32, 8+4) = 12 |
@@ -1014,9 +1014,9 @@ CPU 테스트는 `CUDA_VISIBLE_DEVICES=""`로 실행하고, 산출물은 `tests/
 | 일시 | 변경 | 결과 |
 |---|---|---|
 | 2026-10-21 | `WorldMM/.venv`에 `flask==3.1.3` 설치 (+werkzeug 3.1.9, itsdangerous 2.2.0, blinker 1.9.0) | 기존 패키지 변화 없음. 실제 실행 환경이 `/opt/venv`라 불필요했으나 사용자 지시로 유지 |
-| 2026-10-21 15:47 | (a) `WorldMM/.venv` 텍스트 파일 76개의 `/data1/jyheo/workspace/VAU_RAG` → `/data1/jyheo/workspace/VideoRAG` 치환 (bin 72개: activate·shebang, site-packages 4개: `worldmm.pth`, `__editable__.hipporag-2.0.0a4.pth`, `direct_url.json` 2개) | 남은 항목 0, 권한 그대로 (755×67, 644×9), 백업 보관 |
+| 2026-10-21 15:47 | (a) `WorldMM/.venv` 텍스트 파일 76개의 `/data1/USER/workspace/VAU_RAG` → `/data1/USER/workspace/VideoRAG` 치환 (bin 72개: activate·shebang, site-packages 4개: `worldmm.pth`, `__editable__.hipporag-2.0.0a4.pth`, `direct_url.json` 2개) | 남은 항목 0, 권한 그대로 (755×67, 644×9), 백업 보관 |
 | 2026-10-21 15:47 | (b) `UV_PROJECT_ENVIRONMENT=$PWD/.venv uv sync --frozen --inexact` | (a) 이후라 decord 0.6.0만 같은 버전으로 재설치 |
-| 2026-10-21 16:26–16:31 | (의도하지 않은 변경, 2026-10-25 확인) GPU 스모크(§9.2)와 LLM 서버가 모델 4개를 환경변수 `HUGGINGFACE_HUB_CACHE` 위치(`VideoRAG/.cache/huggingface/hub`)에 내려받음. 우리 스크립트의 `HF_HOME` 설정은 이 위치를 바꾸지 못한다(§3, `REPORT_ISSUES_AND_FIXES.md` I4) | 약 30GB(snapshot 기준 17.5G + 8.1G + 4.4G + 53M) 추가. `/data1/jyheo/workspace/.cache/huggingface/hub`와 같은 내용 |
+| 2026-10-21 16:26–16:31 | (의도하지 않은 변경, 2026-10-25 확인) GPU 스모크(§9.2)와 LLM 서버가 모델 4개를 환경변수 `HUGGINGFACE_HUB_CACHE` 위치(`VideoRAG/.cache/huggingface/hub`)에 내려받음. 우리 스크립트의 `HF_HOME` 설정은 이 위치를 바꾸지 못한다(§3, `REPORT_ISSUES_AND_FIXES.md` I4) | 약 30GB(snapshot 기준 17.5G + 8.1G + 4.4G + 53M) 추가. `/data1/USER/workspace/.cache/huggingface/hub`와 같은 내용 |
 | 검증 | — | `uv.lock`·`pyproject.toml` 해시 동일. `/opt/venv` 패키지 목록 변화 없음. `.venv` 패키지 목록은 worldmm·hipporag 경로만 바뀜. flask 유지. `import worldmm, hipporag, decord, WorldMemory, HippoRAG` 성공. `activate` → `VIRTUAL_ENV=/data1/.../WorldMM/.venv` |
 
 - **남은 사항**: `.venv` 안의 `.pyc` 4,734개에는 컴파일 당시 경로(`VAU_RAG`)가 남아 있다. Python은 `.pyc`를 소스의 수정 시각과 크기로 검증하므로 동작에는 영향이 없고, 예외 traceback에 옛 경로가 보일 수 있을 뿐이다. 문자열 길이가 달라 텍스트 치환으로 고치면 파일이 손상되므로 제외했다.
@@ -1124,13 +1124,13 @@ CPU 테스트는 `CUDA_VISIBLE_DEVICES=""`로 실행하고, 산출물은 `tests/
 - **episodic 캐시를 다시 만들 때**는 해당 granularity 폴더 전체를 지운다(OpenIE 파일만 지우면 옛 그래프가 남음, §5.2). 캐시 삭제는 사용자 승인 후에만 한다.
 - **`-`로 시작하는 영상 id**(예: `-QuCz7kxBr8`)는 항상 `--video-id=<id>`, `--preload=<id>`, `--videos=<id>` 형식으로 넘긴다.
 - **실행 환경은 `/opt/venv`**다. **대상 지정 없이 `uv sync`를 실행하지 않는다**(§10).
-- **모델 캐시**: 이 컨테이너에서 실제로 쓰이는 위치는 환경변수 `HUGGINGFACE_HUB_CACHE`(`/data1/jyheo/workspace/VideoRAG/.cache/huggingface/hub`)다. `config.yaml`의 `paths.hf_home`으로 `HF_HOME`을 바꿔도 이 위치는 바뀌지 않는다(§3 정정). 두 위치 모두에 같은 모델 4개가 있다.
+- **모델 캐시**: 이 컨테이너에서 실제로 쓰이는 위치는 환경변수 `HUGGINGFACE_HUB_CACHE`(`/data1/USER/workspace/VideoRAG/.cache/huggingface/hub`)다. `config.yaml`의 `paths.hf_home`으로 `HF_HOME`을 바꿔도 이 위치는 바뀌지 않는다(§3 정정). 두 위치 모두에 같은 모델 4개가 있다.
 - 전수 검색에는 `/usr/bin/grep`을 쓴다. Deep-Reporter는 `deep_reporter.api`를 먼저 import한다.
 
 ### 13.2 실행 방법
 
 ```bash
-cd /data1/jyheo/workspace/VideoRAG/report_framework
+cd /data1/USER/workspace/VideoRAG/report_framework
 # --- GPU 불필요 ---
 python -B prebuild_episodic_index.py --config config.yaml --dry-run
 python -B domain_templates.py --check --overview-file <caption_dir>/<vid>/10min.json

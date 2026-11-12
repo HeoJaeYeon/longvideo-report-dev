@@ -171,7 +171,7 @@ def main():
     # ------------------------------------------------------------------ 1
     w("## 1. 입력")
     w("")
-    w(f"- **영상 파일**: `{rel(vpath) if vpath.startswith(RF) else vpath}` ({os.path.getsize(vpath):,} bytes, {vr[0].shape[1]}×{vr[0].shape[0]}, {fps:.3f} fps). 보고서 생성 단계에서 영상 파일을 직접 읽는 곳은 image 검색의 프레임 추출뿐이다(코드: `extract_center_frame`).")
+    w(f"- **영상 파일**: `{os.path.relpath(vpath, os.path.dirname(RF))}` ({os.path.getsize(vpath):,} bytes, {vr[0].shape[1]}×{vr[0].shape[0]}, {fps:.3f} fps). 보고서 생성 단계에서 영상 파일을 직접 읽는 곳은 image 검색의 프레임 추출뿐이다(코드: `extract_center_frame`).")
     w(f"- **Video-MME 메타**: domain `{vm[0]['domain']}`, sub_category `{vm[0]['sub_category']}`, URL {vm[0]['url']}. 이 영상의 QA {len(vm)}문항(보고서 생성에는 쓰지 않음):")
     for q in vm:
         w(f"  - {q['question']} (정답 {q['answer']})")

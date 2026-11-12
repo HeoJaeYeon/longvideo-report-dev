@@ -1,7 +1,7 @@
 # Video RAG × 보고서 생성 프레임워크 — 독립 분석 (코드 기반)
 
 > 작성: Claude Code 직접 조사(논문 README + 구현 코드 분석). 기존 `claude_output/VideoRAG_ReportGen_analysis.md`는 신뢰하지 않고 **독립·비판적으로 재분석**함.
-> 분석 대상 실제 경로: **`/data1/jyheo/workspace/VAU_RAG`** (사용자가 말한 `/home/...`는 존재하지 않음 — 실제는 `/data1`).
+> 분석 대상 실제 경로: **`/data1/USER/workspace/VAU_RAG`** (사용자가 말한 `/home/...`는 존재하지 않음 — 실제는 `/data1`).
 > 목표: **Video RAG가 retrieve한 video evidence로 관제(surveillance) 보고서를 자동 생성**하는 프레임워크. Video QA head를 **long-form generation**으로 교체. WorldMM 중심, MERIT 교체 가능 고려. 1차 타깃 = Video-MME 등 Long Video QA 계열.
 
 ---

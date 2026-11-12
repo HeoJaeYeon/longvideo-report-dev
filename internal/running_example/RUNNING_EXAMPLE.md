@@ -159,9 +159,9 @@
 
 | 영상 | 파일 | 크기 | 해상도 / fps | 프레임 수 → 길이 | Video-MME domain / sub_category / duration | URL |
 |---|---|---|---|---|---|---|
-| `-QuCz7kxBr8` | `/data1/jyheo/workspace/VideoRAG/WorldMM/data/Video-MME/data/-QuCz7kxBr8.mp4` | 344,255,167 bytes | 1280×720 / 23.976 | 54,101 → 2,256.5초 (10sec 캡션 끝 00:37:37) | Sports Competition / Basketball / `long` | https://www.youtube.com/watch?v=-QuCz7kxBr8 |
-| `0RxMZBLeqRI` | `/data1/jyheo/workspace/VideoRAG/WorldMM/data/Video-MME/data/0RxMZBLeqRI.mp4` | 303,033,867 bytes | 1280×720 / 29.970 | 54,878 → 1,831.1초 (10sec 캡션 끝 00:30:32) | Knowledge / Humanity & History / `long` | https://www.youtube.com/watch?v=0RxMZBLeqRI |
-| `54k2g9ddy4M` | `/data1/jyheo/workspace/VideoRAG/WorldMM/data/Video-MME/data/54k2g9ddy4M.mp4` | 424,403,085 bytes | 1280×720 / 30.000 | 81,413 → 2,713.8초 (10sec 캡션 끝 00:45:14) | Film & Television / News Report / `long` | https://www.youtube.com/watch?v=54k2g9ddy4M |
+| `-QuCz7kxBr8` | `WorldMM/data/Video-MME/data/-QuCz7kxBr8.mp4` | 344,255,167 bytes | 1280×720 / 23.976 | 54,101 → 2,256.5초 (10sec 캡션 끝 00:37:37) | Sports Competition / Basketball / `long` | https://www.youtube.com/watch?v=-QuCz7kxBr8 |
+| `0RxMZBLeqRI` | `WorldMM/data/Video-MME/data/0RxMZBLeqRI.mp4` | 303,033,867 bytes | 1280×720 / 29.970 | 54,878 → 1,831.1초 (10sec 캡션 끝 00:30:32) | Knowledge / Humanity & History / `long` | https://www.youtube.com/watch?v=0RxMZBLeqRI |
+| `54k2g9ddy4M` | `WorldMM/data/Video-MME/data/54k2g9ddy4M.mp4` | 424,403,085 bytes | 1280×720 / 30.000 | 81,413 → 2,713.8초 (10sec 캡션 끝 00:45:14) | Film & Television / News Report / `long` | https://www.youtube.com/watch?v=54k2g9ddy4M |
 - 보고서 생성 단계에서 영상 파일을 직접 읽는 곳은 image 검색의 프레임 추출뿐이다(코드: `extract_center_frame`).
 - 영상마다 Video-MME QA가 3문항 있다(보고서 생성에는 쓰지 않음).
   - `-QuCz7kxBr8`: What's the least flattering of the gadgets featured in the video? (정답 D) / How many valid goals does Jesse score in the final one-two session? (정답 A) / What tool in the video had the least impact on the player's ability to complete the challenge? (정답 B)
@@ -2861,7 +2861,7 @@ CUDA_VISIBLE_DEVICES= python -B analysis/reproduce_retrieval_cpu.py --video=-QuC
 
 | 항목 | 값 | 근거 |
 |---|---|---|
-| 영상 파일 | `/data1/jyheo/workspace/VideoRAG/WorldMM/data/Video-MME/data/-QuCz7kxBr8.mp4` (344,255,167 bytes) | 파일 |
+| 영상 파일 | `WorldMM/data/Video-MME/data/-QuCz7kxBr8.mp4` (344,255,167 bytes) | 파일 |
 | 해상도·fps·프레임 | 1280×720, 23.976024 fps, 54,101프레임 → 2256.463초 (00:37:36) | decord, WorldMM `get_video_duration` |
 | 자막 | Whisper → `transcript/-QuCz7kxBr8.srt`, 279줄. 모델은 `process_one_video.sh` 1단계의 `distil-large-v3.5` (이 스크립트는 2026-10-21에 수정됐고 로그에 모델명이 없어 당시 값인지는 [부분 확인]) | srt 파일, 스크립트 |
 | 10초 구간 | 226개 = ⌈2256.463 / 10⌉, 마지막 구간 2250–2256.463초(00:37:30–영상 끝) | WorldMM `build_segments` |

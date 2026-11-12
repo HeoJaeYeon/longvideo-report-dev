@@ -1,8 +1,8 @@
 # internal/legacy — 프레임워크 이전·바깥에서 만든 기록 (2026-11-10 정리)
 
 `report_framework/` 밖의 `claude_output/` 폴더들에 흩어져 있던 이 프로젝트 관련 문서와 증거 파일을 한곳에 모았다.
-모두 **당시 기록**이다. 본문 경로(`/data1/jyheo/workspace/VAU_RAG/...` 등)와 수치는 작성 시점 기준이며 고치지 않았다.
-원본은 `report_framework/internal/REORG_LOG_20261110.md`에 적은 대로 남아 있거나(문서) 지워졌다(pilot·smoke).
+모두 **당시 기록**이다. 본문 경로(`/data1/USER/workspace/VAU_RAG/...` 등)와 수치는 작성 시점 기준이며, 2026-11-12에 경로 안의 사용자명만 `USER`로 바꿨다.
+원본은 `report_framework/internal/status/REORG_LOG_20261110.md`에 적은 대로 남아 있거나(문서) 지워졌다(pilot·smoke).
 
 | 폴더 | 원래 위치 | 내용 |
 |---|---|---|

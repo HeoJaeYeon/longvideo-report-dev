@@ -4,7 +4,7 @@ exhaustion), one video per GPU on 5/6/7, then produce a corrected merged result.
 All artifacts under claude_output."""
 import os, sys, json, subprocess
 
-ROOT = "/data1/jyheo/workspace/VideoRAG/WorldMM"
+ROOT = "/data1/USER/workspace/VideoRAG/WorldMM"
 BASE = f"{ROOT}/claude_output/pilot"
 os.chdir(ROOT)
 

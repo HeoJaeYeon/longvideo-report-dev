@@ -46,7 +46,7 @@
 위 출처를 모아 보고서마다 단계별 파일로 펼친다. LLM을 다시 부르지 않는다. 최종 본문은 후처리기를 `report.json`에 다시 돌려 만들고, **`report.md`와 글자 단위로 같은지 확인**한다. 9건 모두 같았다(실측).
 
 ```bash
-cd /data1/jyheo/workspace/VideoRAG/report_framework
+cd /data1/USER/workspace/VideoRAG/report_framework
 python -B analysis/export_stages.py --run outputs/p9p19_check_20261025_141401   # GPU 불필요
 ```
 

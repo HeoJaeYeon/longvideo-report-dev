@@ -25,7 +25,7 @@
 ---
 
 ## 1. 실행 환경 (사실)
-- 컨테이너 `worldmm`, 작업경로 `/data1/jyheo/workspace/VideoRAG/WorldMM`, 가상환경 `.venv`(uv).
+- 컨테이너 `worldmm`, 작업경로 `/data1/USER/workspace/VideoRAG/WorldMM`, 가상환경 `.venv`(uv).
 - Python 3.13 / torch 2.8.0+cu128 / transformers 4.57.6 / flash-attn 2.8.3.
 - GPU: NVIDIA RTX A6000 48GB × 8. **공유 서버** — 타 사용자가 GPU 0·2·3 등에서 대형 VLLM(~40GB) 상시 점유. 가용 GPU만 사용해야 함.
 - 데이터: `data/Video-MME/data/*.mp4`(900개, Long 300 포함), `data/Video-MME/videomme/test.json`(2700문항). Video-MME용 사전 캡션은 없음(직접 생성).
@@ -139,7 +139,7 @@
 ### 8.1 Phase B(50영상) build 재개 — **GPU 6,7만 사용**
 ※ 지금(09-28)은 이미 GPU 6,7 워커가 돌고 있음. **아래는 중단됐을 때 재개용.** 먼저 `bash claude_output/full/full_status.sh`로 워커 생존 확인 후, 안 돌면 재개.
 ```bash
-cd /data1/jyheo/workspace/VideoRAG/WorldMM
+cd /data1/USER/workspace/VideoRAG/WorldMM
 # 0) 우리 워커가 이미 돌면 재개 불필요:
 ps -eo cmd | grep "queue_worker.sh [67]" | grep -v grep
 # 1) (재개 시) stale claims 제거 — 안 하면 미완료 영상이 skip됨

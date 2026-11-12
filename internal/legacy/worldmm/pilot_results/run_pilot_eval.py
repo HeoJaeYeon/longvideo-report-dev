@@ -5,7 +5,7 @@ shard, merges results, and prints an accuracy summary. Run in background after
 build_memory completes."""
 import os, sys, json, subprocess, time
 
-ROOT = "/data1/jyheo/workspace/VideoRAG/WorldMM"
+ROOT = "/data1/USER/workspace/VideoRAG/WorldMM"
 BASE = f"{ROOT}/claude_output/pilot"
 GPUS = [4, 5, 6, 7]
 os.chdir(ROOT)

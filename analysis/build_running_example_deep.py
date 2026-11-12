@@ -282,7 +282,7 @@ def render():
     w("")
     w("| 항목 | 값 | 근거 |")
     w("|---|---|---|")
-    w(f"| 영상 파일 | `{VIDEO}` ({os.path.getsize(VIDEO):,} bytes) | 파일 |")
+    w(f"| 영상 파일 | `{os.path.relpath(VIDEO, os.path.dirname(RF))}` ({os.path.getsize(VIDEO):,} bytes) | 파일 |")
     w(f"| 해상도·fps·프레임 | {c['wh'][0]}×{c['wh'][1]}, {fps:.6f} fps, {c['nfr']:,}프레임 → {c['dur']:.3f}초 ({G.hms(c['dur'])}) | decord, WorldMM `get_video_duration` |")
     w(f"| 자막 | Whisper → `transcript/{VID}.srt`, {len(c['transcript'])}줄. 모델은 `process_one_video.sh` 1단계의 `distil-large-v3.5` (이 스크립트는 2026-10-21에 수정됐고 로그에 모델명이 없어 당시 값인지는 [부분 확인]) | srt 파일, 스크립트 |")
     w(f"| 10초 구간 | {len(c['segments'])}개 = ⌈{c['dur']:.3f} / 10⌉, 마지막 구간 {c['segments'][-1].start_seconds:.0f}–{c['segments'][-1].end_seconds:.3f}초({G.hms(c['segments'][-1].start_seconds)}–영상 끝) | WorldMM `build_segments` |")

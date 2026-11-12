@@ -413,21 +413,21 @@ a2d68b1372d8af2c5dab68730956c7f4  3848  smoke/metadata/episodic_memory/uoJDGnaVu
 9e3189af731d126e88f89585ca9d2b6f  1811  smoke/test_1video.json
 61f057a82d4a870f2137723de9eca8bc  156  smoke/transcript/uoJDGnaVuTg.srt
 defdd30f1a2265151224870536d49e1a  669  smoke_qwen3vl.py
-LINK  pilot/caption_all/0w4OTD4L0GQ -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/0w4OTD4L0GQ
-LINK  pilot/caption_all/GsYi-l5PEEs -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/GsYi-l5PEEs
-LINK  pilot/caption_all/H8fGd3fCJbg -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/H8fGd3fCJbg
-LINK  pilot/caption_all/HnS87Tw4amM -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/HnS87Tw4amM
-LINK  pilot/caption_all/ctqn-UJGX5M -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/ctqn-UJGX5M
-LINK  pilot/caption_all/lAgwMGRvJrM -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/lAgwMGRvJrM
-LINK  pilot/caption_all/mzoX7zEZ6h4 -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/mzoX7zEZ6h4
-LINK  pilot/caption_all/uzyYKAPcfmE -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/uzyYKAPcfmE
-LINK  pilot/s4/caption/0w4OTD4L0GQ -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/0w4OTD4L0GQ
-LINK  pilot/s4/caption/mzoX7zEZ6h4 -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/mzoX7zEZ6h4
-LINK  pilot/s5/caption/H8fGd3fCJbg -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/H8fGd3fCJbg
-LINK  pilot/s5/caption/HnS87Tw4amM -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/HnS87Tw4amM
-LINK  pilot/s6/caption/GsYi-l5PEEs -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/GsYi-l5PEEs
-LINK  pilot/s6/caption/lAgwMGRvJrM -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/lAgwMGRvJrM
-LINK  pilot/s7/caption/ctqn-UJGX5M -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/ctqn-UJGX5M
-LINK  pilot/s7/caption/uzyYKAPcfmE -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/uzyYKAPcfmE
-LINK  pilot/s8/caption/0w4OTD4L0GQ -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/0w4OTD4L0GQ
-LINK  pilot/s8/caption/mzoX7zEZ6h4 -> /data1/jyheo/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/mzoX7zEZ6h4
+LINK  pilot/caption_all/0w4OTD4L0GQ -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/0w4OTD4L0GQ
+LINK  pilot/caption_all/GsYi-l5PEEs -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/GsYi-l5PEEs
+LINK  pilot/caption_all/H8fGd3fCJbg -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/H8fGd3fCJbg
+LINK  pilot/caption_all/HnS87Tw4amM -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/HnS87Tw4amM
+LINK  pilot/caption_all/ctqn-UJGX5M -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/ctqn-UJGX5M
+LINK  pilot/caption_all/lAgwMGRvJrM -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/lAgwMGRvJrM
+LINK  pilot/caption_all/mzoX7zEZ6h4 -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/mzoX7zEZ6h4
+LINK  pilot/caption_all/uzyYKAPcfmE -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/uzyYKAPcfmE
+LINK  pilot/s4/caption/0w4OTD4L0GQ -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/0w4OTD4L0GQ
+LINK  pilot/s4/caption/mzoX7zEZ6h4 -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/mzoX7zEZ6h4
+LINK  pilot/s5/caption/H8fGd3fCJbg -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/H8fGd3fCJbg
+LINK  pilot/s5/caption/HnS87Tw4amM -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/HnS87Tw4amM
+LINK  pilot/s6/caption/GsYi-l5PEEs -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/GsYi-l5PEEs
+LINK  pilot/s6/caption/lAgwMGRvJrM -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/lAgwMGRvJrM
+LINK  pilot/s7/caption/ctqn-UJGX5M -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/ctqn-UJGX5M
+LINK  pilot/s7/caption/uzyYKAPcfmE -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g6/caption/uzyYKAPcfmE
+LINK  pilot/s8/caption/0w4OTD4L0GQ -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/0w4OTD4L0GQ
+LINK  pilot/s8/caption/mzoX7zEZ6h4 -> /data1/USER/workspace/VAU_RAG/WorldMM/claude_output/pilot/g5/caption/mzoX7zEZ6h4

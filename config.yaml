@@ -10,7 +10,7 @@ paths:
   worldmm_root: ../WorldMM                     # WorldMM checkout (캡션의 video_path가 이 경로 기준 상대 경로)
   # [기기별 설정] 모델 캐시. 스크립트가 HF_HOME을 이 값으로 설정한다. 단 HUGGINGFACE_HUB_CACHE가 설정돼 있으면
   # (videorag_report 컨테이너는 <VideoRAG>/.cache/huggingface/hub) 모델은 그 경로에서 읽힌다(I4). 자기 환경에 맞게 바꾼다.
-  hf_home: /data1/jyheo/workspace/.cache/huggingface
+  hf_home: ../../.cache/huggingface           # 이 서버: VideoRAG의 상위(workspace) 폴더의 .cache/huggingface
   # WorldMM 메모리 (50영상, 구축 완료). 폴더 설명: 그 폴더의 README.md·MANIFEST.json
   # (2026-11-10 WorldMM/claude_output/full/ 에서 이전. 다시 만들기: scripts/memory_build/)
   caption_dir: ../WorldMM/output/memory/videomme_long_qwen3vl-8b/caption

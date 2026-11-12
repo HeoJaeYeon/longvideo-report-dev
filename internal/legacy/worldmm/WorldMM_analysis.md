@@ -1,7 +1,7 @@
 # WorldMM 구현 분석 — 디렉토리·모듈·데이터 흐름 (코드 정독 기반, 전면 개정판)
 
 > 목적: WorldMM의 전체 구조/핵심 모듈/연결/데이터 흐름을 **정확히(사실 기반)** 정리. 기존 분석의 오류를 바로잡음.
-> **근거**: `src/worldmm/**`, `preprocess/**`, `eval/eval.py` 직접 정독 + 자체 50영상 DB 구축 경험. 참고: `claude_output/REPORT.md`, `claude_output/HANDOFF.md`. 경로=`/data1/jyheo/workspace/VideoRAG/WorldMM`.
+> **근거**: `src/worldmm/**`, `preprocess/**`, `eval/eval.py` 직접 정독 + 자체 50영상 DB 구축 경험. 참고: `claude_output/REPORT.md`, `claude_output/HANDOFF.md`. 경로=`/data1/USER/workspace/VideoRAG/WorldMM`.
 > 표기: 파일:라인은 정독 시점 기준. 추측은 넣지 않음.
 
 ---

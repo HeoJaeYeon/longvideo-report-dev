@@ -56,26 +56,26 @@ Deep-Report가 쓰는 API는 **작고 대부분 안정적**:
 
 ## 5. 설치 명령 (사용자 직접 실행 — 버전 기록 포함)
 ```bash
-cd /data1/jyheo/workspace/VAU_RAG/WorldMM
+cd /data1/USER/workspace/VAU_RAG/WorldMM
 # (1) 설치 전 스냅샷(복구용)
-uv pip freeze > /data1/jyheo/workspace/VAU_RAG/claude_output/venv_before_deepreporter.lock.txt
+uv pip freeze > /data1/USER/workspace/VAU_RAG/claude_output/venv_before_deepreporter.lock.txt
 # (2) 설치 (Path UP: openai 2.54.0 업그레이드 포함)
 uv pip install langgraph langchain-core langchain-openai flask
 # (3) 설치 후 버전 동결(기록)
-uv pip freeze > /data1/jyheo/workspace/VAU_RAG/claude_output/venv_after_deepreporter.lock.txt
+uv pip freeze > /data1/USER/workspace/VAU_RAG/claude_output/venv_after_deepreporter.lock.txt
 ```
 (보수적으로 openai 고정을 원하면 (2)를 `uv pip install "openai==2.29.0" langgraph langchain-core langchain-openai flask` 로 대체 = Path PIN)
 
 ## 6. 설치 후 필수 검증 (런타임)
 ```bash
-cd /data1/jyheo/workspace/VAU_RAG/WorldMM
+cd /data1/USER/workspace/VAU_RAG/WorldMM
 # (a) 버전 확인
 python -c "import importlib.metadata as m; [print(p, m.version(p)) for p in ['langgraph','langchain-core','langchain-openai','openai','flask']]"
 # (b) ★Risk B 확정: Deep-Reporter 그래프 import + compile
-cd /data1/jyheo/workspace/VAU_RAG/Deep-Report
+cd /data1/USER/workspace/VAU_RAG/Deep-Report
 python -c "from deep_reporter.core.graph import MultimodalLongFormGraph; g=MultimodalLongFormGraph(); print('graph build OK')"
 # (c) ★WorldMM 무손상 확인(openai 2.54.0 영향)
-cd /data1/jyheo/workspace/VAU_RAG/WorldMM
+cd /data1/USER/workspace/VAU_RAG/WorldMM
 python -c "from worldmm.memory.memory import WorldMemory; from worldmm.llm import LLMModel; print('WorldMM import OK')"
 ```
 - (b) 통과 → Risk B 해소. `config_schema` 관련 에러 시 메시지 공유(인자 소폭 수정으로 대응).
