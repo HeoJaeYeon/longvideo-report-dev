@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """
- Qwen3-VL-8B를 OpenAI 호환 API로 제공. 요청은 잠금으로 한 번에 하나씩 처리. 요청 길이를 상한으로 자름(:120). 토큰 계산은 잠금 안(I28). 
 Local OpenAI-compatible chat server (transformers backend) for the report framework.
 
 Exposes POST /v1/chat/completions backed by WorldMM's Qwen3VLModel
