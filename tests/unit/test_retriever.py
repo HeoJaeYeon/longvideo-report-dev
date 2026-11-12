@@ -208,3 +208,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    sys.exit(1 if check.failed else 0)

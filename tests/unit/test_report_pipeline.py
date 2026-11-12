@@ -150,6 +150,8 @@ def part2():
     cfg["retrieval"]["episodic_filter"] = "L0"
     cfg["llm"]["local"]["endpoint"]["port"] = 18410
     cfg["report"]["deep_reporter_log_dir"] = os.path.join(ART, "dr_logs_pipeline")
+    default_translate = cfg["report"]["translate_ko"]   # config default (off since 2026-11-12)
+    cfg["report"]["translate_ko"] = True                 # this part tests the translation path
     if not os.path.isdir(os.path.join(cfg["paths"]["episodic_cache_root"], VID)):
         T.build_test_cache(cfg)
     retr = S.WorldMMRetriever(cfg, T.FakeEmbedding(), S.NoLLM())
@@ -236,6 +238,14 @@ def part2():
     check(v["translation"]["status"] == "skipped" and not os.path.exists(os.path.join(out, "report_ko.md")),
           "validation errors -> translation skipped")
     FakeLLM.mode = "ok"
+
+    off_cfg = copy.deepcopy(cfg); off_cfg["report"]["translate_ko"] = default_translate
+    out = os.path.join(ART, "pipeline_test", "translate_off")
+    code = R.run(off_cfg, VID, "Report what happens in this video.", [], out)
+    v = json.load(open(os.path.join(out, "validation.json")))
+    check(default_translate is False and code == 0 and v["translation"]["status"] == "disabled"
+          and not os.path.exists(os.path.join(out, "report_ko.md")),
+          "config default translate_ko=false -> no report_ko.md, translation disabled")
 
     bad_cfg = copy.deepcopy(cfg); bad_cfg["report"]["max_sections"] = 16
     check(R.run(bad_cfg, VID, "q", [], os.path.join(ART, "pipeline_test", "cap16")) == 2, "report.max_sections=16 -> exit 2 before generation")
@@ -374,3 +384,4 @@ if __name__ == "__main__":
     part3()
     part4()
     print(f"\nRESULT: {'ALL PASS' if check.failed == 0 else f'{check.failed} FAILED'}")
+    sys.exit(1 if check.failed else 0)

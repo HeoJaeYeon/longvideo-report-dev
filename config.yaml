@@ -76,5 +76,5 @@ report:
   deep_reporter_log_dir: logs/deep_reporter   # Deep-Reporter 세션 로그 (load_config가 절대경로로 바꿔 전달)
   previous_sections_context: written   # 결정 4 C0: written = 앞 섹션에서 실제로 쓴 문장(제목 + 단락 첫 문장, 인용 제거, 글자 수 상한)을 writer·query에 전달 / deep_reporter = 원래 동작(섹션 설명 + 본문 앞 100자)
   max_sections: 6                    # 결정 5: 결론 섹션 포함 전체 섹션 수 상한 (허용 3–15; 16 이상은 Deep-Reporter recursion_limit=50 초과로 보고서 전체 실패, 실측)
-  translate_ko: true                 # 결정 6: 영어 report.md 생성 후 한국어 번역본 report_ko.md 추가 (검증 오류 시 생략)
+  translate_ko: false                # 한국어 번역본 report_ko.md 생성 on/off (기본 off, 2026-11-12). true면 영어 report.md 생성 후 섹션별 번역(검증 오류 시 생략, 결정 6)
   translation_max_tokens: 4096       # 섹션 번역 1회의 최대 출력 토큰

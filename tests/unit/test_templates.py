@@ -217,3 +217,4 @@ if __name__ == "__main__":
     part_a()
     part_b()
     print(f"\nRESULT: {'ALL PASS' if check.failed == 0 else f'{check.failed} FAILED'}")
+    sys.exit(1 if check.failed else 0)

@@ -582,7 +582,8 @@ def ground_report(result: Dict[str, Any], enable_filter: bool, out_dir: str,
                                      "median": sorted(whole)[len(whole) // 2] if whole else None}}
     parts = ([header.strip()] if header else []) + bodies
     if refs:
-        parts.append("# References\n\n" + "\n".join(_reference_line(r["n"], r["item"]) for r in refs))
+        # one entry per reference number, separated by a blank line so Markdown renders each [n] on its own line
+        parts.append("# References\n\n" + "\n\n".join(_reference_line(r["n"], r["item"]) for r in refs))
     totals.update({"references": len(refs), "figures": len(figures),
                    "missing_frame_files": sum(f["missing"] for f in figures)})
     return {

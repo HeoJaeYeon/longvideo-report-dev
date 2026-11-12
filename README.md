@@ -77,7 +77,7 @@ python run_report.py --config config.yaml --video-id=<VID> \
 ```
 
 - `-`로 시작하는 영상 id는 `--video-id=<id>`, `--preload=<id>`처럼 `=`로 넘긴다.
-- 출력(`<out-dir>`, 기본 `outputs/<vid>_<시각>/`): `report.md`(근거 정리본), `report_raw.md`, `report.json`, `validation.json`, `frames/`, `report_ko.md`(`report.translate_ko: true`일 때).
+- 출력(`<out-dir>`, 기본 `outputs/<vid>_<시각>/`): `report.md`(근거 정리본), `report_raw.md`, `report.json`, `validation.json`, `frames/`, `report_ko.md`(한국어 번역본: `config.yaml`의 `report.translate_ko`로 켜고 끔, 기본 `false`).
 - 종료 코드: 0 = 검증 통과, 1 = 검증 오류(출력은 씀), 2 = 사전 확인·설정 실패.
 - 다른 사용자와 GPU를 같이 쓰면 상한 래퍼(`scripts/launch/run_*_capped.py`)와 감시가 있는 배치 실행기(`experiments/gpu_3videos.py`, `gpu_report_batch.py`)를 쓴다.
 
