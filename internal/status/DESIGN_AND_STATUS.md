@@ -1,7 +1,7 @@
 # Video-RAG × Deep-Reporter 장편 비디오 보고서 프레임워크 — 분석·설계·구현 현황
 
 - 작성: 2026-10-21~22 (Claude Code, 사용자 지시와 승인에 따라 작성). 최종 갱신: 2026-10-26 (흐름 오류·추측 표현 측정 §9.17, P19 영상 끝 근거·반복 경고 기준·검사 오탐 수정 §8.13. 2026-10-25: P9·P19·I28 §8.12·§9.16, 결정 16, C-1–C-5 §9.10–§9.14, 재시도 이력 §9.15, I29·I30)
-- 위치: `/data1/USER/workspace/VideoRAG/report_framework/DESIGN_AND_STATUS.md`
+- 위치: `report_framework/internal/status/DESIGN_AND_STATUS.md` (2026-11-10 이전: `report_framework/DESIGN_AND_STATUS.md`). 2026-11-12: §2.5(10-26–11-12 진행)와 §13.3 (2-2) 추가.
 - **처음 이어받는 사람은 §2(현재 상태)와 §13(인수인계)부터 읽는다.**
 - **2026-11-10 경로 정리** (동작 변경 없음, 상세 `internal/status/REORG_LOG_20261110.md`): WorldMM 메모리 `WorldMM/claude_output/full/` → `WorldMM/output/memory/videomme_long_qwen3vl-8b/`, 사전 인덱싱 캐시 `report_framework/cache/episodic/` → 같은 폴더의 `report_framework_index/`(둘 다 복사, md5 동일, 원본은 삭제 승인 전까지 보존). `config.yaml`의 경로는 `report_framework/` 기준 상대 경로이고 `rf_config.load_config()`가 해석한다. 메모리 구축 스크립트는 `scripts/memory_build/`, Docker 정의 사본은 `docker/`, WorldMM 로컬 수정 patch는 `patches/worldmm/`에 있다. 메모리·캐시의 옛 경로 표기는 당시 기록이다. 같은 날 폴더 재배치(P2): 스크립트·결과 경로(`tests/*` → `tests/unit/`·`tests/gpu/`·`experiments/`·`scripts/launch/`, `analysis/*.json` → `results/`, `inspect/`·`running_example/` → `internal/`)는 본문에서도 새 위치로 고쳐 적었다. 문서 위치는 `docs/README.md` 색인.
 
@@ -53,6 +53,8 @@
 
 ## 2. 현재 상태 요약 (2026-10-25)
 
+- 2026-10-26 이후의 진행은 §2.5, 현재 상태의 짧은 요약은 `internal/status/CURRENT_STATUS.md`(2026-11-12).
+
 ### 2.1 구성요소별 상태
 
 | 구성요소 | 파일 | 상태 | 검증 수준 |
@@ -73,7 +75,7 @@
 
 - **할 수 있는 것**: LLM 서버와 검색 서비스를 띄우고 `run_report.py`를 실행하면 다음이 나온다.
   - 근거가 연결된 영어 보고서(`report.md`, References·그림 포함)
-  - 한국어 번역본(`report_ko.md`)
+  - 한국어 번역본(`report_ko.md`, `report.translate_ko: true`일 때. 2026-11-12부터 기본 off)
   - 원본(`report_raw.md`), 전체 기록(`report.json`), 검증 결과(`validation.json`)
 - **아직 안 되는 것**
   - **4개 단위(10sec/30sec/3min/10min) episodic 캐시는 검증 영상 3개(`-QuCz7kxBr8`, `0RxMZBLeqRI`, `54k2g9ddy4M`)만 완성됐다**(2026-10-25 C-1, §9.10). 나머지 47개 영상은 없다(C-7, 미실행).
@@ -121,6 +123,32 @@
 | 이미지와 텍스트 근거의 시간 차이 | `validation.json`에 기록. 출력 변경은 결정 7 보류 |
 | (인덱스 품질) 10min 캡션 32/232개가 전처리에서 2,048토큰에 잘림. **검증 영상 3개 중 `0RxMZBLeqRI`의 10min 0–10분·10–20분 캡션이 여기에 해당**(§11) | 원인 확인, 재생성은 보류(I22) |
 | (인덱스 품질) 10min OpenIE 출력 잘림·재시도 폭증, 열거 폭주 triple | 분할 OpenIE + 구제 + 연속 15개 초과 절단, GPU 검증(C-1: 호출 = 계획, 구제 5건, 절단 146개). 분할 기준 아래 입력의 잘림 3건, 정당한 나열 절단 확인(I23·I24) |
+
+
+### 2.5 2026-10-26 – 11-12 진행 (분석·정리, GPU 사용 없음)
+
+현재 상태의 짧은 요약은 `internal/status/CURRENT_STATUS.md`가 맡는다. 이 절은 그 기간의 결과와 근거 문서만 적는다.
+
+- **보고서 9건 텍스트 분석** (`internal/analysis/REPORT_TEXT_REVIEW.md`, 2026-10-26. 대상: §9.16의 9건, 근거·캡션과 대조, 영상은 보지 않음)
+  - 형식(섹션 상한, 결론, 인용 번호)은 9/9 지켰고, 인용한 근거를 그대로 옮긴 사실 서술은 대체로 근거와 맞는다.
+  - 문제 빈도(9건 중): 큰 구간(10분 이상) 누락 9/9, 결말 오류 4/9, 구간 요약의 "the video closes/opens"를 본문에서 영상 전체처럼 씀 6/9, 섹션 안 시간 역행 6/9, 시각 잘못 붙임 4/9, 같은 보고서 안 사실 불일치 6/9, 섹션 사이 반복 7/9, writer 반복 루프 2/9, 결론의 새 사실 4/9. 해석·서사 덧씌우기는 뉴스 영상 3/3, 로마 영상 3/3.
+  - 확인된 원인 C1–C13(입력 자료·planning·섹션 단위 독립 검색·작성·후처리의 네 층), 확인하지 못한 원인 H1–H7(GPU 비교 실행 필요).
+- **같은 조건 3회의 실행 간 차이** (`internal/analysis/SELF_CONSISTENCY_ANALYSIS.md`, `SELF_CONSISTENCY_CAUSES.md`, 2026-10-26)
+  - 형식과 핵심 주체는 3회가 같고, 다루는 구간은 크게 다르다: 3회가 모두 다룬 3분 구간 13개 중 3(`-QuCz7kxBr8`), 11개 중 4(`0RxMZBLeqRI`), 16개 중 8(`54k2g9ddy4M`). 실행 쌍의 episodic 근거 Jaccard 0.19–0.41.
+  - 결말 정답 5/9(`0RxMZBLeqRI` 3/3, `-QuCz7kxBr8` 1/3, `54k2g9ddy4M` 1/3). 맞은 5건은 모두 planner가 결말 구간을 섹션이나 checklist에 넣은 경우이고, 틀린 4건은 planner가 틀린 결말을 checklist에 적었거나(`54k2g9ddy4M` r1·r3) 결론 근거에 끝부분이 없었다(`-QuCz7kxBr8` r2·r3, `SELF_CONSISTENCY_CAUSES.md` §4).
+  - 차이는 같은 입력에 대한 planner 출력(샘플링, seed 없음)에서 시작해 query·검색·본문으로 커진다. 원인 분리 실험 E1–E4(GPU 필요)는 `SELF_CONSISTENCY_CAUSES.md` §5.
+- **흐름 오류·추측 표현 측정**: §9.17.
+- **단계별 원문과 running example**
+  - `analysis/export_stages.py` → `internal/inspect/<run>/`: 9건의 planner·query·writer 프롬프트와 원문, 근거, 후처리 결과(후처리 재실행이 `report.md`를 그대로 재현함을 확인).
+  - `internal/running_example/RUNNING_EXAMPLE.md`(2026-11-02–03): 영상 3개 r1의 단계별 실제 입력·출력. §10은 농구 영상 심층 자료다. 사전 구축 메모리의 실제 내용으로 semantic 추출 23묶음 중 11묶음이 0개(로그의 실패 응답 36건 중 35건이 출력 2,048토큰에서 끊긴 JSON), 검색에 쓰이는 semantic triple 153개, 10sec OpenIE triple이 0개인 캡션 18/226개를 확인했다.
+  - CPU 검색 재현(`analysis/reproduce_retrieval_cpu.py`, 결과 `results/retrieval_repro_-QuCz7kxBr8_r1.json`): 섹션별로 실행 기록과 맞춰 보고 맞은 항목만 싣는다. 2026-11-10 대조 실험에서 같은 코드·데이터로도 일치 항목이 실행마다 달라짐을 확인했다(`internal/status/REORG_LOG_20261110.md` §9).
+  - visual 임베딩은 구간당 10프레임으로 만들어졌다: 저장된 벡터와의 cosine이 10프레임 재계산 0.9965–0.9987, 16프레임 0.887–0.953(구간 4개, `analysis/verify_visual_nframes.py`, `results/visual_nframes_check_-QuCz7kxBr8.json`).
+  - 미팅 구성안: `internal/meetings/MEETING_ISSUES_DECK_PLAN.md`(이슈 ①–⑧, 원인 지도).
+- **코드·폴더 정리** (2026-11-10–12, `internal/status/REORG_LOG_20261110.md`, 동작 변경 없음은 CPU로 확인)
+  - WorldMM 메모리와 사전 인덱스를 `WorldMM/output/memory/videomme_long_qwen3vl-8b/`로 옮겼다(복사, md5 동일). 설정 경로는 `report_framework/` 기준 상대 경로(`rf_config.py`).
+  - 폴더 재배치: `tests/{unit,gpu,fixtures}`, `experiments/`, `scripts/{launch,memory_build}`, `results/`, `docs/`, `internal/`. 새 clone에서 CPU 테스트 6종 통과.
+  - 2026-11-12: References를 번호마다 문단으로 나눔, 한국어 번역 기본 off(`report.translate_ko`), CPU 테스트 실패 시 종료 코드 1, 추적 파일에서 사용자명 제거.
+- 품질 평가(Video-MME 문항 풀이, 자동 지표, 사람 검수)는 아직 시작하지 않았다.
 
 ---
 
@@ -1181,6 +1209,12 @@ python -B tests/gpu/gpu_e2e.py                                                  
 5-2. (다음 GPU 실행에서 확인) §8.13의 영상 끝 근거 효과, I28 효과(사전 인덱싱 시).
 6. (보류) C-7 50개 영상 사전 인덱싱(12,780회, 약 12.5–15시간 추정), I22, P12, I25, 번역 제목 형식.
 
+**(2-2) 2026-10-26 – 11-12 이후 상태** (현재 우선순위는 `internal/status/CURRENT_STATUS.md`)
+1. (완료, GPU 없음) 보고서 9건 텍스트 분석, 실행 간 차이 분석, 흐름·추측 측정, running example, 단계별 원문 — §2.5.
+2. (완료) 코드·폴더 정리와 문서화 — `internal/status/REORG_LOG_20261110.md`.
+3. (다음, GPU 필요) 새 경로로 LLM 서버·검색 서비스·보고서 1건 실행 확인(P7). 그 뒤 옛 원본 삭제(P8).
+4. (사용자 결정 대기) 패키지 구조화((b) 단계), 외부 공개 방식, 원인 분리 실험 E1–E4, 평가 지표.
+
 **(3) 이후**
 - 평가: Video-MME 150문항을 보고서만 보고 풀기, 자동 지표, 사람 검수.
 - MERIT 별도 검색 서비스(§4.2 주의점 반영).
@@ -1201,7 +1235,7 @@ python -B tests/gpu/gpu_e2e.py                                                  
 - [x] 4개 granularity 캐시로 검색 (L0/L1/full), 타임아웃 여유 (§9.12, 지연만. 품질 비교는 미실시)
 - [ ] HTTP OpenIE와 in-process OpenIE 결과 비교
 - [ ] 규칙 근거 검사의 재현율·일반화
-- [ ] 같은 조건 다중 실행의 편차 (C-5에서 조건당 2회만. OpenIE 재계산 편차는 §9.11에서 Jaccard 0.2–0.3)
+- [x] 같은 조건 다중 실행의 편차 (2026-10-26: 영상 3개 × 3회 분석, §2.5. C-5는 조건당 2회. OpenIE 재계산 편차는 §9.11에서 Jaccard 0.2–0.3)
 - [x] 여러 영상 연속 처리 시 검색 서비스 영상 교체 (§9.12: 2.0–2.4초, 메모리 누적 없음)
 - [ ] `llm.backend=openai` 경로
 - [ ] vLLM 교체

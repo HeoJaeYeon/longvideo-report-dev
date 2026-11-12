@@ -15,6 +15,7 @@
 
 | 위치 | 내용 |
 |---|---|
+| `internal/status/CURRENT_STATUS.md` | 지금의 상태와 다음 작업 (짧은 요약, 상태가 바뀌면 고쳐 씀) |
 | `internal/status/DESIGN_AND_STATUS.md` | 분석·설계·구현·검증의 전체 기록과 인수인계(§2 현재 상태, §13 인수인계) |
 | `internal/status/MIGRATION_HANDOFF.md` | 서버 이전 메모 |
 | `internal/status/REORG_LOG_20261110.md` | 2026-11-10 경로·폴더 정리 기록 (무엇을 어디로 옮겼고 어떻게 확인했는지) |

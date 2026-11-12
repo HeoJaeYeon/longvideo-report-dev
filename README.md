@@ -90,5 +90,5 @@ for t in tests/unit/test_*.py; do CUDA_VISIBLE_DEVICES= python -B "$t"; done   #
 ## 현재 상태
 
 - 50개 영상의 WorldMM 메모리는 구축되어 있다. 사전 인덱스는 검증 영상 3개(`-QuCz7kxBr8`, `0RxMZBLeqRI`, `54k2g9ddy4M`)만 있다.
-- 알려진 품질 문제와 대응: `docs/REPORT_ISSUES_AND_FIXES.md`. 설계·결정·검증 기록: `internal/status/DESIGN_AND_STATUS.md`.
+- 현재 상태와 다음 작업: `internal/status/CURRENT_STATUS.md`. 알려진 품질 문제와 대응: `docs/REPORT_ISSUES_AND_FIXES.md`. 설계·결정·검증 기록: `internal/status/DESIGN_AND_STATUS.md`.
 - 2026-11-10 경로·폴더 정리 기록: `internal/status/REORG_LOG_20261110.md`.

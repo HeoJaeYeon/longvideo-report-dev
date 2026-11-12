@@ -138,7 +138,7 @@ planner 차이의 내용(대조)
 | `54k2g9ddy4M` r3 | **틀림** | planner 결론 checklist "Confirm the video's conclusion with Liendo's gold medal and community recovery stories" → writer "The video concludes with Liendo's gold medal and the community's recovery stories" |
 
 정리
-- 맞은 4건은 모두 **planner가 결말 구간을 계획(섹션 또는 checklist)에 넣은** 경우다.
+- 맞은 5건(위 표의 4행. `0RxMZBLeqRI` r2·r3이 한 행)은 모두 **planner가 결말 구간을 계획(섹션 또는 checklist)에 넣은** 경우다. (2026-11-12 정정: 처음에 행 수로 "4건"이라 적었다)
 - 틀린 4건은 두 유형이다.
   - (a) planner가 틀린 결말을 checklist에 넣고 writer가 따름: `54k2g9ddy4M` r1·r3. 개요만 보고 학교 화재를 마지막 꼭지로 오판한 결과다.
   - (b) 결론 근거에 끝부분이 없는데 writer가 결말을 서술함: `-QuCz7kxBr8` r2·r3. 하나는 인용 없이, 하나는 관련 없는 근거를 인용했다.
