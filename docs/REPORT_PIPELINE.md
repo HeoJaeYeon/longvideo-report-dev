@@ -15,7 +15,7 @@
 | 영상 | `-QuCz7kxBr8`(농구 가젯 12개 시험, 00:37:37), `0RxMZBLeqRI`(로마 역사, 00:30:32), `54k2g9ddy4M`(CBC 뉴스 모음, 00:45:14) |
 | 질의 | `Write a report describing what happens in this video: the main people or subjects, the key events in the order they occur, and how the video concludes.` (checklist 없음) |
 | 설정 | Qwen3-VL-8B 로컬 서버(출력 상한 3,072), 4개 단위 episodic 캐시, L1, filter 노드 끔, C0 켬, 섹션 상한 6, 번역 끔 |
-| 코드 | 커밋 `baf08d8` 시점. **2026-10-26 변경(영상 끝 근거 txt0, "loop suspected" 기준, 결말 검사 오탐 수정)은 이 실행에 없다.** 해당 부분은 본문에 따로 표시 |
+| 코드 | 커밋 `b7a021d` 시점. **2026-10-26 변경(영상 끝 근거 txt0, "loop suspected" 기준, 결말 검사 오탐 수정)은 이 실행에 없다.** 해당 부분은 본문에 따로 표시 |
 
 ## 목차
 0. 중간 산출물을 직접 보는 법 · 1. 한눈에 보기 · 2. 사전 준비 · 3. 단계별 흐름과 실제 중간 산출물(①–⑨) · 4. LLM 호출과 시간 · 5. 주요 설정 · 6. 실패 지점과 처리 · 7. 현재 한계 · 8. 확장 지점

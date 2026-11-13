@@ -16,7 +16,7 @@
 |---|---|
 | 실행 | `outputs/p9p19_check_20261025_141401/` (2026-10-25 14:14–14:32, P9·P19 수정 확인 실행, `DESIGN_AND_STATUS.md` §9.16) |
 | 보고서 | 영상 3개 × 같은 조건 3회(r1–r3) = 9건. 이 문서는 **각 영상의 r1**을 단계별 예시로 쓰고, 9건 전체 값은 따로 표시한다 |
-| 코드 상태 | 커밋 `baf08d8`(2026-10-25 14:14:01) 시점. **2026-10-26 변경(`61f3286`: 영상 끝 근거 txt0, "loop suspected" 기준, 결말 검사 오탐 수정)은 이 실행에 들어 있지 않다** |
+| 코드 상태 | 커밋 `b7a021d`(2026-10-25 14:14:01) 시점. **2026-10-26 변경(`d8005b3`: 영상 끝 근거 txt0, "loop suspected" 기준, 결말 검사 오탐 수정)은 이 실행에 들어 있지 않다** |
 | 질의 | `Write a report describing what happens in this video: the main people or subjects, the key events in the order they occur, and how the video concludes.` (checklist 없음) |
 | LLM | Qwen3-VL-8B-Instruct, `local_llm_server.py`(transformers), 서버 출력 상한 `max_tokens_cap` 3,072. 샘플링 생성이라 같은 조건에서도 결과가 달라진다(temperature 0.7, top_p 0.8, top_k 20, 모델 기본값) |
 | 검색 | `videorag_retriever_service.py`, episodic 필터 **L1**, 4개 단위(10sec/30sec/3min/10min) 캐시 |
