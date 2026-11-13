@@ -1,0 +1,23 @@
+# Deleted on 2026-11-13 from WorldMM/ and Deep-Report/ (untracked leftovers of earlier work; user instruction: keep needed changes, document them, delete unused files).
+# Copies: Docker/* (6 files) -> internal/legacy/worldmm/Docker/, WorldMM/.dockerignore -> internal/legacy/worldmm/Docker/WorldMM_root.dockerignore,
+#         WorldMM/claude_output/*.md -> internal/legacy/worldmm/, Deep-Report/claude_output/*.md -> internal/legacy/deep-report/ (user name replaced by USER).
+# No copy (not reused): WorldMM/CLAUDE.md, WorldMM/.claude/settings.local.json (settings of the old worldmm container sessions),
+#         WorldMM/Docker/build_base*.log (build logs of another project's image). Local backup of everything: report_framework/backups/cleanup_20261113/upstream_leftovers/
+# md5  size  path
+a9bdc96f3f2f586080f4f66b54d75b52  13442  Deep-Report/claude_output/DOCKER_SETUP_REPORT.md
+3f853778d04e14cead057fb3e9b82880  15278  Deep-Report/claude_output/Deep-Report_analysis.md
+8235387f7d0972223aab36e25bdb0a3d  12385  Deep-Report/claude_output/INTEGRATION_CONTEXT.md
+3a0f709519814d66b653dc1541410426  3030  WorldMM/.claude/settings.local.json
+946e2a607e96c4e1c4aedc77cebd3386  509  WorldMM/.dockerignore
+c4abb4996dd270b0c52a3ac3ea11b989  3398  WorldMM/CLAUDE.md
+1d3d925ba8c2aab3fddae3df5c7691e4  1490  WorldMM/Docker/Dockerfile
+4c3cb77ca8594cd76bcf4558c6537e49  3395  WorldMM/Docker/Makefile
+fc512371ffa85bee2138ba3050fa5c06  2977  WorldMM/Docker/build_base.log
+cb35a3b76ac187a3b7f3fa037c9f75b6  2760  WorldMM/Docker/build_base_v2.log
+03b756d5fada2a5054c2292055dcfee0  1724  WorldMM/Docker/check_port_used.py
+bfd90b931b27a998ccfdd1e5c98274f2  6081  WorldMM/Docker/docker/base.Dockerfile
+92cd9eb1425b149ba341a2ce9bdf45c2  2505  WorldMM/Docker/docker/user.Dockerfile
+c39822fa77c3cc2138f5e4ac09fbfd93  1326  WorldMM/Docker/envs/extras-mllm.txt
+a4301b058b6a6b8ac12b4064901fa603  16556  WorldMM/claude_output/HANDOFF.md
+2a5315ac7f42d4d08c828c15dd247930  11426  WorldMM/claude_output/REPORT.md
+1624e70a205618e0e008d2358d2a133f  12426  WorldMM/claude_output/WorldMM_analysis.md

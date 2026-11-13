@@ -28,7 +28,7 @@
 | 표기 | 의미 |
 |---|---|
 | ✔ | 코드를 직접 읽었거나 명령으로 실측해 확인함 |
-| ◇ | 기존 기록 문서(예: `WorldMM/claude_output/REPORT.md`)에서 인용, 이번에 재측정하지 않음 |
+| ◇ | 기존 기록 문서(예: `internal/legacy/worldmm/REPORT.md`, 원래 `WorldMM/claude_output/REPORT.md`)에서 인용, 이번에 재측정하지 않음 |
 | ✖ | 아직 검증되지 않음 |
 | (추정) | 계산이나 가정에 기반한 값 |
 
@@ -211,7 +211,7 @@
 
 **논문 수치** (✔ 논문 원문): Video-MME(Long) 정확도는 WorldMM-8B 66.0, WorldMM-GPT 76.6이다. Video-MME 설정은 granularity 10s/30s/3m/10m, semantic consolidation 임계값 0.6, semantic top-10, 최대 5라운드다.
 
-**기존 pilot 기록** (◇ `WorldMM/claude_output/REPORT.md`)
+**기존 pilot 기록** (◇ `internal/legacy/worldmm/REPORT.md`)
 - 8개 영상, 24문항의 보정 결과가 12/24 = 50.0%로 기록돼 있다.
 - eval 시 episodic 재인덱싱이 영상당 약 30–50분, eval 프로세스가 GPU 약 44GB를 쓴다고 기록돼 있다.
 

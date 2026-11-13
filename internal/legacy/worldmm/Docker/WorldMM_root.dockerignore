@@ -1,0 +1,26 @@
+# 빌드 컨텍스트 = WorldMM 루트. base.Dockerfile 은 pyproject/uv.lock/.python-version/README.md/src 만 COPY.
+# (주의: .dockerignore 는 인라인 주석 미지원 → 패턴만 한 줄씩)
+
+# --- 대용량 / 런타임 산출물 (런타임 마운트로 접근) ---
+data
+output
+metadata
+.cache
+.log
+logs
+
+# --- 개발/문서/보조 (이미지에 불필요) ---
+claude_output
+assets
+Docker
+
+# --- VCS / 가상환경 / 캐시 ---
+.git
+**/.git
+.venv
+**/.venv
+**/__pycache__
+*.pyc
+*.pyo
+*.log
+*.egg-info

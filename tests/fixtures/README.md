@@ -14,4 +14,3 @@
 - 테스트 출력은 계속 `tests/_artifacts/`(git 제외)에 쓴다.
 - JSON·로그 안의 경로(`img_path`, `video_path` 등)는 실행 당시 절대 경로이고, 사용자명만 `USER`로 바꿨다(2026-11-12). `test_report_pipeline.py`는 그림 경로를 이 폴더로 바꿔 쓴다.
 - 이 테스트들은 이 폴더 말고도 WorldMM 메모리(`config.yaml`의 `caption_dir`·`metadata_dir`)와 영상 파일(`worldmm_root` 아래 `data/Video-MME/data/`)을 읽는다.
-- 프레임 이미지는 Video-MME 영상에서 뽑은 것이라 외부 공개 전에 재배포 조건을 확인해야 한다.

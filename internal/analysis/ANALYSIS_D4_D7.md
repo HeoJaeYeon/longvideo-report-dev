@@ -109,7 +109,7 @@
 - `deep_reporter/` 패키지에서 `refine|polish|revis`를 검색하면 일치하는 코드가 0건입니다.
 - 저장소 전체에서 일치하는 곳은 두 곳뿐입니다.
   - 평가 프롬프트(`evaluation/prompts/eval_templates.py`, "Look past the polish" 등 채점 기준)
-  - 기존 설계 메모(`Deep-Report/claude_output/INTEGRATION_CONTEXT.md` 96행 "(후속) … editorial refine"). 계획 항목일 뿐 구현은 없습니다.
+  - 기존 설계 메모(`internal/legacy/deep-report/INTEGRATION_CONTEXT.md` 96행 "(후속) … editorial refine"). 계획 항목일 뿐 구현은 없습니다.
 
 **논문** (논문)
 - §2.1의 구성은 Planner, Searcher-Filter, Reporter입니다. 생성은 섹션별 "Checklist-Guided Incremental Synthesis"이고, 섹션 사이의 일관성은 Recurrent Context Update로 맞춥니다. 생성 뒤 보고서 전체를 다시 다듬는 단계는 없습니다.
